@@ -2,6 +2,10 @@
   command = "npm run build"
   publish = ".output/public"
 
+[build.environment]
+  SECURITY_SCAN_ENABLED = "true"
+  SECRETS_SCAN_OMIT_KEYS = "VITE_MAPBOX_TOKEN,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_PUBLISHABLE_KEY"
+
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
