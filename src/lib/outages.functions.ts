@@ -43,7 +43,7 @@ export const listOutageHistory = createServerFn({ method: "GET" }).handler(async
 });
 
 export const reportOutage = createServerFn({ method: "POST" })
-  .inputValidator((data) =>
+  .validator ((data) =>
     z
       .object({
         area: z.string().min(2),

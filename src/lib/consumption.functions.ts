@@ -19,7 +19,7 @@ function emptyDays(days: number): DailyPoint[] {
 }
 
 export const getConsumption = createServerFn({ method: "GET" })
-  .inputValidator((data) =>
+  .validator ((data) =>
     z.object({ range: z.enum(["7d", "30d", "90d"]).default("7d") }).parse(data),
   )
   .handler(async ({ data }) => {
@@ -82,7 +82,7 @@ export const getConsumption = createServerFn({ method: "GET" })
 
 
 export const addReading = createServerFn({ method: "POST" })
-  .inputValidator((data) =>
+  .validator ((data) =>
     z
       .object({
         kwh: z.number().positive(),
