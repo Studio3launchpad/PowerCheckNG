@@ -1,0 +1,228 @@
+// PowerCheckNG — Prisma schema
+// IMPORTANT: NO credit/wallet/balance fields on any model.
+// Payments are direct Paystack purchases. We store invoices + status only.
+
+generator client {
+  provider = "prisma-client-js"
+  // For Cloudflare Workers SSR you'll need the driver adapter:
+  // previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Users ----------
+// Clerk owns auth. We mirror minimal user data, keyed by Clerk user id.
+model User {
+  id            String    @id // Clerk userId
+  email         String    @unique
+  fullName      String?
+  phone         String?
+  avatarUrl     String?
+  role          UserRole  @default(CUSTOMER)
+  meterNumber   String?   @unique
+  discoCode     String?   // e.g. IKEDC, EKEDC
+  address       String?
+  latitude      Float?
+  longitude     Float?
+  fcmTokens     String[]  @default([])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  outageReports     OutageReport[]
+  consumptionReads  ConsumptionReading[]
+//invoices          Invoice[]
+  unitPurchases     UnitPurchase[]
+  backupSystems     BackupSystem[]
+  loads             Load[]
+  notifications     Notification[]
+  insights          AIInsight[]
+  devices           DeviceSession[]
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  SUPPORT
+}
+
+// ---------- Auth / Devices ----------
+model DeviceSession {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceHash   String
+  userAgent    String?
+  ipAddress    String?
+  lastSeenAt   DateTime @default(now())
+  trusted      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, deviceHash])
+  @@index([userId])
+}
+
+// ---------- Outage Tracker ----------
+model OutageReport {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  area        String
+  discoCode   String
+  latitude    Float
+  longitude   Float
+  status      OutageStatus  @default(REPORTED)
+  description String?
+  startedAt   DateTime      @default(now())
+  restoredAt  DateTime?
+  confirmations Int         @default(1)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([discoCode, status])
+  @@index([latitude, longitude])
+}
+
+enum OutageStatus {
+  REPORTED
+  CONFIRMED
+  RESTORED
+  CANCELLED
+}
+
+// ---------- Consumption ----------
+model ConsumptionReading {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kwh         Float
+  source      ReadingSource @default(MANUAL)
+  recordedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([userId, recordedAt])
+}
+
+enum ReadingSource {
+  MANUAL
+  METER_SYNC
+  ESTIMATED
+}
+
+// ---------- Buy Units / Paystack ----------
+// Direct purchase only. NO balance/credit tracking.
+// model Invoice {
+//  id              String         @id @default(cuid())
+// userId          String
+// user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+// reference       String         @unique // Paystack reference
+// idempotencyKey  String         @unique
+// amountKobo      Int            // amount in kobo (NGN minor unit)
+// currency        String         @default("NGN")
+//  status          PaymentStatus  @default(PENDING)
+//  channel         String?        // card, bank, ussd...
+//  paidAt          DateTime?
+//  rawWebhook      Json?
+//  purchase        UnitPurchase?
+//  createdAt       DateTime       @default(now())
+//  updatedAt       DateTime       @updatedAt
+
+//  @@index([userId, status])
+//}
+
+// enum PaymentStatus {
+//  PENDING
+//  SUCCESS
+//  FAILED
+//  REFUNDED
+//}
+
+model UnitPurchase {
+ id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//  invoiceId     String   @unique
+//  invoice       Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  meterNumber   String
+  discoCode     String
+  units         Float    // kWh delivered by token vendor
+  token         String?  // prepaid meter token (encrypted at rest in app layer)
+  vendorRef     String?
+  deliveredAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ---------- Backup Systems ----------
+model BackupSystem {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  type        BackupType
+  capacityKwh Float?
+  fuelLevel   Float?   // 0..1 for generators
+  batteryPct  Float?   // 0..1 for inverters
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum BackupType {
+  GENERATOR
+  INVERTER
+  SOLAR
+  HYBRID
+}
+
+// ---------- Load Manager ----------
+model Load {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  watts       Int
+  room        String?
+  priority    Int      @default(3) // 1=critical, 5=optional
+  isOn        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- Notifications ----------
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  body        String
+  category    NotificationCategory
+  readAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([userId, readAt])
+}
+
+enum NotificationCategory {
+  OUTAGE
+  PAYMENT
+  CONSUMPTION
+  SECURITY
+  SYSTEM
+}
+
+// ---------- AI Insights ----------
+model AIInsight {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind        String   // e.g. "weekly_summary"
+  summary     String
+  payload     Json?
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
