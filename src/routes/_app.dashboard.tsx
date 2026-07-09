@@ -17,7 +17,6 @@ import {
   YAxis,
 } from "recharts";
 import { GlassCard } from "@/components/GlassCard";
-import { OutagesHistory } from "@/components/OutagesHistory";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — PowerCheckNG" }] }),
@@ -30,10 +29,30 @@ const series = Array.from({ length: 24 }, (_, i) => ({
 }));
 
 const STATS = [
-  { label: "Live draw", value: "2.4 kW", icon: Zap, delta: "+0.3" },
-  { label: "Today", value: "14.2 kWh", icon: Activity, delta: "-5%" },
-  { label: "Outages", value: "1 nearby", icon: AlertTriangle, delta: "12m ago" },
-  { label: "Last purchase", value: "₦5,000", icon: CreditCard, delta: "3d ago" },
+  {
+    label: "Energy Health Score",
+    value: "84/100",
+    icon: Zap,
+    delta: "Excellent",
+  },
+  {
+    label: "Estimated Monthly Usage",
+    value: "326 kWh",
+    icon: Activity,
+    delta: "+4% from last month",
+  },
+  {
+    label: "Estimated Monthly Cost",
+    value: "₦23,400",
+    icon: CreditCard,
+    delta: "Within budget",
+  },
+  {
+    label: "Current Outage Status",
+    value: "Power Available",
+    icon: AlertTriangle,
+    delta: "IKEDC • Updated now",
+  },
 ];
 
 function Dashboard() {
@@ -41,9 +60,9 @@ function Dashboard() {
     <div className="space-y-6 pb-24 lg:pb-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-display font-bold">Good evening 👋</h1>
+          <h1 className="text-3xl font-display font-bold">Welcome back 👋</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Here's your home's energy pulse right now.
+            Monitor your electricity usage, manage outages, and make smarter energy decisions.
           </p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs text-primary border border-primary/30">
@@ -113,32 +132,29 @@ function Dashboard() {
 
         <GlassCard>
           <h2 className="font-semibold flex items-center gap-2">
-            <Battery className="size-4 text-primary" /> Backup
+            <Battery className="size-4 text-primary" />
+            Today's AI Recommendation
           </h2>
           <div className="mt-4 space-y-4">
-            {[
-              { name: "Inverter", pct: 78, sub: "~4h 20m remaining" },
-              { name: "Generator", pct: 42, sub: "Fuel: 8.4 L" },
-            ].map((b) => (
-              <div key={b.name}>
-                <div className="flex justify-between text-sm">
-                  <span>{b.name}</span>
-                  <span className="text-muted-foreground">{b.pct}%</span>
-                </div>
-                <div className="mt-1.5 h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full bg-primary glow-primary rounded-full"
-                    style={{ width: `${b.pct}%` }}
-                  />
-                </div>
-                <p className="mt-1 text-[11px] text-muted-foreground">{b.sub}</p>
-              </div>
-            ))}
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <p className="text-sm leading-6">
+                Running your iron during public electricity hours instead of generator hours could
+                reduce your monthly energy cost by approximately
+                <span className="font-semibold text-primary"> ₦3,200.</span>
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-white/10 p-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Energy Tip</p>
+
+              <p className="mt-2 text-sm">
+                Your refrigerator consumes energy continuously. Consider reducing air conditioner
+                usage by 2 hours daily to stay within your monthly budget.
+              </p>
+            </div>
           </div>
         </GlassCard>
       </div>
-
-      <OutagesHistory limit={10} />
     </div>
   );
 }

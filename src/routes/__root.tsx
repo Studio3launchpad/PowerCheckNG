@@ -11,7 +11,7 @@ import { ClerkProvider } from "@clerk/tanstack-react-start";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+
 import { getClerkPublishableKey } from "../lib/clerk-config.functions";
 
 function NotFoundComponent() {
@@ -39,9 +39,7 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+
 
   return (
     <div className="flex min-h-screen items-center justify-center grid-bg px-4">
