@@ -3,22 +3,10 @@ import { motion } from "framer-motion";
 import { History, MapPin, Clock, ThumbsUp, RefreshCw, Zap } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 import { listOutageHistory } from "@/lib/outages.functions";
+import { timeAgo } from "@/lib/outages.utils";
+import { STATUS_STYLES } from "@/lib/outages.constants";
 
-const STATUS_STYLES: Record<string, string> = {
-  REPORTED: "bg-warning/15 text-warning border-warning/30",
-  CONFIRMED: "bg-destructive/15 text-destructive border-destructive/30",
-  RESTORED: "bg-primary/15 text-primary border-primary/30",
-  CANCELLED: "bg-muted text-muted-foreground border-border",
-};
 
-function timeAgo(iso: string) {
-  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const h = Math.floor(mins / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
 
 export function OutagesHistory({ limit }: { limit?: number }) {
   const { data, isLoading, isFetching, refetch, error } = useQuery({
@@ -66,7 +54,7 @@ export function OutagesHistory({ limit }: { limit?: number }) {
         </div>
       ) : (
         <ul className="divide-y divide-border/60">
-          {visible.map((o, i) => (
+          {visible.map((o: any, i: number) => (
             <motion.li
               key={o.id}
               initial={{ opacity: 0, y: 6 }}
