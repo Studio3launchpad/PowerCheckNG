@@ -3,7 +3,6 @@ import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-
 import { useServerFn } from "@tanstack/react-start";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { LiveOutageMap } from "@/components/outage/LiveOutageMap";
@@ -17,6 +16,7 @@ import { useCurrentLocation } from "@/hooks/useCurrentLocation";
 import { FormSchema } from "@/lib/outages.schema";
 import type { FormValues } from "@/lib/outages.schema";
 import { useOutageReporting } from "@/hooks/useOutageReporting";
+import { Outlet } from "@tanstack/react-router";
 
 const outagesQO = queryOptions({
   queryKey: ["outages"],
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_app/outages")({
 });
 
 function OutagesPage() {
-  const { data } = useSuspenseQuery(outagesQO);
+  const { data, refetch, isFetching } = useSuspenseQuery(outagesQO);
   const [open, setOpen] = useState(false);
 
   const form = useForm<FormValues>({
@@ -80,13 +80,10 @@ function OutagesPage() {
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
       <OutageHeader
-        onUpdateLocation={getCurrentLocation}
-        onRefresh={() =>
-          queryClient.invalidateQueries({
-            queryKey: ["outages"],
-          })
-        }
-      />
+  onUpdateLocation={getCurrentLocation}
+  onRefresh={refetch}
+  isRefreshing={isFetching}
+/>
       <GlassCard>
         <div className="flex items-center justify-between">
           <div>
@@ -126,7 +123,10 @@ function OutagesPage() {
       {/* Live map */}
       <LiveOutageMap outages={data.outages} />
 
-      <OutageList outages={data.outages} />
+      <OutageList
+  outages={data.outages}
+  limit={10}
+/>
 
       <PowerStatusModal
         open={showPowerModal}

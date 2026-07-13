@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import type { UseFormReturn } from "react-hook-form";
+import { resolveLocation } from "@/lib/geoResolver";
 
-type LocationForm = {
-  area: string;
-  discoCode: string;
-  latitude: number;
-  longitude: number;
-  description?: string;
-};
 
 export function useCurrentLocation() {
   const [showPowerModal, setShowPowerModal] = useState(false);
@@ -28,6 +21,7 @@ export function useCurrentLocation() {
       );
 
       const data = await response.json();
+      console.log("Reverse Geocode Response:", data);
 
       return {
         state: data.address?.state || "",
@@ -60,16 +54,20 @@ export function useCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        console.log("Current Coordinates:", latitude, longitude);
 
         const address = await reverseGeocode(latitude, longitude);
 
-        setLocation({
-          latitude,
-          longitude,
-          state: address.state,
-          lga: address.lga,
-          area: address.area,
-        });
+// Use our own resolver first
+const resolved = resolveLocation(latitude, longitude);
+
+setLocation({
+  latitude,
+  longitude,
+  state: resolved?.state ?? address.state,
+  lga: resolved?.lga ?? address.lga,
+  area: resolved?.area ?? address.area,
+});
 
         setShowPowerModal(true);
       },

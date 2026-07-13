@@ -58,6 +58,34 @@ export const reportOutage = createServerFn({ method: "POST" })
     const userId = await requireUserId();
     await ensureUser(userId);
 
+    // Prevent duplicate reports from the same user
+// in the same area within 30 minutes.
+
+const thirtyMinutesAgo = new Date(
+  Date.now() - 30 * 60 * 1000,
+);
+
+const recentReport = await prisma.outageReport.findFirst({
+  where: {
+    userId,
+    area: data.area,
+    startedAt: {
+      gte: thirtyMinutesAgo,
+    },
+  },
+  orderBy: {
+    startedAt: "desc",
+  },
+});
+
+if (recentReport) {
+ return {
+  success: false,
+  message:
+    "You already submitted a report within the last 30 minutes.",
+};
+}
+
     const created = await prisma.outageReport.create({
       data: {
         userId,

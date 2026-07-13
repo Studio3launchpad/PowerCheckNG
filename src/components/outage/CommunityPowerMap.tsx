@@ -1,84 +1,99 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
-
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-} from "react-leaflet";
-
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
+import { createMarker } from "@/components/outage/markerIcon";
+import { buildCommunities } from "@/lib/communityAggregation";
+import type { Outage } from "@/lib/outages.types";
+import { CommunityMapPopup } from "@/components/outage/CommunityMapPopUp";
 
-type Outage = {
-  id: string;
-  area: string;
-  discoCode: string;
-  status: string;
-  latitude: number;
-  longitude: number;
-};
+function FitBounds({ outages }: { outages: Outage[] }) {
+  const map = useMap();
 
-const marker = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  useEffect(() => {
+    if (outages.length === 0) return;
 
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
+    const validOutages = outages.filter(
+      (o) =>
+        typeof o.latitude === "number" &&
+        typeof o.longitude === "number" &&
+        !Number.isNaN(o.latitude) &&
+        !Number.isNaN(o.longitude)
+    );
 
-export function CommunityPowerMap({
-  outages,
-}: {
-  outages: Outage[];
-}) {
+    if (validOutages.length === 0) return;
 
-const [mounted, setMounted] = useState(false);
+    if (validOutages.length === 1) {
+      map.setView(
+        [validOutages[0].latitude, validOutages[0].longitude],
+        13,
+        { animate: true }
+      );
+      return;
+    }
 
-useEffect(() => {
-  setMounted(true);
-}, []);
+    const bounds = L.latLngBounds(
+      validOutages.map((o) => [o.latitude, o.longitude] as [number, number])
+    );
 
-if (!mounted) {
-  return (
-    <div className="h-[420px] md:h-[520px] w-full rounded-xl bg-muted animate-pulse flex items-center justify-center">
-      <p className="text-sm text-muted-foreground">
-        Loading community map...
-      </p>
-    </div>
-  );
+    map.fitBounds(bounds, {
+      padding: [40, 40],
+      animate: true,
+    });
+  }, [map, outages]);
+
+  return null;
 }
 
+export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
+  const [mounted, setMounted] = useState(false);
+
+  const communities = buildCommunities(outages);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="h-[420px] md:h-[520px] w-full rounded-xl bg-muted animate-pulse flex items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading community map...</p>
+      </div>
+    );
+  }
+
+  console.log("Outages received:", outages);
+
   return (
-    <MapContainer
-      center={[9.082, 8.6753]}
-      zoom={6}
-      className="h-96 w-full rounded-xl"
-    >
+    <MapContainer center={[9.082, 8.6753]} zoom={6} className="h-96 w-full rounded-xl z-0">
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {outages.map((o) => (
-        <Marker
-          key={o.id}
-          position={[o.latitude, o.longitude]}
-          icon={marker}
-        >
-          <Popup>
-            <strong>{o.area}</strong>
+      <FitBounds outages={outages} />
 
-            <br />
-
-            {o.discoCode}
-
-            <br />
-
-            {o.status}
-          </Popup>
-        </Marker>
-      ))}
+      <>
+  {communities.map((community) => (
+    <Marker
+      key={community.area}
+      position={[
+  community.latitude,
+  community.longitude,
+]}
+      icon={createMarker(
+  community.status === "Power ON"
+    ? "RESTORED"
+    : "CONFIRMED"
+)}
+    >
+      
+        <Popup>
+   <CommunityMapPopup community={community} />
+</Popup>
+    </Marker>
+  ))}
+</>
     </MapContainer>
   );
 }

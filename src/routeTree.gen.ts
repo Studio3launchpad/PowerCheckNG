@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as AppOutagesRouteImport } from './routes/_app.outages'
+import { Route as AppHistoryRouteImport } from './routes/_app.history'
 import { Route as AppEnergyRouteImport } from './routes/_app.energy'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppConsumptionRouteImport } from './routes/_app.consumption'
@@ -43,6 +44,11 @@ const AppOutagesRoute = AppOutagesRouteImport.update({
   path: '/outages',
   getParentRoute: () => AppRoute,
 } as any)
+const AppHistoryRoute = AppHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppEnergyRoute = AppEnergyRouteImport.update({
   id: '/energy',
   path: '/energy',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/consumption': typeof AppConsumptionRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
+  '/history': typeof AppHistoryRoute
   '/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/consumption': typeof AppConsumptionRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
+  '/history': typeof AppHistoryRoute
   '/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/_app/consumption': typeof AppConsumptionRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/energy': typeof AppEnergyRoute
+  '/_app/history': typeof AppHistoryRoute
   '/_app/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/consumption'
     | '/dashboard'
     | '/energy'
+    | '/history'
     | '/outages'
     | '/sign-in/$'
     | '/sign-up/$'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/consumption'
     | '/dashboard'
     | '/energy'
+    | '/history'
     | '/outages'
     | '/sign-in/$'
     | '/sign-up/$'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/_app/consumption'
     | '/_app/dashboard'
     | '/_app/energy'
+    | '/_app/history'
     | '/_app/outages'
     | '/sign-in/$'
     | '/sign-up/$'
@@ -174,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOutagesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/history': {
+      id: '/_app/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof AppHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/energy': {
       id: '/_app/energy'
       path: '/energy'
@@ -210,6 +229,7 @@ interface AppRouteChildren {
   AppConsumptionRoute: typeof AppConsumptionRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEnergyRoute: typeof AppEnergyRoute
+  AppHistoryRoute: typeof AppHistoryRoute
   AppOutagesRoute: typeof AppOutagesRoute
 }
 
@@ -218,6 +238,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConsumptionRoute: AppConsumptionRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEnergyRoute: AppEnergyRoute,
+  AppHistoryRoute: AppHistoryRoute,
   AppOutagesRoute: AppOutagesRoute,
 }
 

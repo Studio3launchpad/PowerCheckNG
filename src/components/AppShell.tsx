@@ -74,9 +74,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 relative z-0">
           {/* Mobile top bar */}
-          <div className="lg:hidden glass rounded-2xl px-4 py-3 mb-4 flex items-center justify-between">
+          <div className="lg:hidden sticky top-0 z-50 glass rounded-2xl px-4 py-3 mb-4 flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
               <div className="size-7 rounded-md bg-primary glow-primary flex items-center justify-center">
                 <Zap className="size-3.5 text-primary-foreground" />

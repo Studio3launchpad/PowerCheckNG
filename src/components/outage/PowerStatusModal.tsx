@@ -18,8 +18,8 @@ export function PowerStatusModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0D171B] p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2">
+      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0D171B] p-3 shadow-2xl">
 
         <div className="flex items-start justify-between">
 
@@ -31,7 +31,7 @@ export function PowerStatusModal({
               </h2>
             </div>
 
-            <p className="mt-3 text-sm text-muted-foreground leading-6">
+            <p className="mt-2 text-sm text-muted-foreground leading-6">
               PowerCheckNG relies on community reports to provide live
               electricity updates.
             </p>
@@ -42,19 +42,19 @@ export function PowerStatusModal({
           </button>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-4">
 
-          <p className="text-sm font-medium mb-4">
+          <p className="text-sm font-medium mb-3">
             What is the current electricity status where you are?
           </p>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
 
             <button
               onClick={() => onSelect("ON")}
-              className="w-full rounded-xl bg-green-600 hover:bg-green-700 p-4 text-left transition"
+              className="w-full rounded-xl bg-green-600 hover:bg-green-700 py-3 px-4 text-left transition"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Power />
                 <span className="font-semibold">Power ON</span>
               </div>
@@ -62,9 +62,9 @@ export function PowerStatusModal({
 
             <button
               onClick={() => onSelect("OFF")}
-              className="w-full rounded-xl bg-red-600 hover:bg-red-700 p-4 text-left transition"
+              className="w-full rounded-xl bg-red-600 hover:bg-red-700 py-3 px-4 text-left transition"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Power />
                 <span className="font-semibold">Power OFF</span>
               </div>
@@ -72,9 +72,9 @@ export function PowerStatusModal({
 
             <button
               onClick={() => onSelect("NOT_SURE")}
-              className="w-full rounded-xl border border-border hover:border-primary p-4 text-left transition"
+              className="w-full rounded-xl border border-border hover:border-primary py-3 px-4 text-left transition"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <HelpCircle />
                 <span className="font-semibold">Not Sure</span>
               </div>
@@ -82,9 +82,9 @@ export function PowerStatusModal({
 
           </div>
 
-          <div className="mt-8 rounded-xl bg-primary/10 border border-primary/20 p-4">
+          <div className="mt-4 rounded-xl bg-primary/10 border border-primary/20 p-2">
 
-            <div className="flex gap-3">
+            <div className="flex gap-2">
 
               <MapPin className="text-primary mt-1" size={18} />
 
