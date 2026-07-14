@@ -1,6 +1,6 @@
 import { GlassCard } from "@/components/GlassCard";
 import { CommunityPowerMap } from "@/components/outage/CommunityPowerMap";
-import type { Outage } from "@/lib/outages.types";
+import type { Outage } from "@/lib/outage/outages.types";
 
 type Props = {
   outages: Outage[];

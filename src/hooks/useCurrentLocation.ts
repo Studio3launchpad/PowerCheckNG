@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { resolveLocation } from "@/lib/geoResolver";
+import { resolveLocation } from "@/lib/outage/geoResolver";
 
 
 export function useCurrentLocation() {
@@ -12,6 +12,7 @@ export function useCurrentLocation() {
     state: "",
     lga: "",
     area: "",
+    discoCode: "UNKNOWN",
   });
 
   const reverseGeocode = async (latitude: number, longitude: number) => {
@@ -21,7 +22,6 @@ export function useCurrentLocation() {
       );
 
       const data = await response.json();
-      console.log("Reverse Geocode Response:", data);
 
       return {
         state: data.address?.state || "",
@@ -58,16 +58,19 @@ export function useCurrentLocation() {
 
         const address = await reverseGeocode(latitude, longitude);
 
-// Use our own resolver first
-const resolved = resolveLocation(latitude, longitude);
+        // Use our own resolver first
+        const resolved = resolveLocation(latitude, longitude);
 
-setLocation({
-  latitude,
-  longitude,
-  state: resolved?.state ?? address.state,
-  lga: resolved?.lga ?? address.lga,
-  area: resolved?.area ?? address.area,
-});
+        console.log("Resolved Location:", resolved);
+
+        setLocation({
+          latitude,
+          longitude,
+          state: resolved?.state ?? address.state,
+          lga: resolved?.lga ?? address.lga,
+          area: resolved?.area ?? address.area,
+          discoCode: resolved?.discoCode ?? "UNKNOWN",
+        });
 
         setShowPowerModal(true);
       },

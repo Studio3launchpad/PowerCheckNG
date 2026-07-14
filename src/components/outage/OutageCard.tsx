@@ -1,9 +1,9 @@
 import { GlassCard } from "@/components/GlassCard";
 import { Clock, MapPin, ThumbsUp } from "lucide-react";
 import { ConfidenceBar } from "@/components/outage/ConfidenceBar";
-import { timeAgo } from "@/lib/outages.utils";
-import type { Outage } from "@/lib/outages.types";
-import { STATUS_STYLES } from "@/lib/outages.constants";
+import { timeAgo } from "@/lib/outage/outages.utils";
+import type { Outage } from "@/lib/outage/outages.types";
+import { STATUS_STYLES } from "@/lib/outage/outages.constants";
 
 type Props = {
   outage: Outage;

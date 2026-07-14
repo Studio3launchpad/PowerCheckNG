@@ -1,16 +1,16 @@
+export type PowerStatus =
+  | "POWER_OFF"
+  | "POWER_ON"
+  | "NOT_SURE";
+
 export type FormValues = {
   area: string;
   discoCode: string;
   latitude: number;
   longitude: number;
+  status: PowerStatus;
   description?: string;
 };
-
-export type OutageStatus =
-  | "REPORTED"
-  | "CONFIRMED"
-  | "RESTORED"
-  | "CANCELLED";
 
 export interface Outage {
   id: string;
@@ -18,7 +18,7 @@ export interface Outage {
   discoCode: string;
   latitude: number;
   longitude: number;
-  status: OutageStatus;
+  status: PowerStatus;
   confirmations: number;
   startedAt: string;
   description?: string;

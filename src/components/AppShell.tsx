@@ -15,7 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/outage/utils";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -76,7 +76,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {/* Main */}
         <main className="flex-1 min-w-0 relative z-0">
           {/* Mobile top bar */}
-          <div className="lg:hidden sticky top-0 z-50 glass rounded-2xl px-4 py-3 mb-4 flex items-center justify-between">
+          <div className="lg:hidden relative z-40 glass rounded-2xl px-4 py-3 mb-4 flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
               <div className="size-7 rounded-md bg-primary glow-primary flex items-center justify-center">
                 <Zap className="size-3.5 text-primary-foreground" />

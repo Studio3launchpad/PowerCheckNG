@@ -8,11 +8,12 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { ClerkProvider } from "@clerk/tanstack-react-start";
-import { useEffect, type ReactNode } from "react";
-
+import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
-
+import { Toaster } from "sonner";
 import { getClerkPublishableKey } from "../lib/clerk-config.functions";
+
+
 
 function NotFoundComponent() {
   return (
@@ -39,7 +40,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-
 
   return (
     <div className="flex min-h-screen items-center justify-center grid-bg px-4">
@@ -79,8 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "PowerCheckNG — Power, in your hands." },
       {
         name: "description",
-        content:
-          "Track outages, and monitor your consumption in real-time -all in one place.",
+        content: "Track outages, and monitor your consumption in real-time -all in one place.",
       },
       { property: "og:title", content: "PowerCheckNG" },
       {
@@ -124,16 +123,25 @@ function RootComponent() {
   const { publishableKey } = Route.useLoaderData();
 
   const tree = (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  <QueryClientProvider client={queryClient}>
+    <Outlet />
 
+    <Toaster
+      position="top-center"
+      richColors
+      duration={5000}
+      closeButton
+    />
+  </QueryClientProvider>
+);
   // Render without Clerk if key is missing so the app still boots in dev preview.
   if (!publishableKey) return tree;
 
   return (
-    <ClerkProvider publishableKey={publishableKey} appearance={{ variables: { colorPrimary: "#00C853" } }}>
+    <ClerkProvider
+      publishableKey={publishableKey}
+      appearance={{ variables: { colorPrimary: "#00C853" } }}
+    >
       {tree}
     </ClerkProvider>
   );

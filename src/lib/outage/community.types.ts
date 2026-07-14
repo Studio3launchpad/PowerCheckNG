@@ -1,3 +1,8 @@
+export type CommunityPowerStatus =
+  | "Power ON"
+  | "Power OFF"
+  | "Needs Confirmation";
+
 export type CommunityStatus = {
   area: string;
   state?: string;
@@ -9,10 +14,11 @@ export type CommunityStatus = {
 
   powerOn: number;
   powerOff: number;
+  notSure: number;
 
   confidence: number;
 
-  status: "Power ON" | "Power OFF";
+  status: CommunityPowerStatus;
 
   lastUpdated: string;
 };

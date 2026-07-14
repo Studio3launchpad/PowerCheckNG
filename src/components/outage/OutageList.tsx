@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { OutageCard } from "./OutageCard";
-import type { Outage } from "@/lib/outages.types";
+import type { Outage } from "@/lib/outage/outages.types";
 
 type Props = {
   outages: Outage[];
@@ -13,7 +13,7 @@ type Props = {
 export function OutageList({
   outages,
   title = "Recent Community Activity",
-  subtitle = "Showing the latest 10 community reports",
+  subtitle = "Showing recent community reports",
   limit,
   showViewAll = true,
 }: Props) {

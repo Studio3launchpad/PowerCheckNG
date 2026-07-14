@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { prisma } from "./prisma.server";
+import { prisma } from "./outage/prisma.server";
 import { ensureUser, getUserId, requireUserId } from "./clerk.server";
 
 // Flat tariff estimate (NGN per kWh). Real Band A/B/C/D rates can be wired

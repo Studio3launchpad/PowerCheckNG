@@ -73,7 +73,7 @@ model OutageReport {
   discoCode   String
   latitude    Float
   longitude   Float
-  status      OutageStatus  @default(REPORTED)
+  status      OutageStatus  @default(NOT_SURE)
   description String?
   startedAt   DateTime      @default(now())
   restoredAt  DateTime?
@@ -86,10 +86,9 @@ model OutageReport {
 }
 
 enum OutageStatus {
-  REPORTED
-  CONFIRMED
-  RESTORED
-  CANCELLED
+  POWER_OFF
+  POWER_ON
+  NOT_SURE
 }
 
 // ---------- Consumption ----------

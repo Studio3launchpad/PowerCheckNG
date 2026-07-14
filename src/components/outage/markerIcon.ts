@@ -1,38 +1,25 @@
 import L from "leaflet";
+import type { PowerStatus } from "@/lib/outage/outages.types";
 
-export function createMarker(status: string) {
-  const color =
-    status === "RESTORED"
-      ? "#22c55e" // green
-      : status === "CONFIRMED"
-      ? "#ef4444" // red
-      : status === "REPORTED"
-      ? "#f59e0b" // amber
-      : "#6b7280"; // gray
+export function createMarker(
+  status: PowerStatus,
+) {
+  const markerClass =
+    status === "POWER_ON"
+      ? "community-marker community-marker-on"
+      : status === "POWER_OFF"
+        ? "community-marker community-marker-off"
+        : "community-marker community-marker-unknown";
 
   return L.divIcon({
     className: "",
     html: `
-      <div
-        style="
-          width:32px;
-          height:32px;
-          border-radius:50%;
-          background:${color};
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          color:white;
-          font-size:18px;
-          font-weight:bold;
-          box-shadow:0 0 12px ${color};
-          border:2px solid white;
-        "
-      >
+      <div class="${markerClass}">
         ⚡
       </div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
+    popupAnchor: [0, -22],
   });
 }

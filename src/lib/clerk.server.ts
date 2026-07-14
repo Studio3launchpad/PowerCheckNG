@@ -1,6 +1,6 @@
 // Clerk server helpers. Read auth state inside server-fn handlers only.
 import { auth, clerkClient } from "@clerk/tanstack-react-start/server";
-import { prisma } from "./prisma.server";
+import { prisma } from "./outage/prisma.server";
 
 export async function requireUserId(): Promise<string> {
   const { userId } = await auth();

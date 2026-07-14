@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import { createMarker } from "@/components/outage/markerIcon";
-import { buildCommunities } from "@/lib/communityAggregation";
-import type { Outage } from "@/lib/outages.types";
-import { CommunityMapPopup } from "@/components/outage/CommunityMapPopUp";
+import { buildCommunities } from "@/lib/outage/communityAggregation";
+import type { Outage } from "@/lib/outage/outages.types";
+import { CommunityMapPopup } from "@/components/outage/CommunityMapPopup";
 
 function FitBounds({ outages }: { outages: Outage[] }) {
   const map = useMap();
@@ -18,22 +18,18 @@ function FitBounds({ outages }: { outages: Outage[] }) {
         typeof o.latitude === "number" &&
         typeof o.longitude === "number" &&
         !Number.isNaN(o.latitude) &&
-        !Number.isNaN(o.longitude)
+        !Number.isNaN(o.longitude),
     );
 
     if (validOutages.length === 0) return;
 
     if (validOutages.length === 1) {
-      map.setView(
-        [validOutages[0].latitude, validOutages[0].longitude],
-        13,
-        { animate: true }
-      );
+      map.setView([validOutages[0].latitude, validOutages[0].longitude], 13, { animate: true });
       return;
     }
 
     const bounds = L.latLngBounds(
-      validOutages.map((o) => [o.latitude, o.longitude] as [number, number])
+      validOutages.map((o) => [o.latitude, o.longitude] as [number, number]),
     );
 
     map.fitBounds(bounds, {
@@ -62,10 +58,15 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
     );
   }
 
-  console.log("Outages received:", outages);
+
 
   return (
-    <MapContainer center={[9.082, 8.6753]} zoom={6} className="h-96 w-full rounded-xl z-0">
+    <div className="relative z-0 overflow-hidden rounded-xl">
+    <MapContainer
+      center={[9.082, 8.6753]}
+      zoom={6}
+      className="h-96 w-full z-0"
+    >
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -74,26 +75,25 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
       <FitBounds outages={outages} />
 
       <>
-  {communities.map((community) => (
-    <Marker
-      key={community.area}
-      position={[
-  community.latitude,
-  community.longitude,
-]}
-      icon={createMarker(
-  community.status === "Power ON"
-    ? "RESTORED"
-    : "CONFIRMED"
-)}
-    >
-      
-        <Popup>
-   <CommunityMapPopup community={community} />
-</Popup>
-    </Marker>
-  ))}
-</>
+        {communities.map((community) => (
+          <Marker
+            key={community.area}
+            position={[community.latitude, community.longitude]}
+            icon={createMarker(
+              community.status === "Power ON"
+                ? "POWER_ON"
+                : community.status === "Power OFF"
+                  ? "POWER_OFF"
+                  : "NOT_SURE",
+            )}
+          >
+            <Popup>
+              <CommunityMapPopup community={community} />
+            </Popup>
+          </Marker>
+        ))}
+      </>
     </MapContainer>
+     </div>
   );
 }
