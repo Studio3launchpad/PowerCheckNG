@@ -1,13 +1,23 @@
 import type { Outage } from "@/lib/outage/outages.types";
 
 export type AvailabilityPeriod = {
-  key: "overnight" | "morning" | "afternoon" | "evening";
+  key:
+    | "overnight"
+    | "morning"
+    | "afternoon"
+    | "evening";
+
   label: string;
   timeRange: string;
+
   powerOn: number;
   powerOff: number;
+
   definiteReports: number;
+
   availability: number;
+
+  reliabilityScore: number;
 };
 
 const periods = [
@@ -45,30 +55,39 @@ export function analyzePowerAvailability(
   outages: Outage[],
 ): AvailabilityPeriod[] {
   return periods.map((period) => {
-    const periodReports = outages.filter((outage) => {
-      const reportDate = new Date(outage.startedAt);
+    const periodReports = outages.filter(
+      (outage) => {
+        const reportDate = new Date(
+          outage.startedAt,
+        );
 
-      if (Number.isNaN(reportDate.getTime())) {
-        return false;
-      }
+        if (
+          Number.isNaN(reportDate.getTime())
+        ) {
+          return false;
+        }
 
-      const hour = reportDate.getHours();
+        const hour = reportDate.getHours();
 
-      return (
-        hour >= period.startHour &&
-        hour <= period.endHour
-      );
-    });
+        return (
+          hour >= period.startHour &&
+          hour <= period.endHour
+        );
+      },
+    );
 
     const powerOn = periodReports.filter(
-      (outage) => outage.status === "POWER_ON",
+      (outage) =>
+        outage.status === "POWER_ON",
     ).length;
 
     const powerOff = periodReports.filter(
-      (outage) => outage.status === "POWER_OFF",
+      (outage) =>
+        outage.status === "POWER_OFF",
     ).length;
 
-    const definiteReports = powerOn + powerOff;
+    const definiteReports =
+      powerOn + powerOff;
 
     const availability =
       definiteReports === 0
@@ -76,6 +95,22 @@ export function analyzePowerAvailability(
         : Math.round(
             (powerOn / definiteReports) * 100,
           );
+
+    /*
+     * Confidence-aware historical score.
+     *
+     * Availability is weighted by report volume so
+     * one 100% report does not automatically outrank
+     * a period supported by many community reports.
+     */
+    const sampleWeight = Math.min(
+      definiteReports / 5,
+      1,
+    );
+
+    const reliabilityScore = Math.round(
+      availability * sampleWeight,
+    );
 
     return {
       key: period.key,
@@ -85,6 +120,7 @@ export function analyzePowerAvailability(
       powerOff,
       definiteReports,
       availability,
+      reliabilityScore,
     };
   });
 }

@@ -46,6 +46,8 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
 
   const communities = buildCommunities(outages);
 
+  
+
   useEffect(() => {
     setMounted(true);
   }, []);

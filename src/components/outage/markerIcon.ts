@@ -22,4 +22,5 @@ export function createMarker(
     iconAnchor: [22, 22],
     popupAnchor: [0, -22],
   });
+
 }

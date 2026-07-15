@@ -1,5 +1,6 @@
 import type { Outage } from "./outages.types";
 import { calculateDistance } from "@/lib/outage/outages.utils";
+import { CURRENT_POWER_WINDOW_MS } from "@/lib/outage/outages.constants";
 
 type Location = {
   latitude: number;
@@ -11,16 +12,23 @@ export function calculateCommunityPower(
   outages: Outage[],
 ) {
   const nearbyReports = outages
-    .filter((outage) => {
-      const distance = calculateDistance(
-        location.latitude,
-        location.longitude,
-        outage.latitude,
-        outage.longitude,
-      );
+  .filter((outage) => {
+    const distance = calculateDistance(
+      location.latitude,
+      location.longitude,
+      outage.latitude,
+      outage.longitude,
+    );
 
-      return distance <= 500;
-    })
+    const reportAge =
+      Date.now() -
+      new Date(outage.startedAt).getTime();
+
+    const isRecent =
+      reportAge <= CURRENT_POWER_WINDOW_MS;
+
+    return distance <= 500 && isRecent;
+  })
     .sort(
       (a, b) =>
         new Date(b.startedAt).getTime() -

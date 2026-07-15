@@ -9,17 +9,19 @@ export function CommunityStats({ outages }: Props) {
   const today = new Date().toDateString();
 
   const reportsToday = outages.filter(
-    (o) => new Date(o.startedAt).toDateString() === today,
+    (outage) =>
+      new Date(outage.startedAt).toDateString() ===
+      today,
+  );
+
+  const powerOffToday = reportsToday.filter(
+    (outage) =>
+      outage.status === "POWER_OFF",
   ).length;
 
-  const activeOutages = outages.filter(
-    (o) => o.status === "POWER_OFF",
-  ).length;
-
-  const restoredToday = outages.filter(
-    (o) =>
-      o.status === "POWER_ON" &&
-      new Date(o.startedAt).toDateString() === today,
+  const powerOnToday = reportsToday.filter(
+    (outage) =>
+      outage.status === "POWER_ON",
   ).length;
 
   return (
@@ -31,27 +33,27 @@ export function CommunityStats({ outages }: Props) {
           </p>
 
           <h2 className="text-2xl font-bold">
-            {reportsToday}
+            {reportsToday.length}
           </h2>
         </div>
 
         <div>
           <p className="text-xs text-muted-foreground">
-            Active Outages
+            Power OFF Today
           </p>
 
           <h2 className="text-2xl font-bold text-red-500">
-            {activeOutages}
+            {powerOffToday}
           </h2>
         </div>
 
         <div>
           <p className="text-xs text-muted-foreground">
-            Restored Today
+            Power ON Today
           </p>
 
           <h2 className="text-2xl font-bold text-green-500">
-            {restoredToday}
+            {powerOnToday}
           </h2>
         </div>
       </div>

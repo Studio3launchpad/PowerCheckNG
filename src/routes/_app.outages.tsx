@@ -1,9 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  queryOptions,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery, queryOptions } from "@tanstack/react-query";
 import { GlassCard } from "@/components/GlassCard";
 import { LiveOutageMap } from "@/components/outage/LiveOutageMap";
 import { PowerStatusModal } from "@/components/outage/PowerStatusModal";
@@ -14,12 +10,13 @@ import { listOutages } from "@/lib/outage/outages.functions";
 import { calculateCommunityPower } from "@/lib/outage/communitypower";
 import { useCurrentLocation } from "@/hooks/useCurrentLocation";
 import { useOutageReporting } from "@/hooks/useOutageReporting";
-import { PowerAvailabilityInsights } from "@/components/outage/PowerAvailabilityInsights";
+import { PowerAvailabilityOutlook } from "@/components/outage/PowerAvailabilityOutlook";
 
 const outagesQO = queryOptions({
   queryKey: ["outages"],
   queryFn: () => listOutages(),
-  refetchInterval: 60000,
+  staleTime: 30_000,
+  refetchInterval: 60_000,
 });
 
 export const Route = createFileRoute("/_app/outages")({
@@ -31,40 +28,24 @@ export const Route = createFileRoute("/_app/outages")({
     ],
   }),
 
-  loader: ({ context }) =>
-    context.queryClient.ensureQueryData(outagesQO),
-
   component: OutagesPage,
 });
 
 function OutagesPage() {
-  const {
-    data,
-    refetch,
-    isFetching,
-  } = useSuspenseQuery(outagesQO);
+  const { data, refetch, isFetching, isPending } = useQuery(outagesQO);
 
-  const {
-    location,
-    showPowerModal,
-    setShowPowerModal,
-    getCurrentLocation,
-  } = useCurrentLocation();
+  const outages = data?.outages ?? [];
+
+  const { location, showPowerModal, setShowPowerModal, getCurrentLocation, isLocating } =
+    useCurrentLocation();
 
   const reportPower = useOutageReporting();
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, []);
 
-  const {
-    reportCount,
-    confidence,
-    currentStatus,
-  } = calculateCommunityPower(
-    location,
-    data.outages,
-  );
+  const { reportCount, confidence, currentStatus } = calculateCommunityPower(location, outages);
 
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
@@ -72,22 +53,23 @@ function OutagesPage() {
         onUpdateLocation={getCurrentLocation}
         onRefresh={refetch}
         isRefreshing={isFetching}
+        isLocating={isLocating}
       />
+
+      {isPending && (
+        <div className="rounded-xl border border-border bg-card/40 px-4 py-3">
+          <p className="text-sm text-muted-foreground">Loading community power reports...</p>
+        </div>
+      )}
 
       <GlassCard>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-muted-foreground">
-              Your Area
-            </p>
+            <p className="text-xs text-muted-foreground">Your Area</p>
 
-            <h2 className="text-xl font-bold mt-1">
-              {location.area}
-            </h2>
+            <h2 className="text-xl font-bold mt-1">{location.area}</h2>
 
-            <p className="text-sm text-muted-foreground">
-              {location.state}
-            </p>
+            <p className="text-sm text-muted-foreground">{location.state}</p>
           </div>
 
           <div className="text-right">
@@ -104,31 +86,30 @@ function OutagesPage() {
             </p>
 
             <div className="mt-2">
-              <p className="text-sm font-semibold">
-                Confidence: {confidence}%
-              </p>
+              <p className="text-sm font-semibold">Confidence: {confidence}%</p>
 
               <p className="text-xs text-muted-foreground">
-                {reportCount} nearby community reports
+                {reportCount} recent community {reportCount === 1 ? "report" : "reports"}
               </p>
             </div>
           </div>
         </div>
       </GlassCard>
 
-      <CommunityStats outages={data.outages} />
+      {!isPending && (
+        <>
+          <CommunityStats outages={outages} />
 
-      <LiveOutageMap outages={data.outages} />
+          <LiveOutageMap outages={outages} />
 
-      <PowerAvailabilityInsights
-  outages={data.outages}
+          <PowerAvailabilityOutlook
+  outages={outages}
   area={location.area}
 />
 
-      <OutageList
-        outages={data.outages}
-        limit={10}
-      />
+          <OutageList outages={outages} limit={10} />
+        </>
+      )}
 
       <PowerStatusModal
         open={showPowerModal}
@@ -142,12 +123,7 @@ function OutagesPage() {
             latitude: location.latitude,
             longitude: location.longitude,
 
-            status:
-              status === "OFF"
-                ? "POWER_OFF"
-                : status === "ON"
-                  ? "POWER_ON"
-                  : "NOT_SURE",
+            status: status === "OFF" ? "POWER_OFF" : status === "ON" ? "POWER_ON" : "NOT_SURE",
 
             description: `Community reported: ${status}`,
           });

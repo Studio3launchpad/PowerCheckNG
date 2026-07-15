@@ -1,12 +1,18 @@
-import { Zap, Plus, RefreshCcw } from "lucide-react";
+import { Zap, Plus, RefreshCcw, LoaderCircle } from "lucide-react";
 
 type OutageHeaderProps = {
   onUpdateLocation: () => void;
   onRefresh: () => void;
   isRefreshing: boolean;
+  isLocating: boolean;
 };
 
-export function OutageHeader({ onUpdateLocation, onRefresh, isRefreshing }: OutageHeaderProps) {
+export function OutageHeader({
+  onUpdateLocation,
+  onRefresh,
+  isRefreshing,
+  isLocating,
+}: OutageHeaderProps) {
   return (
     <header className="flex items-end justify-between flex-wrap gap-3">
       <div>
@@ -22,11 +28,20 @@ export function OutageHeader({ onUpdateLocation, onRefresh, isRefreshing }: Outa
 
       <div className="flex gap-2">
         <button
+  type="button"
   onClick={onUpdateLocation}
-  className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 glow-primary"
+  disabled={isLocating}
+  className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70 glow-primary"
 >
-  <Plus className="size-4" />
-  Update My Power Status
+  {isLocating ? (
+    <LoaderCircle className="size-4 animate-spin" />
+  ) : (
+    <Plus className="size-4" />
+  )}
+
+  {isLocating
+    ? "Getting Location..."
+    : "Update My Power Status"}
 </button>
 
         <button

@@ -1,4 +1,4 @@
-import { Check, Plus } from "lucide-react";
+import { Check, Plus, Trash2 } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 import type { Appliance } from "@/lib/energy/energy.types";
 import { useState } from "react";
@@ -13,6 +13,7 @@ type Props = {
     value: number,
   ) => void;
   onAddAppliance: (appliance: Appliance) => void;
+  onRemoveAppliance: (id: string) => void;
 };
 
 export function ApplianceSelector({
@@ -20,6 +21,7 @@ export function ApplianceSelector({
   onToggle,
   onUpdate,
   onAddAppliance,
+  onRemoveAppliance,
 }: Props) {
   const [showCustomForm, setShowCustomForm] = useState(false);
 
@@ -39,38 +41,52 @@ export function ApplianceSelector({
       <div className="space-y-3">
         {appliances.map((appliance) => (
           <div
-            key={appliance.name}
+            key={appliance.id}
             className="rounded-xl border border-border bg-background/30 p-4"
           >
-            <div className="flex items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={() => onToggle(appliance.name)}
-                className="flex min-w-0 items-center gap-3 text-left"
-              >
-                <div
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
-                    appliance.selected
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-background"
-                  }`}
-                >
-                  {appliance.selected && (
-                    <Check className="h-4 w-4" />
-                  )}
-                </div>
+           <div className="flex items-center justify-between gap-4">
+  <button
+    type="button"
+    onClick={() => onToggle(appliance.name)}
+    className="flex min-w-0 items-center gap-3 text-left"
+  >
+    <div
+      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
+        appliance.selected
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-background"
+      }`}
+    >
+      {appliance.selected && (
+        <Check className="h-4 w-4" />
+      )}
+    </div>
 
-                <div className="min-w-0">
-                  <p className="font-semibold">
-                    {appliance.name}
-                  </p>
+    <div className="min-w-0">
+      <p className="font-semibold">
+        {appliance.name}
+      </p>
 
-                  <p className="text-xs text-muted-foreground">
-                    {appliance.watts}W
-                  </p>
-                </div>
-              </button>
-            </div>
+      <p className="text-xs text-muted-foreground">
+        {appliance.watts}W
+      </p>
+    </div>
+  </button>
+
+  <button
+    type="button"
+    onClick={(event) => {
+      event.stopPropagation();
+
+      onRemoveAppliance(appliance.id);
+    }}
+    aria-label={`Remove ${appliance.name}`}
+    title={`Remove ${appliance.name}`}
+    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-red-500/10 hover:text-red-500"
+  >
+    <Trash2 className="h-4 w-4" />
+  </button>
+</div>
 
             {appliance.selected && (
               <div className="mt-4 grid gap-3 sm:grid-cols-3">

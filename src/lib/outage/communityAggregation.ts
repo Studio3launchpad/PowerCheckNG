@@ -1,21 +1,65 @@
 import type { Outage } from "@/lib/outage/outages.types";
 import type { CommunityStatus } from "./community.types";
+import { CURRENT_POWER_WINDOW_MS } from "@/lib/outage/outages.constants";
+import { resolveLocation } from "@/lib/outage/geoResolver";
 
 export function buildCommunities(
   outages: Outage[],
 ): CommunityStatus[] {
-  const communities = new Map<string, CommunityStatus>();
+  const communities = new Map<
+    string,
+    CommunityStatus
+  >();
 
-  for (const outage of outages) {
-    const key = outage.area.trim().toLowerCase();
+  const recentOutages = outages.filter(
+    (outage) => {
+      const reportTime = new Date(
+        outage.startedAt,
+      ).getTime();
+
+      if (Number.isNaN(reportTime)) {
+        return false;
+      }
+
+      const reportAge =
+        Date.now() - reportTime;
+
+      return (
+        reportAge >= 0 &&
+        reportAge <= CURRENT_POWER_WINDOW_MS
+      );
+    },
+  );
+
+  for (const outage of recentOutages) {
+    const resolvedLocation = resolveLocation(
+      outage.latitude,
+      outage.longitude,
+    );
+
+    const canonicalArea =
+      resolvedLocation?.area ?? outage.area;
+
+    const canonicalState =
+      resolvedLocation?.state ?? "";
+
+    const canonicalLatitude =
+      outage.latitude;
+
+    const canonicalLongitude =
+      outage.longitude;
+
+    const key = canonicalArea
+      .trim()
+      .toLowerCase();
 
     if (!communities.has(key)) {
       communities.set(key, {
-        area: outage.area,
-        state: "",
+        area: canonicalArea,
+        state: canonicalState,
 
-        latitude: outage.latitude,
-        longitude: outage.longitude,
+        latitude: canonicalLatitude,
+        longitude: canonicalLongitude,
 
         reports: 0,
 
@@ -49,22 +93,31 @@ export function buildCommunities(
 
     if (
       new Date(outage.startedAt).getTime() >
-      new Date(community.lastUpdated).getTime()
+      new Date(
+        community.lastUpdated,
+      ).getTime()
     ) {
-      community.lastUpdated = outage.startedAt;
+      community.lastUpdated =
+        outage.startedAt;
     }
   }
 
   for (const community of communities.values()) {
     const definiteReports =
-      community.powerOn + community.powerOff;
+      community.powerOn +
+      community.powerOff;
 
     if (
       definiteReports === 0 ||
-      community.powerOn === community.powerOff
+      community.powerOn ===
+        community.powerOff
     ) {
-      community.status = "Needs Confirmation";
-    } else if (community.powerOn > community.powerOff) {
+      community.status =
+        "Needs Confirmation";
+    } else if (
+      community.powerOn >
+      community.powerOff
+    ) {
       community.status = "Power ON";
     } else {
       community.status = "Power OFF";
@@ -78,12 +131,17 @@ export function buildCommunities(
     community.confidence =
       definiteReports > 0
         ? Math.round(
-            (majority / definiteReports) * 100,
+            (majority /
+              definiteReports) *
+              100,
           )
         : 0;
   }
 
-  return Array.from(communities.values()).sort(
-    (a, b) => b.reports - a.reports,
+  return Array.from(
+    communities.values(),
+  ).sort(
+    (a, b) =>
+      b.reports - a.reports,
   );
 }

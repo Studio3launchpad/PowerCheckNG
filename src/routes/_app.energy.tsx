@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Brain} from "lucide-react";
 import { analyzeEnergyPlan } from "@/lib/energy/energyPlanner";
@@ -7,13 +7,14 @@ import type {Appliance, EnergyAnalysis} from "@/lib/energy/energy.types";
 import { ApplianceSelector } from "@/components/energy/ApplianceSelector";
 import { EnergyBudgetInput } from "@/components/energy/EnergyBudgetInput";
 import { EnergyAnalysisResults } from "@/components/energy/EnergyAnalysisResults";
-import {
-  loadSavedAppliances,
-  loadSavedBudget,
-  saveAppliances,
-  saveBudget,
-} from "@/lib/energy/energyStorage";
+import {loadSavedAppliances, loadSavedBudget, saveAppliances, saveBudget } from "@/lib/energy/energyStorage";
 
+
+const ANALYSIS_SESSION_KEY =
+  "powercheckng-energy-analysis-timestamp";
+
+const ANALYSIS_EXPIRY_MS =
+  30 * 60 * 1000;
 
 export const Route = createFileRoute("/_app/energy")({
   component: SmartEnergyPlanner,
@@ -37,20 +38,67 @@ function SmartEnergyPlanner() {
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  const clearAnalysis = () => {
+  setAnalysis(null);
+
+  if (typeof window !== "undefined") {
+    window.sessionStorage.removeItem(
+      ANALYSIS_SESSION_KEY,
+    );
+  }
+};
+
   useEffect(() => {
   const savedAppliances = loadSavedAppliances();
   const savedBudget = loadSavedBudget();
 
-  if (
+  const restoredAppliances =
     savedAppliances &&
     savedAppliances.length > 0
-  ) {
-    setAppliances(savedAppliances);
-  }
+      ? savedAppliances
+      : DEFAULT_APPLIANCES.map((appliance) => ({
+          ...appliance,
+        }));
 
-  if (savedBudget !== null) {
-    setBudget(savedBudget);
+  const restoredBudget =
+    savedBudget !== null
+      ? savedBudget
+      : "25000";
+
+  setAppliances(restoredAppliances);
+  setBudget(restoredBudget);
+
+  const analysisTimestamp =
+  window.sessionStorage.getItem(
+    ANALYSIS_SESSION_KEY,
+  );
+
+const analysisTime = Number(analysisTimestamp);
+
+const analysisIsRecent =
+  Number.isFinite(analysisTime) &&
+  Date.now() - analysisTime <
+    ANALYSIS_EXPIRY_MS;
+
+if (analysisIsRecent) {
+  const budgetValue = Number(restoredBudget);
+
+  if (
+    Number.isFinite(budgetValue) &&
+    budgetValue > 0
+  ) {
+    const restoredAnalysis = analyzeEnergyPlan(
+      restoredAppliances,
+      budgetValue,
+    );
+
+    setAnalysis(restoredAnalysis);
   }
+} else {
+  window.sessionStorage.removeItem(
+    ANALYSIS_SESSION_KEY,
+  );
+}
 
   setHasLoadedSavedPlan(true);
 }, []);
@@ -83,7 +131,7 @@ useEffect(() => {
     ),
   );
 
-  setAnalysis(null);
+  clearAnalysis();
 };
 
   const updateAppliance = (
@@ -102,12 +150,12 @@ useEffect(() => {
     ),
   );
 
-  setAnalysis(null);
+  clearAnalysis();
 };
 
 const updateBudget = (value: string) => {
   setBudget(value);
-  setAnalysis(null);
+  clearAnalysis();
 };
 
   const addCustomAppliance = (
@@ -118,10 +166,20 @@ const updateBudget = (value: string) => {
     appliance,
   ]);
 
-  setAnalysis(null);
+  clearAnalysis();
 };
 
-  const analyzePlan = () => {
+const removeAppliance = (id: string) => {
+  setAppliances((current) =>
+    current.filter(
+      (appliance) => appliance.id !== id,
+    ),
+  );
+
+  clearAnalysis();
+};
+
+ const analyzePlan = () => {
   const budgetValue = Number(budget);
 
   if (
@@ -132,7 +190,7 @@ const updateBudget = (value: string) => {
   }
 
   setIsAnalyzing(true);
-  setAnalysis(null);
+  clearAnalysis();
 
   setTimeout(() => {
     const result = analyzeEnergyPlan(
@@ -141,6 +199,12 @@ const updateBudget = (value: string) => {
     );
 
     setAnalysis(result);
+
+    window.sessionStorage.setItem(
+  ANALYSIS_SESSION_KEY,
+  Date.now().toString(),
+);
+
     setIsAnalyzing(false);
   }, 1200);
 };
@@ -163,6 +227,7 @@ const updateBudget = (value: string) => {
   onToggle={toggle}
   onUpdate={updateAppliance}
   onAddAppliance={addCustomAppliance}
+  onRemoveAppliance={removeAppliance}
 />
 
 <EnergyBudgetInput
@@ -172,11 +237,26 @@ const updateBudget = (value: string) => {
   isAnalyzing={isAnalyzing}
 />
 
-      {analysis && (
-  <EnergyAnalysisResults
-    analysis={analysis}
-    budget={Number(budget)}
-  />
+   {analysis && (
+  <div className="space-y-6">
+    <EnergyAnalysisResults
+      analysis={analysis}
+      budget={Number(budget)}
+    />
+
+    <div className="flex justify-center">
+      <Link
+        to="/insights"
+        className="group inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10"
+      >
+        View Full Smart Insights
+
+        <span className="transition-transform group-hover:translate-x-1">
+          →
+        </span>
+      </Link>
+    </div>
+  </div>
 )}
     </div>
   );

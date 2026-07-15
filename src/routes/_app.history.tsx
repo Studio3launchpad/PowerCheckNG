@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlassCard } from "@/components/GlassCard";
 import {
   useSuspenseQuery,
@@ -102,16 +102,25 @@ function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">
-          Report History
-        </h1>
+      <div className="space-y-4">
+  <Link
+    to="/outages"
+    className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
+  >
+    <span aria-hidden="true">←</span>
+    Back to Outage Tracker
+  </Link>
 
-        <p className="text-muted-foreground mt-2">
-          Browse previous community reports submitted
-          across Nigeria.
-        </p>
-      </div>
+  <div>
+    <h1 className="text-3xl font-bold">
+      Report History
+    </h1>
+
+    <p className="mt-2 text-muted-foreground">
+      Browse previous community reports submitted across Nigeria.
+    </p>
+  </div>
+</div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <GlassCard>

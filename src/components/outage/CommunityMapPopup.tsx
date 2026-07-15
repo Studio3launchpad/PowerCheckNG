@@ -1,4 +1,4 @@
-import type { CommunityStatus } from "@/lib/community.types";
+import type { CommunityStatus } from "@/lib/outage/community.types";
 import { timeAgo } from "@/lib/outage/time";
 
 type Props = {

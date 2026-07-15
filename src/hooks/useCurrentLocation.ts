@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { resolveLocation } from "@/lib/outage/geoResolver";
-
+import { loadSavedPowerLocation, savePowerLocation } from "@/lib/outage/locationStorage";
 
 export function useCurrentLocation() {
   const [showPowerModal, setShowPowerModal] = useState(false);
 
-  const [location, setLocation] = useState({
-    latitude: 0,
-    longitude: 0,
-    state: "",
-    lga: "",
-    area: "",
-    discoCode: "UNKNOWN",
+  const [isLocating, setIsLocating] = useState(false);
+
+  const [location, setLocation] = useState(() => {
+    const savedLocation = loadSavedPowerLocation();
+
+    return (
+      savedLocation ?? {
+        latitude: 0,
+        longitude: 0,
+        state: "",
+        lga: "",
+        area: "",
+        discoCode: "UNKNOWN",
+      }
+    );
   });
 
   const reverseGeocode = async (latitude: number, longitude: number) => {
@@ -51,31 +59,94 @@ export function useCurrentLocation() {
       return;
     }
 
+    if (isLocating) {
+      return;
+    }
+
+    setIsLocating(true);
+
+    const locationToast = toast.loading("Getting your current location...");
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        const { latitude, longitude } = position.coords;
-        console.log("Current Coordinates:", latitude, longitude);
+        try {
+          const { latitude, longitude } = position.coords;
 
-        const address = await reverseGeocode(latitude, longitude);
+          console.log("Current Coordinates:", latitude, longitude);
 
-        // Use our own resolver first
-        const resolved = resolveLocation(latitude, longitude);
+          const resolved = resolveLocation(latitude, longitude);
 
-        console.log("Resolved Location:", resolved);
+          console.log("Resolved Location:", resolved);
 
-        setLocation({
-          latitude,
-          longitude,
-          state: resolved?.state ?? address.state,
-          lga: resolved?.lga ?? address.lga,
-          area: resolved?.area ?? address.area,
-          discoCode: resolved?.discoCode ?? "UNKNOWN",
-        });
+          if (resolved) {
+  const nextLocation = {
+    latitude,
+    longitude,
+    state: resolved.state,
+    lga: resolved.lga,
+    area: resolved.area,
+    discoCode: resolved.discoCode,
+  };
 
-        setShowPowerModal(true);
+  setLocation(nextLocation);
+  savePowerLocation(nextLocation);
+
+  toast.dismiss(locationToast);
+
+  setShowPowerModal(true);
+
+  return;
+}
+
+          const address = await reverseGeocode(latitude, longitude);
+
+          const fallbackLocation = {
+            latitude,
+            longitude,
+            state: address.state,
+            lga: address.lga,
+            area: address.area,
+            discoCode: "UNKNOWN",
+          };
+
+          setLocation(fallbackLocation);
+          savePowerLocation(fallbackLocation);
+
+          toast.dismiss(locationToast);
+
+          setShowPowerModal(true);
+        } catch (error) {
+          console.error("Location resolution error:", error);
+
+          toast.error("Unable to resolve your current location.", {
+            id: locationToast,
+          });
+        } finally {
+          setIsLocating(false);
+        }
       },
-      () => {
-        toast.error("Unable to retrieve your location.");
+      (error) => {
+        console.error("Geolocation error:", error);
+
+        setIsLocating(false);
+
+        const message =
+          error.code === error.PERMISSION_DENIED
+            ? "Location permission was denied."
+            : error.code === error.POSITION_UNAVAILABLE
+              ? "Your location is currently unavailable."
+              : error.code === error.TIMEOUT
+                ? "Location request timed out. Please try again."
+                : "Unable to retrieve your location.";
+
+        toast.error(message, {
+          id: locationToast,
+        });
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 15_000,
+        maximumAge: 5 * 60 * 1000,
       },
     );
   };
@@ -86,5 +157,6 @@ export function useCurrentLocation() {
     showPowerModal,
     setShowPowerModal,
     getCurrentLocation,
+    isLocating,
   };
 }

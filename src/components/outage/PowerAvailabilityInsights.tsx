@@ -1,6 +1,7 @@
 import { GlassCard } from "@/components/GlassCard";
 import { analyzePowerAvailability } from "@/lib/outage/powerAvailability";
 import type { Outage } from "@/lib/outage/outages.types";
+import { POWER_PATTERN_WINDOW_MS } from "@/lib/outage/outages.constants";
 
 type Props = {
   outages: Outage[];
@@ -11,11 +12,23 @@ export function PowerAvailabilityInsights({
   outages,
   area,
 }: Props) {
-  const areaReports = outages.filter(
-    (outage) =>
-      outage.area.trim().toLowerCase() ===
-      area.trim().toLowerCase(),
-  );
+  const patternCutoff =
+  Date.now() - POWER_PATTERN_WINDOW_MS;
+
+const areaReports = outages.filter((outage) => {
+  const matchesArea =
+    outage.area.trim().toLowerCase() ===
+    area.trim().toLowerCase();
+
+  const reportTime = new Date(
+    outage.startedAt,
+  ).getTime();
+
+  const isWithinPatternWindow =
+    reportTime >= patternCutoff;
+
+  return matchesArea && isWithinPatternWindow;
+});
 
   const periods = analyzePowerAvailability(areaReports);
 
@@ -55,12 +68,12 @@ export function PowerAvailabilityInsights({
           </h2>
 
           <p className="mt-2 text-sm text-muted-foreground">
-            Community-reported power availability patterns for{" "}
-            <span className="font-medium text-foreground">
-              {area}
-            </span>
-            .
-          </p>
+  Community-reported power availability patterns for{" "}
+  <span className="font-medium text-foreground">
+    {area}
+  </span>{" "}
+  based on reports from the last 30 days.
+</p>
         </div>
 
         {totalDefiniteReports === 0 ? (
@@ -70,10 +83,10 @@ export function PowerAvailabilityInsights({
             </p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              PowerCheckNG needs Power ON or Power OFF reports
-              from {area} before an availability pattern can be
-              calculated.
-            </p>
+  PowerCheckNG needs Power ON or Power OFF reports
+  from {area} within the last 30 days before a recent
+  availability pattern can be calculated.
+</p>
           </div>
         ) : (
           <>
@@ -143,11 +156,11 @@ export function PowerAvailabilityInsights({
                 </p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Based on current community reports,{" "}
+                  Based on community reports from the last 30 days,{" "}
                   <span className="font-medium text-foreground">
                     {strongestPeriod.label.toLowerCase()}
                   </span>{" "}
-                  currently shows the strongest reported power
+                  shows the strongest reported power
                   availability in {area}, at{" "}
                   <span className="font-medium text-foreground">
                     {strongestPeriod.availability}%
@@ -158,10 +171,10 @@ export function PowerAvailabilityInsights({
             )}
 
             <p className="text-xs text-muted-foreground">
-              Insights are based on community-submitted Power ON
-              and Power OFF reports. Not Sure reports are excluded
-              from availability calculations.
-            </p>
+  Insights are based on community-submitted Power ON
+  and Power OFF reports from the last 30 days. Not Sure
+  reports are excluded from availability calculations.
+</p>
           </>
         )}
       </div>

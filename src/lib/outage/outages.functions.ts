@@ -70,9 +70,9 @@ export const reportOutage = createServerFn({ method: "POST" })
     await ensureUser(userId);
 
     // Prevent duplicate reports from the same user
-    // in the same area within 30 minutes.
-    const thirtyMinutesAgo = new Date(
-      Date.now() - 30 * 60 * 1000,
+    // in the same area within 5 minutes.
+    const fiveMinutesAgo = new Date(
+      Date.now() - 5 * 60 * 1000,
     );
 
     const recentReport =
@@ -81,7 +81,7 @@ export const reportOutage = createServerFn({ method: "POST" })
           userId,
           area: data.area,
           startedAt: {
-            gte: thirtyMinutesAgo,
+            gte: fiveMinutesAgo,
           },
         },
         orderBy: {
@@ -93,7 +93,7 @@ export const reportOutage = createServerFn({ method: "POST" })
       return {
         success: false as const,
         message:
-          "You already submitted a report for this area within the last 30 minutes.",
+          "You already submitted a report for this area within the last 5 minutes.",
       };
     }
 
