@@ -39,31 +39,15 @@ export function PowerAvailabilityOutlook({
     },
   );
 
-  const periods = analyzePowerAvailability(
-    recentAreaReports,
-  );
+  const analytics = analyzePowerAvailability(
+  recentAreaReports,
+);
 
-  const supportedPeriods = periods.filter(
-    (period) => period.definiteReports > 0,
-  );
-
-  const strongestPeriod =
-    supportedPeriods.length > 0
-      ? supportedPeriods.reduce(
-          (strongest, period) =>
-            period.reliabilityScore >
-            strongest.reliabilityScore
-              ? period
-              : strongest,
-        )
-      : null;
-
-  const totalDefiniteReports =
-    supportedPeriods.reduce(
-      (total, period) =>
-        total + period.definiteReports,
-      0,
-    );
+const {
+  strongestPeriod,
+  overallAvailability,
+  totalReports,
+} = analytics;
 
   return (
     <GlassCard>
@@ -122,14 +106,16 @@ export function PowerAvailabilityOutlook({
                   </h3>
 
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Power was reported ON in{" "}
-                    <span className="font-semibold text-foreground">
-                      {strongestPeriod.availability}%
-                    </span>{" "}
-                    of confirmed{" "}
-{strongestPeriod.label.toLowerCase()}{" "}
-reports from the last 30 days.
-                  </p>
+  Community reports indicate{" "}
+  <span className="font-semibold text-foreground">
+    {strongestPeriod.availability}% reported availability
+  </span>{" "}
+  during the{" "}
+  <span className="font-semibold text-foreground">
+    {strongestPeriod.label.toLowerCase()}
+  </span>{" "}
+  period over the last 30 days.
+</p>
                 </div>
               </div>
             </div>
@@ -141,12 +127,16 @@ reports from the last 30 days.
                 </p>
 
                 <p className="mt-1 text-2xl font-bold">
-                  {totalDefiniteReports}
+                  {totalReports}
                 </p>
 
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Used across all time periods
-                </p>
+  Overall availability:
+  <span className="font-medium text-foreground">
+    {" "}
+    {overallAvailability}%
+  </span>
+</p>
               </div>
 
               <div className="rounded-xl border border-border bg-background/30 p-4">
@@ -174,14 +164,14 @@ reports from the last 30 days.
                 </p>
 
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Based on recent community reports,
-                  consider scheduling flexible
-                  high-energy tasks during{" "}
-                  <span className="font-medium text-foreground">
-                    {strongestPeriod.label.toLowerCase()}
-                  </span>{" "}
-                  periods where practical.
-                </p>
+  Based on community reports collected over the last
+  30 days, electricity has been reported most
+  consistently during the{" "}
+  <span className="font-medium text-foreground">
+    {strongestPeriod.label.toLowerCase()}
+  </span>{" "}
+  period.
+</p>
               </div>
             </div>
 

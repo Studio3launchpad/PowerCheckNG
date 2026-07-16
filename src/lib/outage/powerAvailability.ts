@@ -20,6 +20,18 @@ export type AvailabilityPeriod = {
   reliabilityScore: number;
 };
 
+export type PowerAvailabilityAnalytics = {
+  periods: AvailabilityPeriod[];
+
+  strongestPeriod: AvailabilityPeriod | null;
+
+  weakestPeriod: AvailabilityPeriod | null;
+
+  overallAvailability: number;
+
+  totalReports: number;
+};
+
 const periods = [
   {
     key: "overnight",
@@ -53,8 +65,8 @@ const periods = [
 
 export function analyzePowerAvailability(
   outages: Outage[],
-): AvailabilityPeriod[] {
-  return periods.map((period) => {
+): PowerAvailabilityAnalytics{
+  const analyticsPeriods = periods.map((period) => {
     const periodReports = outages.filter(
       (outage) => {
         const reportDate = new Date(
@@ -123,4 +135,52 @@ export function analyzePowerAvailability(
       reliabilityScore,
     };
   });
+  const periodsWithData = analyticsPeriods.filter(
+  (period) => period.definiteReports > 0,
+);
+
+const totalReports = analyticsPeriods.reduce(
+  (total, period) => total + period.definiteReports,
+  0,
+);
+
+const strongestPeriod =
+  periodsWithData.length > 0
+    ? periodsWithData.reduce((best, current) =>
+        current.reliabilityScore >
+        best.reliabilityScore
+          ? current
+          : best,
+      )
+    : null;
+
+const weakestPeriod =
+  periodsWithData.length > 0
+    ? periodsWithData.reduce((worst, current) =>
+        current.reliabilityScore <
+        worst.reliabilityScore
+          ? current
+          : worst,
+      )
+    : null;
+
+const totalPowerOn = analyticsPeriods.reduce(
+  (total, period) => total + period.powerOn,
+  0,
+);
+
+const overallAvailability =
+  totalReports > 0
+    ? Math.round(
+        (totalPowerOn / totalReports) * 100,
+      )
+    : 0;
+
+return {
+  periods: analyticsPeriods,
+  strongestPeriod,
+  weakestPeriod,
+  overallAvailability,
+  totalReports,
+};
 }

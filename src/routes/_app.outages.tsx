@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, queryOptions } from "@tanstack/react-query";
 import { GlassCard } from "@/components/GlassCard";
 import { LiveOutageMap } from "@/components/outage/LiveOutageMap";
@@ -11,6 +11,7 @@ import { calculateCommunityPower } from "@/lib/outage/communitypower";
 import { useCurrentLocation } from "@/hooks/useCurrentLocation";
 import { useOutageReporting } from "@/hooks/useOutageReporting";
 import { PowerAvailabilityOutlook } from "@/components/outage/PowerAvailabilityOutlook";
+
 
 const outagesQO = queryOptions({
   queryKey: ["outages"],
@@ -102,12 +103,19 @@ function OutagesPage() {
 
           <LiveOutageMap outages={outages} />
 
-          <PowerAvailabilityOutlook
-  outages={outages}
-  area={location.area}
-/>
+          <PowerAvailabilityOutlook outages={outages} area={location.area} />
 
           <OutageList outages={outages} limit={10} />
+
+          <div className="flex justify-center pt-2">
+  <Link
+    to="/history"
+    className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+  >
+    View Full Report History
+    →
+  </Link>
+</div>
         </>
       )}
 

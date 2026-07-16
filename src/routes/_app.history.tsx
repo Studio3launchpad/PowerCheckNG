@@ -1,14 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlassCard } from "@/components/GlassCard";
-import {
-  useSuspenseQuery,
-  queryOptions,
-} from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listOutages } from "@/lib/outage/outages.functions";
 import type { Outage } from "@/lib/outage/outages.types";
 import { OutageList } from "@/components/outage/OutageList";
 import { useEffect, useState } from "react";
 import { HistoryFilters } from "@/components/outage/HistoryFilters";
+import { HistoricalPowerPattern } from "@/components/outage/HistoricalPowerPattern";
 
 const REPORTS_PER_PAGE = 12;
 
@@ -24,143 +22,105 @@ export const Route = createFileRoute("/_app/history")({
 function HistoryPage() {
   const { data } = useSuspenseQuery(outagesQO);
 
-  const [visibleCount, setVisibleCount] = useState(
-    REPORTS_PER_PAGE,
-  );
+  const [visibleCount, setVisibleCount] = useState(REPORTS_PER_PAGE);
 
   const [search, setSearch] = useState("");
   const [disco, setDisco] = useState("");
   const [status, setStatus] = useState("");
+  const [date, setDate] = useState("");
 
   const clearFilters = () => {
     setSearch("");
     setDisco("");
     setStatus("");
+    setDate("");
   };
 
   useEffect(() => {
     setVisibleCount(REPORTS_PER_PAGE);
-  }, [search, disco, status]);
+  }, [search, disco, status, date]);
 
-  const discos = [
-    ...new Set(
-      data.outages.map((outage) => outage.discoCode),
-    ),
-  ].sort();
+  const discos = [...new Set(data.outages.map((outage) => outage.discoCode))].sort();
 
-  const statuses = [
-    ...new Set(
-      data.outages.map((outage) => outage.status),
-    ),
-  ].sort();
+  const statuses = [...new Set(data.outages.map((outage) => outage.status))].sort();
 
-  const filteredReports = data.outages.filter(
-    (outage) => {
-      const matchesSearch =
-        outage.area
-          .toLowerCase()
-          .includes(search.toLowerCase());
+  const filteredReports = data.outages.filter((outage) => {
+    const matchesSearch = outage.area.toLowerCase().includes(search.toLowerCase());
 
-      const matchesDisco =
-        !disco || outage.discoCode === disco;
+    const matchesDisco = !disco || outage.discoCode === disco;
 
-      const matchesStatus =
-        !status || outage.status === status;
+    const matchesStatus = !status || outage.status === status;
 
-      return (
-        matchesSearch &&
-        matchesDisco &&
-        matchesStatus
-      );
-    },
-  );
+    const matchesDate = !date || outage.startedAt.startsWith(date);
 
-  const visibleReports = filteredReports.slice(
-    0,
-    visibleCount,
-  );
+    const reportsForAnalytics = search || disco || status || date ? filteredReports : data.outages;
 
-  const hasMoreReports =
-    visibleCount < filteredReports.length;
+    return matchesSearch && matchesDisco && matchesStatus && matchesDate;
+  });
+
+  const reportsForAnalytics = filteredReports.length > 0 ? filteredReports : data.outages;
+
+  const visibleReports = filteredReports.slice(0, visibleCount);
+
+  const hasMoreReports = visibleCount < filteredReports.length;
 
   const totalReports = data.outages.length;
 
   const powerOffReports = data.outages.filter(
-    (outage: Outage) =>
-      outage.status === "POWER_OFF",
+    (outage: Outage) => outage.status === "POWER_OFF",
   ).length;
 
   const powerOnReports = data.outages.filter(
-    (outage: Outage) =>
-      outage.status === "POWER_ON",
+    (outage: Outage) => outage.status === "POWER_ON",
   ).length;
 
   const notSureReports = data.outages.filter(
-    (outage: Outage) =>
-      outage.status === "NOT_SURE",
+    (outage: Outage) => outage.status === "NOT_SURE",
   ).length;
 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-  <Link
-    to="/outages"
-    className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
-  >
-    <span aria-hidden="true">←</span>
-    Back to Outage Tracker
-  </Link>
+        <Link
+          to="/outages"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
+        >
+          <span aria-hidden="true">←</span>
+          Back to Outage Tracker
+        </Link>
 
-  <div>
-    <h1 className="text-3xl font-bold">
-      Report History
-    </h1>
+        <div>
+          <h1 className="text-3xl font-bold">Community Report History</h1>
 
-    <p className="mt-2 text-muted-foreground">
-      Browse previous community reports submitted across Nigeria.
-    </p>
-  </div>
-</div>
+          <p className="mt-2 text-muted-foreground">
+            Browse previous community reports submitted across Nigeria.
+          </p>
+        </div>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <GlassCard>
-          <p className="text-sm text-muted-foreground">
-            Total Reports
-          </p>
+          <p className="text-sm text-muted-foreground">Total Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2">
-            {totalReports}
-          </h2>
+          <h2 className="text-3xl font-bold mt-2">{totalReports}</h2>
         </GlassCard>
 
         <GlassCard>
-          <p className="text-sm text-muted-foreground">
-            Power OFF Reports
-          </p>
+          <p className="text-sm text-muted-foreground">Power OFF Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2 text-red-500">
-            {powerOffReports}
-          </h2>
+          <h2 className="text-3xl font-bold mt-2 text-red-500">{powerOffReports}</h2>
         </GlassCard>
 
         <GlassCard>
-          <p className="text-sm text-muted-foreground">
-            Power ON Reports
-          </p>
+          <p className="text-sm text-muted-foreground">Power ON Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2 text-green-500">
-            {powerOnReports}
-          </h2>
+          <h2 className="text-3xl font-bold mt-2 text-green-500">{powerOnReports}</h2>
         </GlassCard>
 
         <GlassCard>
-          <p className="text-sm text-muted-foreground">
-            Not Sure Reports
-          </p>
+          <p className="text-sm text-muted-foreground">Not Sure Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2 text-yellow-500">
-            {notSureReports}
-          </h2>
+          <h2 className="text-3xl font-bold mt-2 text-yellow-500">{notSureReports}</h2>
         </GlassCard>
       </div>
 
@@ -174,7 +134,11 @@ function HistoryPage() {
         onStatusChange={setStatus}
         statuses={statuses}
         onClearFilters={clearFilters}
+        date={date}
+        onDateChange={setDate}
       />
+
+      <HistoricalPowerPattern outages={reportsForAnalytics} />
 
       <OutageList
         outages={visibleReports}
@@ -187,12 +151,7 @@ function HistoryPage() {
         <div className="flex justify-center pt-4">
           <button
             type="button"
-            onClick={() =>
-              setVisibleCount(
-                (current) =>
-                  current + REPORTS_PER_PAGE,
-              )
-            }
+            onClick={() => setVisibleCount((current) => current + REPORTS_PER_PAGE)}
             className="rounded-xl border border-primary/30 px-6 py-3 font-medium text-primary transition hover:bg-primary/10"
           >
             Load More Reports

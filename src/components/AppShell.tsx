@@ -33,7 +33,7 @@ const NAV = [
   },
   {
     to: "/backup",
-    label: "Backup Recommendation",
+    label: "Power Backup Advisor",
     mobileLabel: "Backup",
     icon: Battery,
   },

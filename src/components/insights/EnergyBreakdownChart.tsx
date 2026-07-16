@@ -118,10 +118,19 @@ export function EnergyBreakdownChart({
   }}
   contentStyle={{
     background: "rgba(20,28,40,0.95)",
-    border:
-      "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 12,
     fontSize: 12,
+    color: "#ffffff",
+  }}
+  itemStyle={{
+    color: "#ffffff",
+  }}
+  labelStyle={{
+    color: "#ffffff",
+  }}
+  cursor={{
+    fill: "rgba(255,255,255,0.05)",
   }}
 />
             </PieChart>

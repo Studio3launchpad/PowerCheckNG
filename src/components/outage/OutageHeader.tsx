@@ -1,4 +1,5 @@
 import { Zap, Plus, RefreshCcw, LoaderCircle } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 type OutageHeaderProps = {
   onUpdateLocation: () => void;
@@ -44,18 +45,24 @@ export function OutageHeader({
     : "Update My Power Status"}
 </button>
 
-        <button
-          onClick={() => onRefresh()}
-          disabled={isRefreshing}
-          className="rounded-xl border border-border px-4 py-2 flex items-center gap-2"
-        >
-          <RefreshCcw
-  size={16}
-  className={isRefreshing ? "animate-spin" : ""}
-/>
+<Link
+  to="/history"
+  className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-accent/20"
+>
+  Report History
+</Link>
 
-{isRefreshing ? "Refreshing..." : "Refresh"}
-        </button>
+        <button
+  onClick={() => onRefresh()}
+  disabled={isRefreshing}
+  className="inline-flex items-center justify-center rounded-xl border border-border p-2 hover:bg-accent/20"
+  title="Refresh reports"
+>
+  <RefreshCcw
+    size={18}
+    className={isRefreshing ? "animate-spin" : ""}
+  />
+</button>
       </div>
     </header>
   );

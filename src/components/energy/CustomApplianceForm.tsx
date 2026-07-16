@@ -40,6 +40,7 @@ export function CustomApplianceForm({
       watts: wattsValue,
       quantity: quantityValue,
       hours: hoursValue,
+      essential: false,
     };
 
     onAdd(appliance);

@@ -2,6 +2,13 @@ export type Appliance = {
   id: string;
   name: string;
   selected: boolean;
+
+  /*
+   * Should this appliance be powered
+   * during an outage?
+   */
+  essential: boolean;
+
   watts: number;
   quantity: number;
   hours: number;
@@ -18,8 +25,23 @@ export type EnergyAnalysis = {
   dailyUsage: number;
   monthlyUsage: number;
   monthlyCost: number;
+
   score: number;
+
   highestConsumer: string;
+
   recommendations: string[];
+
   breakdown: ApplianceBreakdown[];
+
+  /*
+   * Backup Advisor
+   */
+  peakLoad: number;
+
+  totalSelectedWatts: number;
+
+  applianceCount: number;
+
+  essentialApplianceCount: number;
 };

@@ -43,16 +43,16 @@ export function OutageList({
         ))}
       </div>
 
-      {showViewAll && (
+      {/* {showViewAll && (
         <div className="flex justify-center mt-8">
           <Link
             to="/history"
             className="text-primary font-medium hover:underline transition-colors hover:text-primary/80"
           >
-            View Full Report History →
+            View Full Report History 
           </Link>
         </div>
-      )}
+      )} */}
     </>
   );
 }

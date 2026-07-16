@@ -1,6 +1,6 @@
 import { analyzeEnergyPlan } from "@/lib/energy/energyPlanner";
 import { ESTIMATED_TARIFF_PER_KWH } from "@/lib/energy/energy.constants";
-
+import { saveEnergyAnalysis } from "@/lib/energy/energyStorage";
 import type { Appliance } from "@/lib/energy/energy.types";
 
 import type {
@@ -117,11 +117,45 @@ function calculateSavingsOpportunities(
     });
   }
 
-  return opportunities.sort(
-    (a, b) =>
-      b.estimatedMonthlySavings -
-      a.estimatedMonthlySavings,
+ /*
+ * If no appliance-specific savings were found,
+ * generate intelligent general recommendations.
+ */
+if (opportunities.length === 0) {
+  const analysis = analyzeEnergyPlan(
+    appliances,
+    0,
   );
+
+  const topConsumer =
+    analysis.breakdown[0];
+
+  if (topConsumer) {
+    opportunities.push({
+      appliance: topConsumer.name,
+      action:
+        "Reduce daily usage or replace with a more energy-efficient model.",
+      estimatedMonthlySavings:
+        topConsumer.cost * 0.15,
+    });
+  }
+
+  if (analysis.score < 80) {
+    opportunities.push({
+      appliance: "Whole Home",
+      action:
+        "Reduce usage across your highest-consuming appliances by about 10%.",
+      estimatedMonthlySavings:
+        analysis.monthlyCost * 0.10,
+    });
+  }
+}
+
+return opportunities.sort(
+  (a, b) =>
+    b.estimatedMonthlySavings -
+    a.estimatedMonthlySavings,
+);
 }
 
 function buildSmartInsights({
@@ -263,6 +297,8 @@ export function generateEnergyInsights(
     appliances,
     budget,
   );
+
+  saveEnergyAnalysis(analysis);
 
   const selectedApplianceCount =
     appliances.filter(

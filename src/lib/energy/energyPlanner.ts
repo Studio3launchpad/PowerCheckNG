@@ -6,6 +6,11 @@ import type {
 
 import { ESTIMATED_TARIFF_PER_KWH } from "./energy.constants";
 
+import { LOAD_FACTORS } from "@/lib/backup/loadFactors";
+
+
+
+
 export function analyzeEnergyPlan(
   appliances: Appliance[],
   budget: number,
@@ -13,6 +18,52 @@ export function analyzeEnergyPlan(
   const selectedAppliances = appliances.filter(
     (appliance) => appliance.selected,
   );
+
+  const applianceCount =
+  selectedAppliances.length;
+
+const totalSelectedWatts =
+  selectedAppliances.reduce(
+    (total, appliance) =>
+      total +
+      appliance.watts * appliance.quantity,
+    0,
+  );
+
+const essentialAppliances =
+  selectedAppliances.filter(
+    (appliance) => appliance.essential,
+  );
+
+/*
+ * Use essential appliances where available.
+ * Otherwise fall back to all selected appliances.
+ */
+const appliancesForBackup =
+  essentialAppliances.length > 0
+    ? essentialAppliances
+    : selectedAppliances;
+
+    const essentialApplianceCount =
+  essentialAppliances.length;
+
+const peakLoad = Math.round(
+  appliancesForBackup.reduce(
+    (total, appliance) => {
+     const factor =
+  LOAD_FACTORS[appliance.name]?.surgeMultiplier ??
+  1;
+
+return (
+  total +
+  appliance.watts *
+  appliance.quantity *
+  factor
+);
+    },
+    0,
+  ),
+);
 
   const dailyUsage = selectedAppliances.reduce(
     (total, appliance) => {
@@ -252,12 +303,24 @@ export function analyzeEnergyPlan(
   );
 
   return {
-    dailyUsage,
-    monthlyUsage,
-    monthlyCost,
-    score,
-    highestConsumer,
-    recommendations,
-    breakdown,
-  };
+  dailyUsage,
+  monthlyUsage,
+  monthlyCost,
+
+  score,
+
+  highestConsumer,
+
+  recommendations,
+
+  breakdown,
+
+  peakLoad,
+
+  totalSelectedWatts,
+
+  applianceCount,
+
+  essentialApplianceCount,
+};
 }
