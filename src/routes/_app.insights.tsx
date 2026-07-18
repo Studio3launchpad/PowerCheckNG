@@ -1,11 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-
+import { BatteryCharging } from "lucide-react";
 import { InsightSummaryCards } from "@/components/insights/InsightSummaryCards";
 import { BudgetRiskCard } from "@/components/insights/BudgetRiskCard";
 import { SmartInsightList } from "@/components/insights/SmartInsightList";
 import { SavingsOpportunities } from "@/components/insights/SavingsOpportunities";
 import { EnergyBreakdownChart } from "@/components/insights/EnergyBreakdownChart";
-
 import { generateEnergyInsights } from "@/lib/insights/insightEngine";
 
 import type { Appliance } from "@/lib/energy/energy.types";
@@ -191,6 +190,35 @@ function SmartInsightsPage() {
       <EnergyBreakdownChart
         breakdown={profile.analysis.breakdown}
       />
+
+      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
+  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="flex items-start gap-4">
+      <div className="rounded-xl bg-primary/10 p-3">
+        <BatteryCharging className="h-6 w-6 text-primary" />
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold">
+          Need Backup Power?
+        </h2>
+
+        <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+          Based on your selected appliances and energy usage,
+          PowerCheckNG can recommend the right inverter or
+          generator for your home or business.
+        </p>
+      </div>
+    </div>
+
+    <Link
+      to="/backup"
+      className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+    >
+      Open Backup Advisor →
+    </Link>
+  </div>
+</div>
 
       <div className="rounded-xl border border-border bg-background/30 px-4 py-3">
         <p className="text-xs leading-5 text-muted-foreground">

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Brain } from "lucide-react";
 import { analyzeEnergyPlan } from "@/lib/energy/energyPlanner";
 import { DEFAULT_APPLIANCES } from "@/lib/energy/energy.constants";
@@ -14,7 +14,6 @@ import {
   saveBudget,
   saveEnergyAnalysis,
 } from "@/lib/energy/energyStorage";
-
 
 const ANALYSIS_SESSION_KEY = "powercheckng-energy-analysis-timestamp";
 
@@ -38,6 +37,10 @@ function SmartEnergyPlanner() {
   const [analysis, setAnalysis] = useState<EnergyAnalysis | null>(null);
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const budgetSectionRef = useRef<HTMLDivElement>(null);
+
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const clearAnalysis = () => {
     setAnalysis(null);
@@ -101,6 +104,15 @@ function SmartEnergyPlanner() {
     saveBudget(budget);
   }, [budget, hasLoadedSavedPlan]);
 
+  useEffect(() => {
+  if (!analysis) return;
+
+  resultsSectionRef.current?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}, [analysis]);
+
   const toggle = (name: string) => {
     setAppliances((current) =>
       current.map((appliance) =>
@@ -117,19 +129,19 @@ function SmartEnergyPlanner() {
   };
 
   const toggleEssential = (name: string) => {
-  setAppliances((current) =>
-    current.map((appliance) =>
-      appliance.name === name
-        ? {
-            ...appliance,
-            essential: !appliance.essential,
-          }
-        : appliance,
-    ),
-  );
+    setAppliances((current) =>
+      current.map((appliance) =>
+        appliance.name === name
+          ? {
+              ...appliance,
+              essential: !appliance.essential,
+            }
+          : appliance,
+      ),
+    );
 
-  clearAnalysis();
-};
+    clearAnalysis();
+  };
 
   const updateAppliance = (name: string, field: "watts" | "quantity" | "hours", value: number) => {
     setAppliances((current) =>
@@ -152,7 +164,7 @@ function SmartEnergyPlanner() {
   };
 
   const addCustomAppliance = (appliance: Appliance) => {
-    setAppliances((current) => [...current, appliance]);
+    setAppliances((current) => [appliance, ...current]);
 
     clearAnalysis();
   };
@@ -186,52 +198,59 @@ function SmartEnergyPlanner() {
     }, 1200);
   };
 
+  const scrollToBudget = () => {
+    budgetSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div>
+          <h1 className="text-3xl font-display font-bold flex items-center gap-2">
+            <Brain className="text-primary" />
+            Smart Energy Planner
+          </h1>
 
-<h1 className="text-3xl font-display font-bold flex items-center gap-2">
-          <Brain className="text-primary" />
-          Smart Energy Planner
-        </h1>
-
-        <p className="text-sm text-muted-foreground mt-2">
-          Build an energy plan based on your appliances and monthly electricity budget.
-        </p>
-
+          <p className="text-sm text-muted-foreground mt-2">
+            Build an energy plan based on your appliances and monthly electricity budget.
+          </p>
         </div>
 
-         {analysis && (
-    <Link
-      to="/insights"
-      className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
-    >
-      View Smart Insights
-
-      <span>→</span>
-    </Link>
-  )}
+        {analysis && (
+          <Link
+            to="/insights"
+            className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
+          >
+            View Smart Insights
+            <span>→</span>
+          </Link>
+        )}
       </header>
 
       <ApplianceSelector
-  appliances={appliances}
-  onToggle={toggle}
-  onUpdate={updateAppliance}
-  onAddAppliance={addCustomAppliance}
-  onRemoveAppliance={removeAppliance}
-  onToggleEssential={toggleEssential}
-/>
-
-      <EnergyBudgetInput
-        budget={budget}
-        onBudgetChange={updateBudget}
-        onAnalyze={analyzePlan}
-        isAnalyzing={isAnalyzing}
+        appliances={appliances}
+        onToggle={toggle}
+        onUpdate={updateAppliance}
+        onAddAppliance={addCustomAppliance}
+        onRemoveAppliance={removeAppliance}
+        onToggleEssential={toggleEssential}
+        onContinueToBudget={scrollToBudget}
       />
 
+      <div ref={budgetSectionRef}>
+        <EnergyBudgetInput
+          budget={budget}
+          onBudgetChange={updateBudget}
+          onAnalyze={analyzePlan}
+          isAnalyzing={isAnalyzing}
+        />
+      </div>
+
       {analysis && (
-        <div className="space-y-6">
+        <div className="space-y-6" ref={resultsSectionRef}>
           <EnergyAnalysisResults analysis={analysis} budget={Number(budget)} />
 
           <div className="flex justify-center">

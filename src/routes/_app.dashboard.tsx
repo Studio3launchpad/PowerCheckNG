@@ -1,157 +1,386 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import {
-  Zap,
-  Activity,
-  AlertTriangle,
-  CreditCard,
-  TrendingUp,
-  Battery,
-} from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Zap, Activity, AlertTriangle, CreditCard, TrendingUp, Battery } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
+import { Link } from "@tanstack/react-router";
+import { useQuery, queryOptions } from "@tanstack/react-query";
+import { buildBackupAdvisor } from "@/lib/backup/backupAdvisor";
+import { useCurrentLocation } from "@/hooks/useCurrentLocation";
+import { calculateCommunityPower } from "@/lib/outage/communitypower";
+import { listOutages } from "@/lib/outage/outages.functions";
+
+import {
+  loadEnergyAnalysis,
+  loadSavedAppliances,
+  loadSavedBudget,
+} from "@/lib/energy/energyStorage";
+
+const outagesQO = queryOptions({
+  queryKey: ["outages"],
+  queryFn: () => listOutages(),
+  staleTime: 30_000,
+  refetchInterval: 60_000,
+});
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — PowerCheckNG" }] }),
   component: Dashboard,
 });
 
-const series = Array.from({ length: 24 }, (_, i) => ({
-  hour: `${i}:00`,
-  kw: +(Math.sin(i / 3) * 0.8 + 1.8 + Math.random() * 0.5).toFixed(2),
-}));
-
-const STATS = [
-  {
-    label: "Energy Health Score",
-    value: "84/100",
-    icon: Zap,
-    delta: "Excellent",
-  },
-  {
-    label: "Estimated Monthly Usage",
-    value: "326 kWh",
-    icon: Activity,
-    delta: "+4% from last month",
-  },
-  {
-    label: "Estimated Monthly Cost",
-    value: "₦23,400",
-    icon: CreditCard,
-    delta: "Within budget",
-  },
-  {
-    label: "Current Outage Status",
-    value: "Power Available",
-    icon: AlertTriangle,
-    delta: "IKEDC • Updated now",
-  },
-];
-
 function Dashboard() {
+  const analysis = loadEnergyAnalysis();
+
+  const { data, isPending } = useQuery(outagesQO);
+
+  const outages = data?.outages ?? [];
+
+  const { location } = useCurrentLocation();
+
+  const { reportCount, confidence, currentStatus } = calculateCommunityPower(location, outages);
+
+  const appliances = loadSavedAppliances() ?? [];
+
+  const budget = Number(loadSavedBudget() ?? 0);
+
+  const selectedAppliances = appliances.filter((appliance) => appliance.selected);
+
+  const essentialAppliances = selectedAppliances.filter((appliance) => appliance.essential);
+
+  const hasEnergyProfile = analysis !== null;
+
+  const advisor = analysis ? buildBackupAdvisor(analysis) : null;
+
+  if (!hasEnergyProfile) {
+    return (
+      <div className="space-y-6 pb-24 lg:pb-6">
+        <header>
+          <h1 className="text-3xl font-display font-bold">Dashboard</h1>
+
+          <p className="mt-2 text-sm text-muted-foreground">
+            Start by creating your Smart Energy Plan to unlock your personalised dashboard.
+          </p>
+        </header>
+
+        <GlassCard className="p-8 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-2xl">
+            ⚡
+          </div>
+
+          <h2 className="mt-5 text-xl font-semibold">No Energy Profile Yet</h2>
+
+          <p className="mt-3 text-sm text-muted-foreground">
+            Build your Smart Energy Plan to see your energy summary, recommendations, backup
+            solution and community power information.
+          </p>
+
+          <Link
+            to="/energy"
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+          >
+            Build Your Energy Plan
+          </Link>
+        </GlassCard>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 pb-24 lg:pb-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="space-y-5">
         <div>
-          <h1 className="text-3xl font-display font-bold">Welcome back 👋</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Monitor your electricity usage, manage outages, and make smarter energy decisions.
+          <h1 className="text-3xl font-display font-bold">Dashboard</h1>
+
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            Everything you need to plan, analyse and optimise your electricity usage in one place.
+          </p>
+
+          <p className="mt-6 text-lg font-medium text-muted-foreground">
+            Good{" "}
+            {new Date().getHours() < 12
+              ? "Morning"
+              : new Date().getHours() < 17
+                ? "Afternoon"
+                : "Evening"}{" "}
+            👋
           </p>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs text-primary border border-primary/30">
-          <span className="size-1.5 rounded-full bg-primary animate-pulse" /> On grid · IKEDC
-        </span>
+
+        <GlassCard className="p-5">
+          <h2 className="text-lg font-semibold">Today's Summary</h2>
+
+          <p className="mt-3 leading-7 text-muted-foreground">
+            Your estimated monthly electricity cost is
+            <span className="font-semibold text-foreground">
+              {" "}
+              ₦{analysis.monthlyCost.toLocaleString()}
+            </span>{" "}
+            which is{" "}
+            <span className="font-semibold text-primary">
+              ₦{Math.abs(budget - analysis.monthlyCost).toLocaleString()}
+            </span>
+            {analysis.monthlyCost <= budget
+              ? " below your planned budget."
+              : " above your planned budget."}
+          </p>
+
+          <p className="mt-3 leading-7 text-muted-foreground">
+            Community reports currently indicate
+            <span
+              className={`ml-1 font-semibold ${
+                currentStatus === "Power ON" ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {currentStatus}
+            </span>{" "}
+            around <span className="font-semibold">{location.area}</span>.
+          </p>
+        </GlassCard>
       </header>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {STATS.map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <GlassCard className="p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Energy Health Score</span>
+
+            <Zap className="size-4 text-primary" />
+          </div>
+
+          <p className="mt-2 text-2xl font-display font-bold">{analysis.score}/100</p>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {analysis.score >= 80
+              ? "Excellent"
+              : analysis.score >= 60
+                ? "Good"
+                : "Needs Improvement"}
+          </p>
+        </GlassCard>
+
+        <GlassCard className="p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Monthly Usage</span>
+
+            <Activity className="size-4 text-primary" />
+          </div>
+
+          <p className="mt-2 text-2xl font-display font-bold">
+            {analysis.monthlyUsage.toFixed(1)} kWh
+          </p>
+
+          <p className="mt-1 text-xs text-muted-foreground">Estimated consumption</p>
+        </GlassCard>
+
+        <GlassCard className="p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Monthly Cost</span>
+
+            <CreditCard className="size-4 text-primary" />
+          </div>
+
+          <p className="mt-2 text-2xl font-display font-bold">
+            ₦{analysis.monthlyCost.toLocaleString()}
+          </p>
+
+          <p
+            className={`mt-1 text-xs font-medium ${
+              analysis.monthlyCost <= budget ? "text-green-500" : "text-red-500"
+            }`}
           >
-            <GlassCard className="p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{s.label}</span>
-                <s.icon className="size-4 text-primary" />
-              </div>
-              <p className="mt-2 text-2xl font-display font-bold">{s.value}</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">{s.delta}</p>
-            </GlassCard>
-          </motion.div>
-        ))}
+            {analysis.monthlyCost <= budget
+              ? `₦${(budget - analysis.monthlyCost).toLocaleString()} below budget`
+              : `₦${(analysis.monthlyCost - budget).toLocaleString()} above budget`}
+          </p>
+        </GlassCard>
+
+        <GlassCard className="p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Backup Ready</span>
+
+            <Battery className="size-4 text-primary" />
+          </div>
+
+          <p className="mt-2 text-2xl font-display font-bold">{advisor?.readinessScore ?? 0}%</p>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {advisor?.bestTechnology === "INVERTER"
+              ? "Inverter Recommended"
+              : advisor?.bestTechnology === "GENERATOR"
+                ? "Generator Recommended"
+                : "Hybrid Recommended"}
+          </p>
+        </GlassCard>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
-        <GlassCard className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
+      <div className="space-y-6">
+        {/* ================= COMMUNITY POWER ================= */}
+
+        <GlassCard className="p-6">
+          <div className="flex flex-col gap-6 h-16 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h2 className="font-semibold">Today's consumption</h2>
-              <p className="text-xs text-muted-foreground">kW over 24h</p>
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-6 w-6 text-primary" />
+
+                <h2 className="text-xl font-semibold">Community Power</h2>
+              </div>
+
+              <p className="mt-2 text-sm text-muted-foreground">
+                Live community power status from nearby reports.
+              </p>
             </div>
-            <TrendingUp className="size-4 text-primary" />
+
+            <Link
+              to="/outages"
+              className="inline-flex items-center rounded-xl border border-primary/30 bg-primary/5 px-5 py-3 font-medium text-primary transition hover:bg-primary/10"
+            >
+              Open Outage Tracker →
+            </Link>
           </div>
-          <div className="h-64">
-            <ResponsiveContainer>
-              <AreaChart data={series}>
-                <defs>
-                  <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#00C853" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="#00C853" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="hour" tick={{ fontSize: 10, fill: "#888" }} interval={3} />
-                <YAxis tick={{ fontSize: 10, fill: "#888" }} width={28} />
-                <Tooltip
-                  contentStyle={{
-                    background: "rgba(20,28,40,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="kw"
-                  stroke="#00C853"
-                  strokeWidth={2}
-                  fill="url(#g1)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-4">
+            <div>
+              <p className="text-xs uppercase text-muted-foreground">Status</p>
+
+              <span
+                className={`mt-3 inline-flex rounded-full px-4 py-2 text-sm font-semibold ${
+                  currentStatus === "Power ON"
+                    ? "bg-green-500/10 text-green-500"
+                    : currentStatus === "Power OFF"
+                      ? "bg-red-500/10 text-red-500"
+                      : "bg-yellow-500/10 text-yellow-500"
+                }`}
+              >
+                {isPending ? "Loading..." : currentStatus}
+              </span>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase text-muted-foreground">Area</p>
+
+              <p className="mt-3 text-lg font-semibold">{location.area}</p>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase text-muted-foreground">Distribution Company</p>
+
+              <p className="mt-3 text-lg font-semibold">{location.discoCode}</p>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase text-muted-foreground">Community Confidence</p>
+
+              <p className="mt-3 text-lg font-semibold">
+                {confidence}% ({reportCount} reports)
+              </p>
+            </div>
           </div>
         </GlassCard>
 
-        <GlassCard>
-          <h2 className="font-semibold flex items-center gap-2">
-            <Battery className="size-4 text-primary" />
-            Today's AI Recommendation
-          </h2>
-          <div className="mt-4 space-y-4">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-              <p className="text-sm leading-6">
-                Running your iron during public electricity hours instead of generator hours could
-                reduce your monthly energy cost by approximately
-                <span className="font-semibold text-primary"> ₦3,200.</span>
-              </p>
+        {/* ================= POWERCHECK TOOLS ================= */}
+
+        <GlassCard className="p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold">PowerCheck Tools</h2>
+
+            <p className="mt-2 text-sm text-muted-foreground">Access all PowerCheckNG tools.</p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-4">
+            <Link
+              to="/energy"
+              className="group flex flex-col items-center rounded-2xl border border-border p-8 transition-all hover:border-primary hover:bg-primary/5"
+            >
+              <Zap className="h-10 w-10 text-primary transition group-hover:scale-110" />
+
+              <span className="mt-5 font-semibold">Planner</span>
+            </Link>
+
+            <Link
+              to="/insights"
+              className="group flex flex-col items-center rounded-2xl border border-border p-8 transition-all hover:border-primary hover:bg-primary/5"
+            >
+              <TrendingUp className="h-10 w-10 text-primary transition group-hover:scale-110" />
+
+              <span className="mt-5 font-semibold">Insights</span>
+            </Link>
+
+            <Link
+              to="/backup"
+              className="group flex flex-col items-center rounded-2xl border border-border p-8 transition-all hover:border-primary hover:bg-primary/5"
+            >
+              <Battery className="h-10 w-10 text-primary transition group-hover:scale-110" />
+
+              <span className="mt-5 font-semibold">Backup</span>
+            </Link>
+
+            <Link
+              to="/outages"
+              className="group flex flex-col items-center rounded-2xl border border-border p-8 transition-all hover:border-primary hover:bg-primary/5"
+            >
+              <AlertTriangle className="h-10 w-10 text-primary transition group-hover:scale-110" />
+
+              <span className="mt-5 font-semibold">Outages</span>
+            </Link>
+          </div>
+        </GlassCard>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <GlassCard className="lg:col-span-2 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Energy Profile</h2>
+
+              <p className="mt-1 text-sm text-muted-foreground">Your current energy setup.</p>
             </div>
 
-            <div className="rounded-xl border border-white/10 p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">Energy Tip</p>
+            <Link to="/energy" className="text-sm font-semibold text-primary hover:underline">
+              Update →
+            </Link>
+          </div>
 
-              <p className="mt-2 text-sm">
-                Your refrigerator consumes energy continuously. Consider reducing air conditioner
-                usage by 2 hours daily to stay within your monthly budget.
-              </p>
+          <div className="mt-6 grid grid-cols-2 gap-5">
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs text-muted-foreground">Selected</p>
+
+              <p className="mt-2 text-2xl font-bold">{analysis.applianceCount}</p>
             </div>
+
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs text-muted-foreground">Essential</p>
+
+              <p className="mt-2 text-2xl font-bold">{analysis.essentialApplianceCount}</p>
+            </div>
+
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs text-muted-foreground">Peak Load</p>
+
+              <p className="mt-2 text-2xl font-bold">{analysis.peakLoad.toLocaleString()}W</p>
+            </div>
+
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs text-muted-foreground">Highest Consumer</p>
+
+              <p className="mt-2 font-semibold">{analysis.highestConsumer}</p>
+            </div>
+          </div>
+        </GlassCard>
+
+        <GlassCard className="lg:col-span-2 p-6">
+          <div className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-5">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+              Today's Recommendation
+            </p>
+
+            <p className="mt-3 text-base leading-7">{analysis.recommendations[0]}</p>
+          </div>
+
+          <div className="mt-6">
+            <Link
+              to="/insights"
+              className="inline-flex items-center text-sm font-semibold text-primary hover:underline"
+            >
+              View Smart Insights →
+            </Link>
           </div>
         </GlassCard>
       </div>

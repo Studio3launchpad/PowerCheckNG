@@ -2,14 +2,15 @@ export type CatalogueAppliance = {
   id: string;
   name: string;
   category:
-    | "Cooling"
-    | "Entertainment"
-    | "Kitchen"
-    | "Office"
-    | "Laundry"
-    | "Lighting"
-    | "Water"
-    | "Other";
+  | "Cooling"
+  | "Entertainment"
+  | "Kitchen"
+  | "Office"
+  | "Laundry"
+  | "Lighting"
+  | "Water"
+  | "Security"
+  | "Workshop & Business";
 
   watts: number;
   defaultHours: number;
@@ -54,13 +55,6 @@ export const APPLIANCE_CATALOGUE: CatalogueAppliance[] = [
     watts: 150,
     defaultHours: 4,
   },
-  {
-    id: "game-console",
-    name: "Game Console",
-    category: "Entertainment",
-    watts: 180,
-    defaultHours: 2,
-  },
 
   // Kitchen
   {
@@ -76,13 +70,6 @@ export const APPLIANCE_CATALOGUE: CatalogueAppliance[] = [
     category: "Kitchen",
     watts: 1800,
     defaultHours: 0.5,
-  },
-  {
-    id: "rice-cooker",
-    name: "Rice Cooker",
-    category: "Kitchen",
-    watts: 700,
-    defaultHours: 1,
   },
   {
     id: "blender",
@@ -131,15 +118,6 @@ export const APPLIANCE_CATALOGUE: CatalogueAppliance[] = [
     defaultHours: 1,
   },
 
-  // Lighting
-  {
-    id: "security-light",
-    name: "Security Light",
-    category: "Lighting",
-    watts: 30,
-    defaultHours: 12,
-  },
-
   // Water
   {
     id: "borehole-pump",
@@ -148,4 +126,43 @@ export const APPLIANCE_CATALOGUE: CatalogueAppliance[] = [
     watts: 1100,
     defaultHours: 1,
   },
+
+  // Security
+{
+  id: "cctv-camera",
+  name: "CCTV Camera",
+  category: "Security",
+  watts: 15,
+  defaultHours: 24,
+},
+
+// Workshop & Business
+{
+  id: "pos-terminal",
+  name: "POS Terminal",
+  category: "Workshop & Business",
+  watts: 15,
+  defaultHours: 10,
+},
+{
+  id: "photocopier",
+  name: "Photocopier",
+  category: "Workshop & Business",
+  watts: 900,
+  defaultHours: 2,
+},
+{
+  id: "hair-clipper",
+  name: "Hair Clipper",
+  category: "Workshop & Business",
+  watts: 20,
+  defaultHours: 4,
+},
+{
+  id: "hair-dryer",
+  name: "Hair Dryer",
+  category: "Workshop & Business",
+  watts: 1800,
+  defaultHours: 1,
+},
 ];

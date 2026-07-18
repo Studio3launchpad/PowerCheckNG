@@ -85,3 +85,49 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
     essential: false,
   },
 ];
+
+export const APPLIANCE_CATEGORIES = [
+  { id: "all", label: "All" },
+  { id: "Cooling", label: "Cooling" },
+  { id: "Kitchen", label: "Kitchen" },
+  { id: "Entertainment", label: "Entertainment" },
+  { id: "Office", label: "Office" },
+  { id: "Laundry", label: "Laundry" },
+  { id: "Water", label: "Water" },
+  { id: "Security", label: "Security" },
+  {
+    id: "Workshop & Business",
+    label: "Workshop & Business",
+  },
+];
+
+export type ApplianceCategory =
+  (typeof APPLIANCE_CATEGORIES)[number];
+
+export const POWER_RANGES = [
+  {
+    id: "very-low",
+    label: "Very Low (1–50W)",
+    defaultWatts: 25,
+  },
+  {
+    id: "low",
+    label: "Low (51–150W)",
+    defaultWatts: 100,
+  },
+  {
+    id: "medium",
+    label: "Medium (151–500W)",
+    defaultWatts: 300,
+  },
+  {
+    id: "high",
+    label: "High (501–1500W)",
+    defaultWatts: 900,
+  },
+  {
+    id: "very-high",
+    label: "Very High (1500W+)",
+    defaultWatts: 2500,
+  },
+] as const;

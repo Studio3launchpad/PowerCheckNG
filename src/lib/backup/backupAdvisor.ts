@@ -92,6 +92,10 @@ export type BackupRecommendation = {
 };
 
 export type GeneratorRecommendation = {
+  type: BackupType;
+
+  title: string;
+
   name: string;
 
   estimatedCost: number;
@@ -103,6 +107,8 @@ export type GeneratorRecommendation = {
   maintenance: string;
 
   reason: string;
+
+  suitability: number;
 };
 
 export function recommendBackupSystem(peakLoad: number, dailyEnergy: number): BackupRecommendation {
@@ -129,7 +135,18 @@ export function recommendBackupSystem(peakLoad: number, dailyEnergy: number): Ba
     suitability = Math.round(loadScore);
   }
 
-  const reason = `Your estimated simultaneous backup load is ${peakLoad}W. After applying a 25% safety margin (${recommendedLoad}W), the ${system.inverter} is the most suitable recommendation, providing sufficient capacity for startup surge and future expansion.`;
+  let reason: string;
+
+  if (system.maxLoad <= 500) {
+    reason =
+      "An inverter is the most practical choice for your selected appliances because their combined outage load is relatively low. It provides quiet operation, lower running costs, and sufficient backup capacity for your essential appliances while leaving room for modest future expansion.";
+  } else if (system.maxLoad <= 1800) {
+    reason =
+      "Your energy needs are well suited to an inverter system. It provides reliable backup for your essential appliances while maintaining good efficiency and lower operating costs compared to fuel-powered alternatives.";
+  } else {
+    reason =
+      "Your energy demand is approaching the upper range for residential inverter systems. This recommendation provides enough capacity for your current essential appliances while allowing room for future expansion if your energy needs grow.";
+  }
 
   return {
     type: "INVERTER",
@@ -152,29 +169,37 @@ export function recommendBackupSystem(peakLoad: number, dailyEnergy: number): Ba
   };
 }
 
-export function recommendGenerator(
-  peakLoad: number,
-): GeneratorRecommendation {
+export function recommendGenerator(peakLoad: number): GeneratorRecommendation {
   const system =
-    GENERATOR_SYSTEMS.find(
-      (generator) =>
-        peakLoad <= generator.maxLoad,
-    ) ??
-    GENERATOR_SYSTEMS[
-      GENERATOR_SYSTEMS.length - 1
-    ];
+    GENERATOR_SYSTEMS.find((generator) => peakLoad <= generator.maxLoad) ??
+    GENERATOR_SYSTEMS[GENERATOR_SYSTEMS.length - 1];
+
+  let suitability: number;
+
+  if (peakLoad > GENERATOR_SYSTEMS[GENERATOR_SYSTEMS.length - 1].maxLoad) {
+    suitability = 65;
+  } else {
+    const loadScore = Math.max(70, 100 - Math.abs(system.maxLoad - peakLoad) / 30);
+
+    suitability = Math.round(loadScore);
+  }
 
   return {
+    type: "GENERATOR",
+
+    title: "Recommended Generator",
+
+    suitability,
+
     ...system,
 
     reason:
-      "Generators are generally more suitable for higher electrical loads, long outages, and appliances with heavy startup requirements such as water pumps and air conditioners.",
+      "A generator is recommended because your outage power demand is relatively high and may need to be sustained for extended periods. It can comfortably support heavier appliances and avoids the runtime limitations associated with battery-only backup systems.",
   };
 }
 
 export function buildBackupAdvisor(analysis: EnergyAnalysis) {
-  const inverterRecommendation =
-  recommendBackupSystem(analysis.peakLoad, analysis.dailyUsage);
+  const inverterRecommendation = recommendBackupSystem(analysis.peakLoad, analysis.dailyUsage);
 
   const generatorRecommendation = recommendGenerator(analysis.peakLoad);
 
@@ -185,23 +210,20 @@ export function buildBackupAdvisor(analysis: EnergyAnalysis) {
 
   let bestTechnology: BackupType;
 
-if (analysis.peakLoad <= 1800) {
-  bestTechnology = "INVERTER";
-} else if (analysis.peakLoad <= 3000) {
-  bestTechnology =
-    analysis.essentialApplianceCount >= 4
-      ? "HYBRID"
-      : "GENERATOR";
-} else {
-  bestTechnology = "GENERATOR";
-}
-return {
-  readinessScore,
+  if (analysis.peakLoad <= 1800) {
+    bestTechnology = "INVERTER";
+  } else if (analysis.peakLoad <= 3000) {
+    bestTechnology = analysis.essentialApplianceCount >= 4 ? "HYBRID" : "GENERATOR";
+  } else {
+    bestTechnology = "GENERATOR";
+  }
+  return {
+    readinessScore,
 
-  bestTechnology,
+    bestTechnology,
 
-  recommendation: inverterRecommendation,
+    recommendation: inverterRecommendation,
 
-  generatorRecommendation,
-};
+    generatorRecommendation,
+  };
 }

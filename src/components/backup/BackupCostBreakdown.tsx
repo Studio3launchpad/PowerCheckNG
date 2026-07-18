@@ -1,14 +1,32 @@
 import { Wallet, Info } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
-import type { BackupRecommendation } from "@/lib/backup/backupAdvisor";
+import type {
+  BackupRecommendation,
+  BackupType,
+  GeneratorRecommendation,
+} from "@/lib/backup/backupAdvisor";
+import { buildBackupDisplayModel } from "@/lib/backup/displayModel";
 
 type Props = {
-  recommendation: BackupRecommendation;
+  bestTechnology: BackupType;
+
+  inverter: BackupRecommendation;
+
+  generator: GeneratorRecommendation;
 };
 
 export function BackupCostBreakdown({
-  recommendation,
+  bestTechnology,
+  inverter,
+  generator,
 }: Props) {
+
+const display = buildBackupDisplayModel(
+  bestTechnology,
+  inverter,
+  generator,
+);
+
   return (
     <GlassCard>
       <div className="space-y-6">
@@ -32,7 +50,7 @@ export function BackupCostBreakdown({
           </p>
 
           <h3 className="mt-2 text-3xl font-bold text-primary">
-            ₦{recommendation.estimatedCost.toLocaleString()}
+            ₦{display.cost.toLocaleString()}
           </h3>
 
           <p className="mt-3 text-sm text-muted-foreground">
@@ -46,11 +64,10 @@ export function BackupCostBreakdown({
           </h3>
 
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>✓ Inverter</li>
-            <li>✓ Recommended battery configuration</li>
-            <li>✓ Basic installation materials</li>
-            <li>✓ Standard electrical accessories</li>
-          </ul>
+  {display.items.map((item) => (
+    <li key={item}>{item}</li>
+  ))}
+</ul>
         </div>
 
         <div className="rounded-xl border border-border p-4">
@@ -63,10 +80,8 @@ export function BackupCostBreakdown({
               </p>
 
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Actual costs depend on the inverter brand, battery technology,
-                installation complexity, accessories required, and current market
-                prices in your location.
-              </p>
+  {display.note}
+</p>
             </div>
           </div>
         </div>

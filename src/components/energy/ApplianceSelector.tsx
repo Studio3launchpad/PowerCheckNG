@@ -4,6 +4,7 @@ import type { Appliance } from "@/lib/energy/energy.types";
 import { useState } from "react";
 import { CustomApplianceForm } from "@/components/energy/CustomApplianceForm";
 import { APPLIANCE_CATALOGUE } from "@/lib/energy/applianceCatalogue";
+import { APPLIANCE_CATEGORIES } from "@/lib/energy/energy.constants";
 
 type Props = {
   appliances: Appliance[];
@@ -12,6 +13,7 @@ type Props = {
   onAddAppliance: (appliance: Appliance) => void;
   onRemoveAppliance: (id: string) => void;
   onToggleEssential: (name: string) => void;
+  onContinueToBudget: () => void;
 };
 
 export function ApplianceSelector({
@@ -21,6 +23,7 @@ export function ApplianceSelector({
   onAddAppliance,
   onRemoveAppliance,
   onToggleEssential,
+  onContinueToBudget,
 }: Props) {
   const [showCustomForm, setShowCustomForm] = useState(false);
 
@@ -28,15 +31,29 @@ export function ApplianceSelector({
 
   const [search, setSearch] = useState("");
 
+  const [selectedCategory, setSelectedCategory] =
+  useState<string>("All");
+
   const existingAppliances = new Set(appliances.map((a) => a.name.toLowerCase()));
 
   const filteredCatalogue = APPLIANCE_CATALOGUE.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+  const matchesSearch =
+    item.name.toLowerCase().includes(search.toLowerCase());
 
-    const alreadyAdded = existingAppliances.has(item.name.toLowerCase());
+  const matchesCategory =
+    selectedCategory === "All" ||
+    item.category === selectedCategory;
 
-    return matchesSearch && !alreadyAdded;
-  });
+  const alreadyAdded = existingAppliances.has(
+    item.name.toLowerCase(),
+  );
+
+  return (
+    matchesSearch &&
+    matchesCategory &&
+    !alreadyAdded
+  );
+});
 
   return (
     <GlassCard>
@@ -63,7 +80,11 @@ export function ApplianceSelector({
 
                 <button
                   type="button"
-                  onClick={() => setShowCatalogue(false)}
+                  onClick={() => {
+  setSearch("");
+  setSelectedCategory("All");
+  setShowCatalogue(false);
+}}
                   className="rounded-lg p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground"
                 >
                   ✕
@@ -77,6 +98,37 @@ export function ApplianceSelector({
                 onChange={(e) => setSearch(e.target.value)}
                 className="mt-5 w-full rounded-xl border border-border bg-background px-4 py-3 outline-none focus:border-primary"
               />
+
+              <div className="mt-4 flex flex-wrap gap-2">
+  <button
+    type="button"
+    onClick={() => setSelectedCategory("All")}
+    className={`rounded-full px-3 py-1 text-sm transition ${
+      selectedCategory === "All"
+        ? "bg-primary text-primary-foreground"
+        : "border border-border hover:border-primary"
+    }`}
+  >
+    All
+  </button>
+
+  {APPLIANCE_CATEGORIES
+  .filter((category) => category.id !== "all")
+  .map((category) => (
+    <button
+      key={category.id}
+      type="button"
+      onClick={() => setSelectedCategory(category.id)}
+      className={`rounded-full px-3 py-1 text-sm transition ${
+        selectedCategory === category.id
+          ? "bg-primary text-primary-foreground"
+          : "border border-border hover:border-primary"
+      }`}
+    >
+      {category.label}
+    </button>
+  ))}
+</div>
 
               <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredCatalogue.map((item) => (
@@ -100,7 +152,9 @@ export function ApplianceSelector({
                         essential: false,
                       });
 
-                      setShowCatalogue(false);
+                      setSearch("");
+  setSelectedCategory("All");
+  setShowCatalogue(false);
                     }}
                     className="rounded-lg border border-border bg-background px-4 py-3 text-left transition hover:border-primary hover:bg-primary/5"
                   >
@@ -119,9 +173,11 @@ export function ApplianceSelector({
                 <button
                   type="button"
                   onClick={() => {
-                    setShowCatalogue(false);
-                    setShowCustomForm(true);
-                  }}
+  setSearch("");
+  setSelectedCategory("All");
+  setShowCatalogue(false);
+  setShowCustomForm(true);
+}}
                   className="mt-3 rounded-lg border border-primary bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
                 >
                   + Create Custom Appliance
@@ -132,15 +188,25 @@ export function ApplianceSelector({
         )}
 
         {!showCustomForm && (
-          <button
-            type="button"
-            onClick={() => setShowCatalogue(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4" />
-            Add Appliance
-          </button>
-        )}
+  <div className="flex flex-wrap gap-2">
+    <button
+      type="button"
+      onClick={setShowCatalogue.bind(null, true)}
+      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+    >
+      <Plus className="h-4 w-4" />
+      Add Appliance
+    </button>
+
+    <button
+      type="button"
+      onClick={onContinueToBudget}
+      className="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/10"
+    >
+      Set Monthly Budget
+    </button>
+  </div>
+)}
       </div>
 
       {showCustomForm && (

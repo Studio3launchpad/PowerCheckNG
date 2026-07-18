@@ -1,17 +1,36 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 import type { Appliance } from "@/lib/energy/energy.types";
-import type { BackupRecommendation } from "@/lib/backup/backupAdvisor";
+import type {
+  BackupRecommendation,
+  BackupType,
+  GeneratorRecommendation,
+} from "@/lib/backup/backupAdvisor";
 
 type Props = {
   appliances: Appliance[];
-  recommendation: BackupRecommendation;
+
+  bestTechnology: BackupType;
+
+  inverter: BackupRecommendation;
+
+  generator: GeneratorRecommendation;
 };
 
 export function CanItPowerCard({
   appliances,
-  recommendation,
+  bestTechnology,
+  inverter,
+  generator,
 }: Props) {
+
+const maxLoad =
+  bestTechnology === "GENERATOR"
+    ? generator.maxLoad
+    : bestTechnology === "HYBRID"
+      ? Math.max(inverter.maxLoad, generator.maxLoad)
+      : inverter.maxLoad;
+
   const selected = appliances.filter(
     (appliance) => appliance.selected,
   );
@@ -27,7 +46,7 @@ export function CanItPowerCard({
 
     if (
       runningLoad + load <=
-      recommendation.maxLoad
+      maxLoad
     ) {
       supported.push(appliance);
       runningLoad += load;

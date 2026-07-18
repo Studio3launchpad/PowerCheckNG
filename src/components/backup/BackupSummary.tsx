@@ -1,15 +1,33 @@
 import { GlassCard } from "@/components/GlassCard";
-import type { BackupRecommendation } from "@/lib/backup/backupAdvisor";
+import type {
+  BackupRecommendation,
+  BackupType,
+  GeneratorRecommendation,
+} from "@/lib/backup/backupAdvisor";
+import { buildBackupDisplayModel } from "@/lib/backup/displayModel";
 
 
 
 type Props = {
-  recommendation: BackupRecommendation;
+  bestTechnology: BackupType;
+
+  inverter: BackupRecommendation;
+
+  generator: GeneratorRecommendation;
 };
 
 export function BackupSummary({
-  recommendation,
+  bestTechnology,
+  inverter,
+  generator,
 }: Props) {
+
+const display = buildBackupDisplayModel(
+  bestTechnology,
+  inverter,
+  generator,
+);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <GlassCard>
@@ -18,7 +36,7 @@ export function BackupSummary({
         </p>
 
         <h2 className="mt-2 text-2xl font-bold">
-          {recommendation.inverter}
+          {display.system}
         </h2>
       </GlassCard>
 
@@ -28,7 +46,7 @@ export function BackupSummary({
         </p>
 
         <h2 className="mt-2 text-2xl font-bold">
-          {recommendation.estimatedRuntime} Hours
+          {display.runtime}
         </h2>
       </GlassCard>
 
@@ -38,7 +56,7 @@ export function BackupSummary({
         </p>
 
         <h2 className="mt-2 text-2xl font-bold">
-          ₦{recommendation.estimatedCost.toLocaleString()}
+          ₦{display.cost.toLocaleString()}
         </h2>
       </GlassCard>
 
@@ -48,7 +66,7 @@ export function BackupSummary({
         </p>
 
         <h2 className="mt-2 text-2xl font-bold text-primary">
-          {recommendation.maxLoad}W
+          {display.capacity}W
         </h2>
       </GlassCard>
     </div>
