@@ -19,6 +19,7 @@ import { Route as AppHistoryRouteImport } from './routes/_app.history'
 import { Route as AppEnergyRouteImport } from './routes/_app.energy'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppBackupRouteImport } from './routes/_app.backup'
+import { Route as AppAccountRouteImport } from './routes/_app.account'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -69,9 +70,15 @@ const AppBackupRoute = AppBackupRouteImport.update({
   path: '/backup',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountRoute = AppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AppAccountRoute
   '/backup': typeof AppBackupRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AppAccountRoute
   '/backup': typeof AppBackupRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_app/account': typeof AppAccountRoute
   '/_app/backup': typeof AppBackupRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/energy': typeof AppEnergyRoute
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/backup'
     | '/dashboard'
     | '/energy'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/backup'
     | '/dashboard'
     | '/energy'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/_app/account'
     | '/_app/backup'
     | '/_app/dashboard'
     | '/_app/energy'
@@ -221,10 +233,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBackupRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/account': {
+      id: '/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AppAccountRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
   AppBackupRoute: typeof AppBackupRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEnergyRoute: typeof AppEnergyRoute
@@ -234,6 +254,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
   AppBackupRoute: AppBackupRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEnergyRoute: AppEnergyRoute,

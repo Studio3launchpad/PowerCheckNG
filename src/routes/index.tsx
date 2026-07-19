@@ -59,7 +59,8 @@ function Landing() {
   ] as const;
 
   return (
-    <div className="min-h-screen grid-bg">
+    <div className="min-h-screen grid-bg relative overflow-hidden">
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
       {/* Nav */}
       <LandingNav />
 

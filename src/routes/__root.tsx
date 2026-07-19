@@ -12,6 +12,7 @@ import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "sonner";
 import { getClerkPublishableKey } from "../lib/clerk-config.functions";
+import { dark } from "@clerk/ui/themes";
 
 
 
@@ -139,10 +140,21 @@ function RootComponent() {
 
   return (
     <ClerkProvider
-      publishableKey={publishableKey}
-      appearance={{ variables: { colorPrimary: "#00C853" } }}
-    >
-      {tree}
-    </ClerkProvider>
+  publishableKey={publishableKey}
+  appearance={{
+    theme: dark,
+
+    variables: {
+      colorPrimary: "#00C853",
+      borderRadius: "0.9rem",
+    },
+
+    options: {
+      unsafe_disableDevelopmentModeWarnings: true,
+    },
+  }}
+>
+  {tree}
+</ClerkProvider>
   );
 }

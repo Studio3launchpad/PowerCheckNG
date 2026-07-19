@@ -2,6 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { Section } from "@/components/layout/Section";
+
+
 
 const previewCards = [
   {
@@ -36,7 +40,9 @@ const previewCards = [
 
 export function Hero() {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-24 pt-12 lg:grid-cols-2">
+   <Section className="pt-8 sm:pt-12">
+  <PageContainer>
+    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
       {/* Left */}
 
       <motion.div
@@ -44,12 +50,12 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs text-primary">
+        <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] sm:text-xs text-primary">
           <span className="size-1.5 animate-pulse rounded-full bg-primary" />
           ⚡ Smarter Energy Planning for Nigeria
         </span>
 
-        <h1 className="mt-5 font-display text-5xl font-bold leading-tight md:text-6xl">
+        <h1 className="mt-5 font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
           Good Energy Decisions,
           <br />
 
@@ -58,18 +64,18 @@ export function Hero() {
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-xl leading-8 text-muted-foreground">
+        <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg lg:text-xl lg:leading-8">
           PowerCheckNG helps Nigerian homes and businesses
           understand electricity usage, estimate monthly costs,
           choose the right backup solution and stay informed
           about power outages in their community.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Link
             to="/sign-up/$"
             params={{ _splat: "" }}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 glow-primary"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto glow-primary"
           >
             Get Started
             <ArrowRight className="size-4" />
@@ -77,7 +83,7 @@ export function Hero() {
 
           <a
             href="#features"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/40 px-5 py-3 text-sm font-medium transition hover:bg-card/70"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/40 px-5 py-3 text-sm font-medium transition hover:bg-card/70 sm:w-auto"
           >
             Explore Features
           </a>
@@ -114,7 +120,7 @@ export function Hero() {
 
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
 
               {previewCards.map((card, index) => (
 
@@ -188,6 +194,8 @@ export function Hero() {
         </GlassCard>
 
       </motion.div>
-    </section>
+        </div>
+  </PageContainer>
+</Section>
   );
 }

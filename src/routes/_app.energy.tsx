@@ -254,13 +254,24 @@ function SmartEnergyPlanner() {
           <EnergyAnalysisResults analysis={analysis} budget={Number(budget)} />
 
           <div className="flex justify-center">
-            <Link
-              to="/insights"
-              className="group inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10"
-            >
-              View Full Smart Insights
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </Link>
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
+  <Link
+    to="/dashboard"
+    className="inline-flex items-center justify-center rounded-xl border border-border px-6 py-3 text-sm font-semibold transition hover:bg-white/5"
+  >
+    ← View Dashboard
+  </Link>
+
+  <Link
+    to="/insights"
+    className="group inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10"
+  >
+    View Full Smart Insights
+    <span className="transition-transform group-hover:translate-x-1">
+      →
+    </span>
+  </Link>
+</div>
           </div>
         </div>
       )}
