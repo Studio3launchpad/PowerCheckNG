@@ -13,7 +13,7 @@ function ProfilePage() {
       title="Personal & Security"
       description="Manage your profile, security settings and connected accounts."
     >
-      <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
+      <div className="overflow-x-auto rounded-3xl border bg-card shadow-sm">
         <UserProfile routing="hash" />
       </div>
     </AccountPage>

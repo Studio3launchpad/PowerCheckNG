@@ -50,7 +50,6 @@ function SessionsPage() {
 
   return (
     <AccountPage title="Active Sessions" description="Devices currently signed into your account.">
-      <AccountNavigation />
 
       <GlassCard className="rounded-2xl p-6">
         {isLoading ? (
@@ -60,9 +59,9 @@ function SessionsPage() {
             {data.map((session, index) => (
               <div
                 key={session.id}
-                className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/40 p-5 transition hover:border-primary/30 hover:bg-primary/5"
+                className="flex flex-col gap-5 rounded-2xl border border-border/50 bg-background/40 p-5 transition hover:border-primary/30 hover:bg-primary/5 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div className="space-y-1">
+                <div className="min-w-0 flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold">
                       {session.activity?.device ?? "Unknown Device"}
@@ -89,6 +88,7 @@ function SessionsPage() {
                   </p>
                 </div>
                 <Button
+  className="w-full sm:w-auto"
                   variant="outline"
                   size="sm"
                   disabled={revokeOne.isPending}
@@ -108,8 +108,9 @@ function SessionsPage() {
           <p className="text-muted-foreground">No active sessions found.</p>
         )}
       </GlassCard>
-      <div className="flex justify-end pt-6">
+      <div className="flex justify-stretch pt-6 sm:justify-end">
         <Button
+  className="w-full sm:w-auto"
           variant="destructive"
           disabled={revokeAll.isPending}
           onClick={() =>

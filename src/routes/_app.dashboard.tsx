@@ -13,6 +13,7 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardTools } from "@/components/dashboard/DashboardTools";
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard";
 import {loadEnergyAnalysis, loadSavedBudget} from "@/lib/energy/energyStorage";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 const outagesQO = queryOptions({
   queryKey: ["outages"],
@@ -45,30 +46,27 @@ function Dashboard() {
 
   if (!hasEnergyProfile) {
     return (
-      <div className="space-y-6 pb-24 lg:pb-6">
-        <header>
-          <h1 className="text-3xl font-display font-bold">Dashboard</h1>
+      <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
+        <PageHeader
+  title="Dashboard"
+  description="Start by creating your Smart Energy Plan to unlock your personalised dashboard."
+/>
 
-          <p className="mt-2 text-sm text-muted-foreground">
-            Start by creating your Smart Energy Plan to unlock your personalised dashboard.
-          </p>
-        </header>
-
-        <GlassCard className="p-8 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-2xl">
+        <GlassCard className="p-5 text-center sm:p-8">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl sm:h-14 sm:w-14 sm:text-2xl">
             ⚡
           </div>
 
-          <h2 className="mt-5 text-xl font-semibold">No Energy Profile Yet</h2>
+          <h2 className="mt-5 text-lg font-semibold sm:text-xl">No Energy Profile Yet</h2>
 
-          <p className="mt-3 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
             Build your Smart Energy Plan to see your energy summary, recommendations, backup
             solution and community power information.
           </p>
 
           <Link
             to="/energy"
-            className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+            className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto sm:px-5"
           >
             Build Your Energy Plan
           </Link>
@@ -78,7 +76,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 pb-24 lg:pb-6">
+    <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
       <DashboardHeader
         monthlyCost={analysis.monthlyCost}
         budget={budget}

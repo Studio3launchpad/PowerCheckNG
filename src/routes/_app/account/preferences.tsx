@@ -1,18 +1,16 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
-
+import { toast } from "sonner";
 import { GlassCard } from "@/components/GlassCard";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-
 import { AccountPage } from "@/components/account/AccountPage";
-
 import {
   getPreferences,
   savePreferences,
 } from "@/lib/preferences.storage";
-
 import type { UserPreferences } from "@/lib/preferences.types";
+
 
 export const Route = createFileRoute(
   "/_app/account/preferences",
@@ -26,35 +24,51 @@ function PreferencesPage() {
       getPreferences(),
     );
 
-  React.useEffect(() => {
-    savePreferences(preferences);
-  }, [preferences]);
-
   function updateNotification(
-    key: keyof UserPreferences["notifications"],
-    value: boolean,
-  ) {
-    setPreferences((prev) => ({
+  key: keyof UserPreferences["notifications"],
+  value: boolean,
+) {
+  setPreferences((prev) => {
+    const updated = {
       ...prev,
       notifications: {
         ...prev.notifications,
         [key]: value,
       },
-    }));
-  }
+    };
+
+    savePreferences(updated);
+
+    toast.success("Preferences saved", {
+  id: "preferences-saved",
+});
+
+    return updated;
+  });
+}
 
   function updatePrivacy(
-    key: keyof UserPreferences["privacy"],
-    value: boolean,
-  ) {
-    setPreferences((prev) => ({
+  key: keyof UserPreferences["privacy"],
+  value: boolean,
+) {
+  setPreferences((prev) => {
+    const updated = {
       ...prev,
       privacy: {
         ...prev.privacy,
         [key]: value,
       },
-    }));
-  }
+    };
+
+    savePreferences(updated);
+
+    toast.success("Preferences saved", {
+  id: "preferences-saved",
+});
+
+    return updated;
+  });
+}
 
   return (
   <AccountPage
@@ -168,9 +182,9 @@ function Preference({
   ) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-6">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-      <div className="space-y-1">
+      <div className="flex-1 space-y-1">
 
         <Label className="font-medium">
           {title}

@@ -33,7 +33,7 @@ export function AccountNavigation() {
   });
 
   return (
-    <nav className="mb-8 flex w-fit items-center gap-2 rounded-2xl border bg-card p-2 shadow-sm">
+    <nav className="mb-6 flex w-full flex-wrap gap-2 rounded-2xl border bg-card p-2 shadow-sm sm:mb-8 sm:w-fit">
       {items.map((item) => {
         const Icon = item.icon;
 
@@ -44,7 +44,7 @@ export function AccountNavigation() {
             key={item.to}
             to={item.to}
             className={[
-              "flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium whitespace-nowrap transition-all",
+              "flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium whitespace-nowrap transition-all sm:flex-none sm:px-5",
               active
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",

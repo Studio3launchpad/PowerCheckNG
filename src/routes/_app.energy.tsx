@@ -1,19 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
-import { Brain } from "lucide-react";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { analyzeEnergyPlan } from "@/lib/energy/energyPlanner";
 import { DEFAULT_APPLIANCES } from "@/lib/energy/energy.constants";
 import type { Appliance, EnergyAnalysis } from "@/lib/energy/energy.types";
 import { ApplianceSelector } from "@/components/energy/ApplianceSelector";
 import { EnergyBudgetInput } from "@/components/energy/EnergyBudgetInput";
 import { EnergyAnalysisResults } from "@/components/energy/EnergyAnalysisResults";
-import {
-  loadSavedAppliances,
-  loadSavedBudget,
-  saveAppliances,
-  saveBudget,
-  saveEnergyAnalysis,
-} from "@/lib/energy/energyStorage";
+import {loadSavedAppliances, loadSavedBudget, saveAppliances, saveBudget, saveEnergyAnalysis} from "@/lib/energy/energyStorage";
 
 const ANALYSIS_SESSION_KEY = "powercheckng-energy-analysis-timestamp";
 
@@ -206,29 +200,22 @@ function SmartEnergyPlanner() {
   };
 
   return (
-    <div className="space-y-6 pb-24 lg:pb-6">
-      <header className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h1 className="text-3xl font-display font-bold flex items-center gap-2">
-            <Brain className="text-primary" />
-            Smart Energy Planner
-          </h1>
-
-          <p className="text-sm text-muted-foreground mt-2">
-            Build an energy plan based on your appliances and monthly electricity budget.
-          </p>
-        </div>
-
-        {analysis && (
-          <Link
-            to="/insights"
-            className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
-          >
-            View Smart Insights
-            <span>→</span>
-          </Link>
-        )}
-      </header>
+    <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
+      <PageHeader
+  title="Smart Energy Planner"
+  description="Build an energy plan based on your appliances and monthly electricity budget."
+  actions={
+    analysis ? (
+      <Link
+        to="/insights"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto"
+      >
+        View Smart Insights
+        <span>→</span>
+      </Link>
+    ) : undefined
+  }
+/>
 
       <ApplianceSelector
         appliances={appliances}
@@ -253,18 +240,18 @@ function SmartEnergyPlanner() {
         <div className="space-y-6" ref={resultsSectionRef}>
           <EnergyAnalysisResults analysis={analysis} budget={Number(budget)} />
 
-          <div className="flex justify-center">
-            <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="flex justify-center px-4 sm:px-0">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
   <Link
     to="/dashboard"
-    className="inline-flex items-center justify-center rounded-xl border border-border px-6 py-3 text-sm font-semibold transition hover:bg-white/5"
+    className="inline-flex w-full items-center justify-center rounded-xl border border-border px-4 py-3 text-sm font-semibold transition hover:bg-white/5 sm:w-auto sm:px-6"
   >
     ← View Dashboard
   </Link>
 
   <Link
     to="/insights"
-    className="group inline-flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10"
+    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto sm:px-6"
   >
     View Full Smart Insights
     <span className="transition-transform group-hover:translate-x-1">

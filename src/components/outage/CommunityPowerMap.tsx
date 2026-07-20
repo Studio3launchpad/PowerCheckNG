@@ -45,6 +45,13 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
   const [mounted, setMounted] = useState(false);
 
   const communities = buildCommunities(outages);
+  console.table(
+  outages.map((o) => ({
+    area: o.area,
+    lat: o.latitude,
+    lng: o.longitude,
+  })),
+);
 
   
 

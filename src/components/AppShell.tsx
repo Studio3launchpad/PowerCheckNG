@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UserButton } from "@clerk/tanstack-react-start";
-import { Battery, Brain, LayoutDashboard, Menu, Settings, User, Zap } from "lucide-react";
+import { Battery, Brain, LayoutDashboard, Menu, Zap, UserRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/outage/utils";
 import { Button } from "@/components/ui/button";
@@ -35,10 +35,17 @@ const NAV = [
 
 const SIDEBAR_NAV = NAV;
 
-function isNavItemActive(
-  pathname: string,
-  route: string,
-) {
+const MOBILE_MENU_NAV = [
+  ...SIDEBAR_NAV,
+  {
+    to: "/account/profile",
+    label: "Account",
+    mobileLabel: "Account",
+    icon: UserRound,
+  },
+] as const;
+
+function isNavItemActive(pathname: string, route: string) {
   if (pathname === route || pathname.startsWith(`${route}/`)) {
     return true;
   }
@@ -99,9 +106,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
 
           <Link
-  to="/account"
-  className="mt-4 flex items-center justify-between rounded-xl bg-white/5 p-3 transition hover:bg-white/10"
->
+            to="/account"
+            className="mt-4 flex items-center justify-between rounded-xl bg-white/5 p-3 transition hover:bg-white/10"
+          >
             <UserButton />
 
             <span className="pr-2 text-xs text-muted-foreground">Account</span>
@@ -132,9 +139,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </Button>
                 </SheetTrigger>
 
-                <SheetContent side="right">
-                  <div className="mt-2 space-y-1">
-                    {SIDEBAR_NAV.map((item) => {
+                <SheetContent side="right" className="h-fit rounded-l-2xl pb-20">
+                  <div className="mt-2 space-y-6">
+                    {MOBILE_MENU_NAV.map((item) => {
                       const Icon = item.icon;
 
                       const active = isNavItemActive(pathname, item.to);
