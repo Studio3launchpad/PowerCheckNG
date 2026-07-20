@@ -1,6 +1,9 @@
 export type SavedPowerLocation = {
-  latitude: number;
-  longitude: number;
+  rawLatitude: number;
+rawLongitude: number;
+
+latitude: number;
+longitude: number;
   state: string;
   lga: string;
   area: string;

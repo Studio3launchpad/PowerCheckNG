@@ -47,5 +47,9 @@ export function resolveLocation(
   state: matchedArea.state,
   lga: "",
   discoCode: matchedArea.discoCode,
+
+  communityLatitude: matchedArea.latitude,
+  communityLongitude: matchedArea.longitude,
+  radiusKm: matchedArea.radiusKm,
 };
 }

@@ -5,7 +5,9 @@ type Props = {
   outages: Outage[];
 };
 
-export function CommunityStats({ outages }: Props) {
+export function CommunityStats({
+  outages,
+}: Props) {
   const today = new Date().toDateString();
 
   const reportsToday = outages.filter(
@@ -26,33 +28,33 @@ export function CommunityStats({ outages }: Props) {
 
   return (
     <GlassCard>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <p className="text-xs text-muted-foreground">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-border/50 p-4">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
             Reports Today
           </p>
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="mt-2 text-3xl font-bold">
             {reportsToday.length}
           </h2>
         </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground">
-            Power OFF Today
+        <div className="rounded-xl border border-border/50 p-4">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Power OFF
           </p>
 
-          <h2 className="text-2xl font-bold text-red-500">
+          <h2 className="mt-2 text-3xl font-bold text-red-500">
             {powerOffToday}
           </h2>
         </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground">
-            Power ON Today
+        <div className="rounded-xl border border-border/50 p-4">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Power ON
           </p>
 
-          <h2 className="text-2xl font-bold text-green-500">
+          <h2 className="mt-2 text-3xl font-bold text-green-500">
             {powerOnToday}
           </h2>
         </div>

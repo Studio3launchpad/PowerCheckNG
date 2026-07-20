@@ -30,26 +30,13 @@ const areaReports = outages.filter((outage) => {
   return matchesArea && isWithinPatternWindow;
 });
 
-  const periods = analyzePowerAvailability(areaReports);
+  const analytics = analyzePowerAvailability(areaReports);
 
-  const periodsWithData = periods.filter(
-    (period) => period.definiteReports > 0,
-  );
-
-  const totalDefiniteReports = periods.reduce(
-    (total, period) =>
-      total + period.definiteReports,
-    0,
-  );
-
-  const strongestPeriod =
-    periodsWithData.length > 0
-      ? periodsWithData.reduce((strongest, period) =>
-          period.availability > strongest.availability
-            ? period
-            : strongest,
-        )
-      : null;
+const {
+  periods,
+  strongestPeriod,
+  totalReports: totalDefiniteReports,
+} = analytics;
 
   if (!area) {
     return null;
@@ -63,11 +50,11 @@ const areaReports = outages.filter((outage) => {
             Power Availability Insights
           </p>
 
-          <h2 className="mt-1 text-xl font-bold">
+          <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
             Historical Power Pattern
           </h2>
 
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base">
   Community-reported power availability patterns for{" "}
   <span className="font-medium text-foreground">
     {area}
@@ -77,12 +64,12 @@ const areaReports = outages.filter((outage) => {
         </div>
 
         {totalDefiniteReports === 0 ? (
-          <div className="rounded-xl border border-border bg-muted/30 p-5">
-            <p className="font-medium">
+          <div className="rounded-xl border border-border bg-muted/30 p-5 sm:p-6">
+            <p className="text-lg font-semibold">
               Not enough confirmed power reports yet
             </p>
 
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
   PowerCheckNG needs Power ON or Power OFF reports
   from {area} within the last 30 days before a recent
   availability pattern can be calculated.
@@ -94,9 +81,9 @@ const areaReports = outages.filter((outage) => {
               {periods.map((period) => (
                 <div
                   key={period.key}
-                  className="space-y-2"
+                  className="space-y-3 rounded-xl border border-border bg-background/30 p-4"
                 >
-                  <div className="flex items-end justify-between gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <p className="font-medium">
                         {period.label}
@@ -108,11 +95,19 @@ const areaReports = outages.filter((outage) => {
                     </div>
 
                     <div className="text-right">
-                      <p className="font-bold">
-                        {period.definiteReports > 0
-                          ? `${period.availability}%`
-                          : "No data"}
-                      </p>
+                      <div className="text-left sm:text-right">
+    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+        Availability
+    </p>
+
+    <p className="text-lg font-bold">
+        {period.definiteReports > 0
+            ? `${period.availability}%`
+            : "No data"}
+    </p>
+
+    ...
+</div>
 
                       {period.definiteReports > 0 && (
                         <p className="text-xs text-muted-foreground">
@@ -135,7 +130,7 @@ const areaReports = outages.filter((outage) => {
                   </div>
 
                   {period.definiteReports > 0 && (
-                    <div className="flex gap-4 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                       <span>
                         ON: {period.powerOn}
                       </span>
@@ -150,12 +145,12 @@ const areaReports = outages.filter((outage) => {
             </div>
 
             {strongestPeriod && (
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                <p className="text-sm font-medium text-primary">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                   Pattern Insight
                 </p>
 
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-3 leading-7 text-muted-foreground">
                   Based on community reports from the last 30 days,{" "}
                   <span className="font-medium text-foreground">
                     {strongestPeriod.label.toLowerCase()}
@@ -170,7 +165,7 @@ const areaReports = outages.filter((outage) => {
               </div>
             )}
 
-            <p className="text-xs text-muted-foreground">
+            <p className="border-t border-border pt-4 text-xs leading-6 text-muted-foreground">
   Insights are based on community-submitted Power ON
   and Power OFF reports from the last 30 days. Not Sure
   reports are excluded from availability calculations.

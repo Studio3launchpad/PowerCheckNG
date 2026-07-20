@@ -32,8 +32,8 @@ export function HistoryFilters({
   onDateChange,
 }: Props) {
   return (
-    <div className="sticky top-4 z-20 rounded-2xl border border-border bg-background/90 backdrop-blur p-4 space-y-4">
-      <div className="flex gap-3">
+    <div className="sticky top-0 z-40 -mx-4 border-b border-border bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:mx-0 sm:rounded-2xl sm:border sm:px-5">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           type="text"
           placeholder="🔍 Search by area..."
@@ -48,25 +48,25 @@ export function HistoryFilters({
       px-4
       py-3
       outline-none
+      mb-3
       focus:border-primary
-    "
+    "  
         />
 
         <button
           onClick={onClearFilters}
-          className="rounded-xl border border-border px-4 hover:bg-white/5"
+          className="w-full rounded-xl border border-border px-4 py-3 hover:bg-white/5 sm:w-auto mb-3"
         >
           Clear
         </button>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <div className="relative">
-
-<select
-          value={status}
-          onChange={(e) => onStatusChange(e.target.value)}
-          className="w-full
+          <select
+            value={status}
+            onChange={(e) => onStatusChange(e.target.value)}
+            className="w-full
             appearance-none
             rounded-xl
             border
@@ -75,17 +75,17 @@ export function HistoryFilters({
             px-4
             py-3
             pr-10"
-        >
-          <option value="">All Status</option>
+          >
+            <option value="">All Status</option>
 
-          {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-    className="
+            {statuses.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="
         pointer-events-none
         absolute
         right-4
@@ -94,15 +94,14 @@ export function HistoryFilters({
         size-5
         text-muted-foreground
     "
-/>
-
+          />
         </div>
 
         <div className="relative">
           <select
-          value={disco}
-          onChange={(e) => onDiscoChange(e.target.value)}
-          className="w-full
+            value={disco}
+            onChange={(e) => onDiscoChange(e.target.value)}
+            className="w-full
             appearance-none
             rounded-xl
             border
@@ -111,18 +110,18 @@ export function HistoryFilters({
             px-4
             py-3
             pr-10"
-        >
-          <option value="">All DisCos</option>
+          >
+            <option value="">All DisCos</option>
 
-          {discos.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+            {discos.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
 
-        <ChevronDown
-    className="
+          <ChevronDown
+            className="
         pointer-events-none
         absolute
         right-4
@@ -131,22 +130,21 @@ export function HistoryFilters({
         size-5
         text-muted-foreground
     "
-/>
+          />
         </div>
 
         <div className="space-y-1">
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => onDateChange(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background/50 px-3 py-3 [color-scheme:dark]"
+          />
 
-  <input
-    type="date"
-    value={date}
-    onChange={(e) => onDateChange(e.target.value)}
-    className="w-full rounded-xl border border-border bg-background/50 px-3 py-3 [color-scheme:dark]"
-  />
-
-  <p className="text-xs text-muted-foreground">
-    Type a date (DD/MM/YYYY) or click the calendar icon.
-  </p>
-</div>
+          <p className="text-xs text-muted-foreground">
+            Filter reports by date.
+          </p>
+        </div>
       </div>
     </div>
   );

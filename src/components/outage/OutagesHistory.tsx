@@ -1,15 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { History, MapPin, Clock, ThumbsUp, RefreshCw, Zap } from "lucide-react";
+import {
+  History,
+  MapPin,
+  Clock,
+  ThumbsUp,
+  RefreshCw,
+  Zap,
+} from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 import { listOutageHistory } from "@/lib/outage/outages.functions";
 import { timeAgo } from "@/lib/outage/outages.utils";
 import { STATUS_STYLES } from "@/lib/outage/outages.constants";
 
-
-
-export function OutagesHistory({ limit }: { limit?: number }) {
-  const { data, isLoading, isFetching, refetch, error } = useQuery({
+export function OutagesHistory({
+  limit,
+}: {
+  limit?: number;
+}) {
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch,
+    error,
+  } = useQuery({
     queryKey: ["outages", "history"],
     queryFn: () => listOutageHistory(),
     refetchInterval: 10_000,
@@ -17,74 +32,125 @@ export function OutagesHistory({ limit }: { limit?: number }) {
   });
 
   const rows = data?.outages ?? [];
-  const visible = limit ? rows.slice(0, limit) : rows;
+  const visible = limit
+    ? rows.slice(0, limit)
+    : rows;
 
   return (
     <GlassCard>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-semibold flex items-center gap-2">
-            <History className="size-4 text-primary" /> Outages history
+          <h2 className="flex items-center gap-2 font-semibold">
+            <History className="size-4 text-primary" />
+            Outage History
           </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Live from the database · refreshes every 10s
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            Live from the database • Refreshes every
+            10 seconds
           </p>
         </div>
+
         <button
           onClick={() => refetch()}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-[11px] text-muted-foreground hover:bg-white/5"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground transition hover:bg-white/5 sm:w-auto"
         >
-          <RefreshCw className={`size-3 ${isFetching ? "animate-spin" : ""}`} />
-          {isFetching ? "Updating" : "Refresh"}
+          <RefreshCw
+            className={`size-3.5 ${
+              isFetching
+                ? "animate-spin"
+                : ""
+            }`}
+          />
+
+          {isFetching
+            ? "Updating..."
+            : "Refresh"}
         </button>
       </div>
 
       {error ? (
-        <p className="text-sm text-destructive">Failed to load outage history.</p>
+        <p className="text-sm text-destructive">
+          Failed to load outage history.
+        </p>
       ) : isLoading ? (
-        <div className="space-y-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-14 rounded-lg bg-white/5 animate-pulse" />
+        <div className="space-y-3">
+          {Array.from({
+            length: 3,
+          }).map((_, i) => (
+            <div
+              key={i}
+              className="h-16 animate-pulse rounded-xl bg-white/5"
+            />
           ))}
         </div>
       ) : visible.length === 0 ? (
-        <div className="py-8 text-center text-sm text-muted-foreground flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-muted-foreground">
           <Zap className="size-6 text-primary/60" />
           No outages reported yet.
         </div>
       ) : (
         <ul className="divide-y divide-border/60">
-          {visible.map((o: any, i: number) => (
-            <motion.li
-              key={o.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-              className="py-3 flex items-start justify-between gap-3"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-medium flex items-center gap-1.5 truncate">
-                  <MapPin className="size-3.5 text-primary shrink-0" /> {o.area}
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-2">
-                  <span>{o.discoCode}</span>
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="size-3" /> {timeAgo(o.startedAt)}
-                  </span>
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <ThumbsUp className="size-3" /> {o.confirmations}
-                  </span>
-                </p>
-              </div>
-              <span
-                className={`text-[10px] uppercase tracking-wide px-2 py-1 rounded-full border shrink-0 ${STATUS_STYLES[o.status]}`}
+          {visible.map(
+            (
+              o: any,
+              i: number,
+            ) => (
+              <motion.li
+                key={o.id}
+                initial={{
+                  opacity: 0,
+                  y: 6,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  delay:
+                    i * 0.03,
+                }}
+                className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
               >
-                {o.status}
-              </span>
-            </motion.li>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 truncate text-sm font-medium">
+                    <MapPin className="size-4 shrink-0 text-primary" />
+
+                    {o.area}
+                  </p>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                    <span>
+                      {o.discoCode}
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <Clock className="size-3" />
+                      {timeAgo(
+                        o.startedAt,
+                      )}
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <ThumbsUp className="size-3" />
+                      {
+                        o.confirmations
+                      }
+                    </span>
+                  </div>
+                </div>
+
+                <span
+                  className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide ${STATUS_STYLES[o.status]}`}
+                >
+                  {o.status.replace(
+                    "_",
+                    " ",
+                  )}
+                </span>
+              </motion.li>
+            ),
+          )}
         </ul>
       )}
     </GlassCard>

@@ -17,7 +17,9 @@ export type AvailabilityPeriod = {
 
   availability: number;
 
-  reliabilityScore: number;
+  confidenceScore: number;
+
+  weightedScore: number;
 };
 
 export type PowerAvailabilityAnalytics = {
@@ -120,20 +122,25 @@ export function analyzePowerAvailability(
       1,
     );
 
-    const reliabilityScore = Math.round(
-      availability * sampleWeight,
-    );
+    const confidenceScore = Math.round(
+  sampleWeight * 100,
+);
+
+const weightedScore = Math.round(
+  availability * sampleWeight,
+);
 
     return {
-      key: period.key,
-      label: period.label,
-      timeRange: period.timeRange,
-      powerOn,
-      powerOff,
-      definiteReports,
-      availability,
-      reliabilityScore,
-    };
+  key: period.key,
+  label: period.label,
+  timeRange: period.timeRange,
+  powerOn,
+  powerOff,
+  definiteReports,
+  availability,
+  confidenceScore,
+  weightedScore,
+};
   });
   const periodsWithData = analyticsPeriods.filter(
   (period) => period.definiteReports > 0,
@@ -147,8 +154,8 @@ const totalReports = analyticsPeriods.reduce(
 const strongestPeriod =
   periodsWithData.length > 0
     ? periodsWithData.reduce((best, current) =>
-        current.reliabilityScore >
-        best.reliabilityScore
+        current.weightedScore >
+best.weightedScore
           ? current
           : best,
       )
@@ -157,8 +164,8 @@ const strongestPeriod =
 const weakestPeriod =
   periodsWithData.length > 0
     ? periodsWithData.reduce((worst, current) =>
-        current.reliabilityScore <
-        worst.reliabilityScore
+        current.weightedScore <
+        worst.weightedScore
           ? current
           : worst,
       )

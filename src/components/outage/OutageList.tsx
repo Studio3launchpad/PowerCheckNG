@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+
 import { OutageCard } from "./OutageCard";
 import type { Outage } from "@/lib/outage/outages.types";
 
@@ -24,17 +24,17 @@ export function OutageList({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold">{title}</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
             {subtitle}
           </p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {reports.map((o) => (
           <OutageCard
             key={o.id}
@@ -42,17 +42,6 @@ export function OutageList({
           />
         ))}
       </div>
-
-      {/* {showViewAll && (
-        <div className="flex justify-center mt-8">
-          <Link
-            to="/history"
-            className="text-primary font-medium hover:underline transition-colors hover:text-primary/80"
-          >
-            View Full Report History 
-          </Link>
-        </div>
-      )} */}
     </>
   );
 }

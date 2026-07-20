@@ -6,15 +6,26 @@ export function ConfidenceBar({
   confidence,
 }: ConfidenceBarProps) {
   return (
-    <div>
-      <div className="flex justify-between text-xs mb-1">
-        <span>Confidence</span>
-        <span>{confidence}%</span>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-muted-foreground">
+  Confidence
+</span>
+
+<span className="font-medium">
+  {confidence}%
+</span>
       </div>
 
-      <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+      <div
+  className="h-2.5 overflow-hidden rounded-full bg-white/10"
+  role="progressbar"
+  aria-valuenow={confidence}
+  aria-valuemin={0}
+  aria-valuemax={100}
+>
         <div
-          className={`h-full transition-all ${
+          className={`h-full origin-left rounded-full transition-all duration-500 ${
             confidence >= 80
               ? "bg-green-500"
               : confidence >= 50

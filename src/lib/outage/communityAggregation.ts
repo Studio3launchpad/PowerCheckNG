@@ -44,14 +44,16 @@ export function buildCommunities(
       resolvedLocation?.state ?? "";
 
     const canonicalLatitude =
-      outage.latitude;
+  resolvedLocation?.communityLatitude ??
+  outage.latitude;
 
-    const canonicalLongitude =
-      outage.longitude;
+const canonicalLongitude =
+  resolvedLocation?.communityLongitude ??
+  outage.longitude;
 
-    const key = canonicalArea
-      .trim()
-      .toLowerCase();
+    const key = `${canonicalState}:${canonicalArea}`
+  .trim()
+  .toLowerCase();
 
     if (!communities.has(key)) {
       communities.set(key, {

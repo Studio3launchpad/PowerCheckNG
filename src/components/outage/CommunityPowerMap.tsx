@@ -6,37 +6,59 @@ import { createMarker } from "@/components/outage/markerIcon";
 import { buildCommunities } from "@/lib/outage/communityAggregation";
 import type { Outage } from "@/lib/outage/outages.types";
 import { CommunityMapPopup } from "@/components/outage/CommunityMapPopup";
+import { useMemo } from "react";
 
-function FitBounds({ outages }: { outages: Outage[] }) {
+
+
+function FitBounds({
+  communities,
+}: {
+  communities: ReturnType<typeof buildCommunities>;
+}) {
   const map = useMap();
 
   useEffect(() => {
-    if (outages.length === 0) return;
+    if (communities.length === 0) return;
 
-    const validOutages = outages.filter(
-      (o) =>
-        typeof o.latitude === "number" &&
-        typeof o.longitude === "number" &&
-        !Number.isNaN(o.latitude) &&
-        !Number.isNaN(o.longitude),
-    );
+const validCommunities = communities.filter(
+  (c) =>
+    typeof c.latitude === "number" &&
+    typeof c.longitude === "number" &&
+    !Number.isNaN(c.latitude) &&
+    !Number.isNaN(c.longitude),
+);
 
-    if (validOutages.length === 0) return;
+    if (validCommunities.length === 0) {
+  return;
+}
 
-    if (validOutages.length === 1) {
-      map.setView([validOutages[0].latitude, validOutages[0].longitude], 13, { animate: true });
-      return;
-    }
+   if (validCommunities.length === 1) {
+  map.setView(
+    [
+      validCommunities[0].latitude,
+      validCommunities[0].longitude,
+    ],
+    13,
+    { animate: true },
+  );
+  return;
+}
 
-    const bounds = L.latLngBounds(
-      validOutages.map((o) => [o.latitude, o.longitude] as [number, number]),
-    );
+   const bounds = L.latLngBounds(
+  validCommunities.map(
+    (c) =>
+      [c.latitude, c.longitude] as [
+        number,
+        number,
+      ],
+  ),
+);
 
     map.fitBounds(bounds, {
       padding: [40, 40],
       animate: true,
     });
-  }, [map, outages]);
+  }, [map, communities]);
 
   return null;
 }
@@ -44,13 +66,9 @@ function FitBounds({ outages }: { outages: Outage[] }) {
 export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
   const [mounted, setMounted] = useState(false);
 
-  const communities = buildCommunities(outages);
-  console.table(
-  outages.map((o) => ({
-    area: o.area,
-    lat: o.latitude,
-    lng: o.longitude,
-  })),
+  const communities = useMemo(
+  () => buildCommunities(outages),
+  [outages],
 );
 
   
@@ -61,7 +79,7 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
 
   if (!mounted) {
     return (
-      <div className="h-[420px] md:h-[520px] w-full rounded-xl bg-muted animate-pulse flex items-center justify-center">
+      <div className="flex h-[320px] w-full items-center justify-center rounded-xl bg-muted animate-pulse sm:h-[420px] lg:h-[520px]">
         <p className="text-sm text-muted-foreground">Loading community map...</p>
       </div>
     );
@@ -74,19 +92,19 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
     <MapContainer
       center={[9.082, 8.6753]}
       zoom={6}
-      className="h-96 w-full z-0"
+      className="h-[320px] w-full sm:h-[420px] lg:h-[520px] z-0"
     >
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <FitBounds outages={outages} />
+      <FitBounds communities={communities} />
 
       <>
         {communities.map((community) => (
           <Marker
-            key={community.area}
+            key={`${community.state}-${community.area}`}
             position={[community.latitude, community.longitude]}
             icon={createMarker(
               community.status === "Power ON"

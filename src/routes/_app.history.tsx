@@ -53,8 +53,6 @@ function HistoryPage() {
 
     const matchesDate = !date || outage.startedAt.startsWith(date);
 
-    const reportsForAnalytics = search || disco || status || date ? filteredReports : data.outages;
-
     return matchesSearch && matchesDisco && matchesStatus && matchesDate;
   });
 
@@ -89,41 +87,46 @@ function HistoryPage() {
           Back to Outage Tracker
         </Link>
 
-        <div>
-          <h1 className="text-3xl font-bold">Community Report History</h1>
+        <div className="space-y-2">
+         <h1 className="text-2xl font-bold sm:text-3xl">
+            Community Report History
+          </h1>
 
-          <p className="mt-2 text-muted-foreground">
+          <p className="max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base">
             Browse previous community reports submitted across Nigeria.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <GlassCard>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <GlassCard className="p-5">
           <p className="text-sm text-muted-foreground">Total Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2">{totalReports}</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2">{totalReports}</h2>
         </GlassCard>
 
-        <GlassCard>
+        <GlassCard className="p-5">
           <p className="text-sm text-muted-foreground">Power OFF Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2 text-red-500">{powerOffReports}</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-red-500">{powerOffReports}</h2>
         </GlassCard>
 
-        <GlassCard>
+        <GlassCard className="p-5">
           <p className="text-sm text-muted-foreground">Power ON Reports</p>
 
           <h2 className="text-3xl font-bold mt-2 text-green-500">{powerOnReports}</h2>
         </GlassCard>
 
-        <GlassCard>
-          <p className="text-sm text-muted-foreground">Not Sure Reports</p>
+        <GlassCard className="p-5">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">Not Sure Reports</p>
 
-          <h2 className="text-3xl font-bold mt-2 text-yellow-500">{notSureReports}</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-yellow-500">{notSureReports}</h2>
         </GlassCard>
       </div>
 
+      <HistoricalPowerPattern outages={reportsForAnalytics} />
+
+      
       <HistoryFilters
         search={search}
         onSearchChange={setSearch}
@@ -138,7 +141,6 @@ function HistoryPage() {
         onDateChange={setDate}
       />
 
-      <HistoricalPowerPattern outages={reportsForAnalytics} />
 
       <OutageList
         outages={visibleReports}
@@ -152,7 +154,7 @@ function HistoryPage() {
           <button
             type="button"
             onClick={() => setVisibleCount((current) => current + REPORTS_PER_PAGE)}
-            className="rounded-xl border border-primary/30 px-6 py-3 font-medium text-primary transition hover:bg-primary/10"
+            className="w-full rounded-xl border border-primary/30 px-6 py-3 font-medium text-primary transition hover:bg-primary/10 sm:w-auto"
           >
             Load More Reports
           </button>

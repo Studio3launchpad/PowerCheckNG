@@ -80,13 +80,17 @@ export function useCurrentLocation() {
 
           if (resolved) {
   const nextLocation = {
-    latitude,
-    longitude,
-    state: resolved.state,
-    lga: resolved.lga,
-    area: resolved.area,
-    discoCode: resolved.discoCode,
-  };
+  rawLatitude: latitude,
+  rawLongitude: longitude,
+
+  latitude: resolved.communityLatitude,
+  longitude: resolved.communityLongitude,
+
+  state: resolved.state,
+  lga: resolved.lga,
+  area: resolved.area,
+  discoCode: resolved.discoCode,
+};
 
   setLocation(nextLocation);
   savePowerLocation(nextLocation);
@@ -101,8 +105,11 @@ export function useCurrentLocation() {
           const address = await reverseGeocode(latitude, longitude);
 
           const fallbackLocation = {
-            latitude,
-            longitude,
+  rawLatitude: latitude,
+  rawLongitude: longitude,
+
+  latitude,
+  longitude,
             state: address.state,
             lga: address.lga,
             area: address.area,

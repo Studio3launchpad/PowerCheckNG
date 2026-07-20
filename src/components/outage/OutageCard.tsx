@@ -17,10 +17,10 @@ export function OutageCard({ outage }: Props) {
 
   return (
     <GlassCard>
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="font-semibold flex items-center gap-1.5">
-            <MapPin className="size-4 text-primary" />
+          <p className="flex items-center gap-2 truncate font-semibold">
+            <MapPin className="size-4 shrink-0 text-primary" />
             {outage.area}
           </p>
 
@@ -30,16 +30,14 @@ export function OutageCard({ outage }: Props) {
         </div>
 
         <span
-          className={`text-[10px] uppercase tracking-wide px-2 py-1 rounded-full border ${
-            STATUS_STYLES[outage.status]
-          }`}
+          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide ${STATUS_STYLES[outage.status]}`}
         >
-          {outage.status}
+          {outage.status.replace("_", " ")}
         </span>
       </div>
 
-      <div className="mt-4 space-y-3">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
+      <div className="mt-4 space-y-3 border-t border-border pt-4">
+        <div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span className="flex items-center gap-1">
             <Clock className="size-3" />
             {timeAgo(outage.startedAt)}
