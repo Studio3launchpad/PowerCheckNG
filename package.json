@@ -12,7 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@clerk/tanstack-react-start": "^1.4.7",
+    "@clerk/tanstack-react-start": "^1.4.20",
     "@clerk/ui": "^1.25.5",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6",

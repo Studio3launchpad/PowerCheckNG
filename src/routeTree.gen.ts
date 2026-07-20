@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AccountSecurityRouteImport } from './routes/account-security'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
@@ -19,8 +20,17 @@ import { Route as AppHistoryRouteImport } from './routes/_app.history'
 import { Route as AppEnergyRouteImport } from './routes/_app.energy'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppBackupRouteImport } from './routes/_app.backup'
-import { Route as AppAccountRouteImport } from './routes/_app.account'
+import { Route as AppAccountRouteImport } from './routes/_app/account'
+import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
+import { Route as AppAccountSessionsRouteImport } from './routes/_app/account/sessions'
+import { Route as AppAccountProfileRouteImport } from './routes/_app/account/profile'
+import { Route as AppAccountPreferencesRouteImport } from './routes/_app/account/preferences'
 
+const AccountSecurityRoute = AccountSecurityRouteImport.update({
+  id: '/account-security',
+  path: '/account-security',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -75,10 +85,31 @@ const AppAccountRoute = AppAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAccountRoute,
+} as any)
+const AppAccountSessionsRoute = AppAccountSessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => AppAccountRoute,
+} as any)
+const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppAccountRoute,
+} as any)
+const AppAccountPreferencesRoute = AppAccountPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => AppAccountRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof AppAccountRoute
+  '/account-security': typeof AccountSecurityRoute
+  '/account': typeof AppAccountRouteWithChildren
   '/backup': typeof AppBackupRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
@@ -87,10 +118,14 @@ export interface FileRoutesByFullPath {
   '/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/account/preferences': typeof AppAccountPreferencesRoute
+  '/account/profile': typeof AppAccountProfileRoute
+  '/account/sessions': typeof AppAccountSessionsRoute
+  '/account/': typeof AppAccountIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof AppAccountRoute
+  '/account-security': typeof AccountSecurityRoute
   '/backup': typeof AppBackupRoute
   '/dashboard': typeof AppDashboardRoute
   '/energy': typeof AppEnergyRoute
@@ -99,12 +134,17 @@ export interface FileRoutesByTo {
   '/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/account/preferences': typeof AppAccountPreferencesRoute
+  '/account/profile': typeof AppAccountProfileRoute
+  '/account/sessions': typeof AppAccountSessionsRoute
+  '/account': typeof AppAccountIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
-  '/_app/account': typeof AppAccountRoute
+  '/account-security': typeof AccountSecurityRoute
+  '/_app/account': typeof AppAccountRouteWithChildren
   '/_app/backup': typeof AppBackupRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/energy': typeof AppEnergyRoute
@@ -113,11 +153,16 @@ export interface FileRoutesById {
   '/_app/outages': typeof AppOutagesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/_app/account/preferences': typeof AppAccountPreferencesRoute
+  '/_app/account/profile': typeof AppAccountProfileRoute
+  '/_app/account/sessions': typeof AppAccountSessionsRoute
+  '/_app/account/': typeof AppAccountIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account-security'
     | '/account'
     | '/backup'
     | '/dashboard'
@@ -127,10 +172,14 @@ export interface FileRouteTypes {
     | '/outages'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/sessions'
+    | '/account/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account'
+    | '/account-security'
     | '/backup'
     | '/dashboard'
     | '/energy'
@@ -139,10 +188,15 @@ export interface FileRouteTypes {
     | '/outages'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/sessions'
+    | '/account'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/account-security'
     | '/_app/account'
     | '/_app/backup'
     | '/_app/dashboard'
@@ -152,17 +206,29 @@ export interface FileRouteTypes {
     | '/_app/outages'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/_app/account/preferences'
+    | '/_app/account/profile'
+    | '/_app/account/sessions'
+    | '/_app/account/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AccountSecurityRoute: typeof AccountSecurityRoute
   SignInSplatRoute: typeof SignInSplatRoute
   SignUpSplatRoute: typeof SignUpSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/account-security': {
+      id: '/account-security'
+      path: '/account-security'
+      fullPath: '/account-security'
+      preLoaderRoute: typeof AccountSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -240,11 +306,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/account/': {
+      id: '/_app/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AppAccountIndexRouteImport
+      parentRoute: typeof AppAccountRoute
+    }
+    '/_app/account/sessions': {
+      id: '/_app/account/sessions'
+      path: '/sessions'
+      fullPath: '/account/sessions'
+      preLoaderRoute: typeof AppAccountSessionsRouteImport
+      parentRoute: typeof AppAccountRoute
+    }
+    '/_app/account/profile': {
+      id: '/_app/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AppAccountProfileRouteImport
+      parentRoute: typeof AppAccountRoute
+    }
+    '/_app/account/preferences': {
+      id: '/_app/account/preferences'
+      path: '/preferences'
+      fullPath: '/account/preferences'
+      preLoaderRoute: typeof AppAccountPreferencesRouteImport
+      parentRoute: typeof AppAccountRoute
+    }
   }
 }
 
+interface AppAccountRouteChildren {
+  AppAccountPreferencesRoute: typeof AppAccountPreferencesRoute
+  AppAccountProfileRoute: typeof AppAccountProfileRoute
+  AppAccountSessionsRoute: typeof AppAccountSessionsRoute
+  AppAccountIndexRoute: typeof AppAccountIndexRoute
+}
+
+const AppAccountRouteChildren: AppAccountRouteChildren = {
+  AppAccountPreferencesRoute: AppAccountPreferencesRoute,
+  AppAccountProfileRoute: AppAccountProfileRoute,
+  AppAccountSessionsRoute: AppAccountSessionsRoute,
+  AppAccountIndexRoute: AppAccountIndexRoute,
+}
+
+const AppAccountRouteWithChildren = AppAccountRoute._addFileChildren(
+  AppAccountRouteChildren,
+)
+
 interface AppRouteChildren {
-  AppAccountRoute: typeof AppAccountRoute
+  AppAccountRoute: typeof AppAccountRouteWithChildren
   AppBackupRoute: typeof AppBackupRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEnergyRoute: typeof AppEnergyRoute
@@ -254,7 +366,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppAccountRoute: AppAccountRoute,
+  AppAccountRoute: AppAccountRouteWithChildren,
   AppBackupRoute: AppBackupRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEnergyRoute: AppEnergyRoute,
@@ -268,6 +380,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AccountSecurityRoute: AccountSecurityRoute,
   SignInSplatRoute: SignInSplatRoute,
   SignUpSplatRoute: SignUpSplatRoute,
 }

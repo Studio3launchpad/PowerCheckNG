@@ -4,15 +4,16 @@ import { ChevronRight, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/GlassCard";
 import { AccountAvatar } from "@/components/account/AccountAvatar";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_app/account")({
+export const Route = createFileRoute("/_app/account/")({
   component: AccountPage,
 });
 
 function AccountPage() {
   const clerk = useClerk();
   const { user } = useUser();
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       <div>
@@ -42,7 +43,14 @@ function AccountPage() {
             </div>
           </div>
 
-          <Button onClick={() => clerk.openUserProfile()} variant="default">
+          <Button
+            onClick={() =>
+              navigate({
+                to: "/account/profile",
+              })
+            }
+            variant="default"
+          >
             Edit Profile
           </Button>
         </div>
@@ -50,7 +58,11 @@ function AccountPage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <GlassCard
-          onClick={() => clerk.openUserProfile()}
+          onClick={() =>
+            navigate({
+              to: "/account/profile",
+            })
+          }
           className="cursor-pointer p-6 transition hover:border-primary/30 hover:bg-primary/5"
         >
           <div className="flex items-center justify-between">
@@ -61,13 +73,17 @@ function AccountPage() {
 
                 <p className="text-sm text-muted-foreground">Manage your email addresses.</p>
               </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </div>
         </GlassCard>
 
         <GlassCard
-          onClick={() => clerk.openUserProfile()}
+          onClick={() =>
+            navigate({
+              to: "/account/profile",
+            })
+          }
           className="cursor-pointer p-6 transition hover:border-primary/30 hover:bg-primary/5"
         >
           <div className="flex items-center justify-between">
@@ -79,13 +95,17 @@ function AccountPage() {
 
                 <p className="text-sm text-muted-foreground">Update your password.</p>
               </div>
-          <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </div>
         </GlassCard>
 
         <GlassCard
-          onClick={() => clerk.openUserProfile()}
+          onClick={() =>
+            navigate({
+              to: "/account/sessions",
+            })
+          }
           className="cursor-pointer p-6 transition hover:border-primary/30 hover:bg-primary/5"
         >
           <div className="flex items-center justify-between">
@@ -97,8 +117,8 @@ function AccountPage() {
 
                 <p className="text-sm text-muted-foreground">View signed-in devices.</p>
               </div>
-          <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </div>
         </GlassCard>
 
@@ -115,8 +135,8 @@ function AccountPage() {
 
                 <p className="text-sm text-muted-foreground">End your current session.</p>
               </div>
-          <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </div>
         </GlassCard>
       </div>
