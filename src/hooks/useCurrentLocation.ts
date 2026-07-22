@@ -72,44 +72,40 @@ export function useCurrentLocation() {
         try {
           const { latitude, longitude } = position.coords;
 
-          console.log("Current Coordinates:", latitude, longitude);
-
           const resolved = resolveLocation(latitude, longitude);
 
-          console.log("Resolved Location:", resolved);
-
           if (resolved) {
-  const nextLocation = {
-  rawLatitude: latitude,
-  rawLongitude: longitude,
+            const nextLocation = {
+              rawLatitude: latitude,
+              rawLongitude: longitude,
 
-  latitude: resolved.communityLatitude,
-  longitude: resolved.communityLongitude,
+              latitude: resolved.communityLatitude,
+              longitude: resolved.communityLongitude,
 
-  state: resolved.state,
-  lga: resolved.lga,
-  area: resolved.area,
-  discoCode: resolved.discoCode,
-};
+              state: resolved.state,
+              lga: resolved.lga,
+              area: resolved.area,
+              discoCode: resolved.discoCode,
+            };
 
-  setLocation(nextLocation);
-  savePowerLocation(nextLocation);
+            setLocation(nextLocation);
+            savePowerLocation(nextLocation);
 
-  toast.dismiss(locationToast);
+            toast.dismiss(locationToast);
 
-  setShowPowerModal(true);
+            setShowPowerModal(true);
 
-  return;
-}
+            return;
+          }
 
           const address = await reverseGeocode(latitude, longitude);
 
           const fallbackLocation = {
-  rawLatitude: latitude,
-  rawLongitude: longitude,
+            rawLatitude: latitude,
+            rawLongitude: longitude,
 
-  latitude,
-  longitude,
+            latitude,
+            longitude,
             state: address.state,
             lga: address.lga,
             area: address.area,

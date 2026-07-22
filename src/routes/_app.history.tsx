@@ -40,11 +40,19 @@ function HistoryPage() {
     setVisibleCount(REPORTS_PER_PAGE);
   }, [search, disco, status, date]);
 
-  const discos = [...new Set(data.outages.map((outage) => outage.discoCode))].sort();
+  const discos = Array.from(
+  new Set(
+    data.outages.map((outage: Outage) => outage.discoCode),
+  ),
+) as string[];
 
-  const statuses = [...new Set(data.outages.map((outage) => outage.status))].sort();
+  const statuses = Array.from(
+  new Set(
+    data.outages.map((outage: Outage) => outage.status),
+  ),
+) as string[];
 
-  const filteredReports = data.outages.filter((outage) => {
+  const filteredReports = data.outages.filter((outage: Outage) => {
     const matchesSearch = outage.area.toLowerCase().includes(search.toLowerCase());
 
     const matchesDisco = !disco || outage.discoCode === disco;

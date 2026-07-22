@@ -1,39 +1,44 @@
-import {
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { reportOutage } from "@/lib/outage/outages.functions";
 import type { FormValues } from "@/lib/outage/outages.types";
 
-
 type Options = {
   onSuccess?: () => void;
 };
 
-export function useOutageReporting({
-  onSuccess,
-}: Options = {}) {
+export function useOutageReporting({ onSuccess }: Options = {}) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const submitFn = useServerFn(reportOutage);
 
   const mutation = useMutation({
-    mutationFn: (values: FormValues) =>
-      submitFn({ data: values }),
+    mutationFn: async (values: FormValues) => {
+      const response = await submitFn({ data: values });
+
+      return response;
+    },
 
     onSuccess: async (result) => {
+      if (!result) {
+        toast.error("Server returned no response.");
+        return;
+      }
+
       if (!result.success) {
         toast.warning(result.message);
         return;
       }
 
-      toast.success(
-        `Power status reported for ${result.outage.area}`,
-      );
+      if (!result.outage) {
+        toast.error("No outage information returned.");
+        return;
+      }
+
+      toast.success(`Power status reported for ${result.outage.area}`);
 
       await queryClient.invalidateQueries({
         queryKey: ["outages"],
@@ -46,12 +51,9 @@ export function useOutageReporting({
     },
 
     onError: (err: unknown) => {
-      console.error("Submit Error:", err);
+      console.error("Failed to submit outage report",err);
 
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Failed to submit power status";
+      const message = err instanceof Error ? err.message : "Failed to submit power status";
 
       toast.error(message);
     },

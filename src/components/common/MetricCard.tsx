@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 
 type MetricCardProps = {
   title: string;

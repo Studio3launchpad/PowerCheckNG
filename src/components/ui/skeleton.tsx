@@ -1,4 +1,4 @@
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("animate-pulse rounded-md bg-primary/10", className)} {...props} />;

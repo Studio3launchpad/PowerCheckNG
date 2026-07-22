@@ -4,11 +4,10 @@ import type { LucideIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 
 type SidebarNavItemProps = {
   to: string;

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 
 interface ResponsiveGridProps extends React.HTMLAttributes<HTMLDivElement> {
   columns?: 1 | 2 | 3 | 4;

@@ -9,70 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AccountSecurityRouteImport } from './routes/account-security'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
-import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
-import { Route as AppOutagesRouteImport } from './routes/_app.outages'
-import { Route as AppInsightsRouteImport } from './routes/_app.insights'
-import { Route as AppHistoryRouteImport } from './routes/_app.history'
-import { Route as AppEnergyRouteImport } from './routes/_app.energy'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppBackupRouteImport } from './routes/_app.backup'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AccountSecurityRouteImport } from './routes/account-security'
 import { Route as AppAccountRouteImport } from './routes/_app/account'
+import { Route as AppBackupRouteImport } from './routes/_app.backup'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppEnergyRouteImport } from './routes/_app.energy'
+import { Route as AppHistoryRouteImport } from './routes/_app.history'
+import { Route as AppInsightsRouteImport } from './routes/_app.insights'
+import { Route as AppOutagesRouteImport } from './routes/_app.outages'
+import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
+import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
-import { Route as AppAccountSessionsRouteImport } from './routes/_app/account/sessions'
-import { Route as AppAccountProfileRouteImport } from './routes/_app/account/profile'
 import { Route as AppAccountPreferencesRouteImport } from './routes/_app/account/preferences'
+import { Route as AppAccountProfileRouteImport } from './routes/_app/account/profile'
+import { Route as AppAccountSessionsRouteImport } from './routes/_app/account/sessions'
 
-const AccountSecurityRoute = AccountSecurityRouteImport.update({
-  id: '/account-security',
-  path: '/account-security',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AccountSecurityRoute = AccountSecurityRouteImport.update({
+  id: '/account-security',
+  path: '/account-security',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SignUpSplatRoute = SignUpSplatRouteImport.update({
-  id: '/sign-up/$',
-  path: '/sign-up/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignInSplatRoute = SignInSplatRouteImport.update({
-  id: '/sign-in/$',
-  path: '/sign-in/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppOutagesRoute = AppOutagesRouteImport.update({
-  id: '/outages',
-  path: '/outages',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppInsightsRoute = AppInsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppHistoryRoute = AppHistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppEnergyRoute = AppEnergyRouteImport.update({
-  id: '/energy',
-  path: '/energy',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AppAccountRoute = AppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBackupRoute = AppBackupRouteImport.update({
@@ -80,19 +50,49 @@ const AppBackupRoute = AppBackupRouteImport.update({
   path: '/backup',
   getParentRoute: () => AppRoute,
 } as any)
-const AppAccountRoute = AppAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AppRoute,
+} as any)
+const AppEnergyRoute = AppEnergyRouteImport.update({
+  id: '/energy',
+  path: '/energy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHistoryRoute = AppHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInsightsRoute = AppInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOutagesRoute = AppOutagesRouteImport.update({
+  id: '/outages',
+  path: '/outages',
+  getParentRoute: () => AppRoute,
+} as any)
+const SignInSplatRoute = SignInSplatRouteImport.update({
+  id: '/sign-in/$',
+  path: '/sign-in/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignUpSplatRoute = SignUpSplatRouteImport.update({
+  id: '/sign-up/$',
+  path: '/sign-up/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppAccountRoute,
 } as any)
-const AppAccountSessionsRoute = AppAccountSessionsRouteImport.update({
-  id: '/sessions',
-  path: '/sessions',
+const AppAccountPreferencesRoute = AppAccountPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
   getParentRoute: () => AppAccountRoute,
 } as any)
 const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
@@ -100,9 +100,9 @@ const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppAccountRoute,
 } as any)
-const AppAccountPreferencesRoute = AppAccountPreferencesRouteImport.update({
-  id: '/preferences',
-  path: '/preferences',
+const AppAccountSessionsRoute = AppAccountSessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
   getParentRoute: () => AppAccountRoute,
 } as any)
 
@@ -222,11 +222,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/account-security': {
-      id: '/account-security'
-      path: '/account-security'
-      fullPath: '/account-security'
-      preLoaderRoute: typeof AccountSecurityRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -236,60 +236,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/account-security': {
+      id: '/account-security'
+      path: '/account-security'
+      fullPath: '/account-security'
+      preLoaderRoute: typeof AccountSecurityRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sign-up/$': {
-      id: '/sign-up/$'
-      path: '/sign-up/$'
-      fullPath: '/sign-up/$'
-      preLoaderRoute: typeof SignUpSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-in/$': {
-      id: '/sign-in/$'
-      path: '/sign-in/$'
-      fullPath: '/sign-in/$'
-      preLoaderRoute: typeof SignInSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app/outages': {
-      id: '/_app/outages'
-      path: '/outages'
-      fullPath: '/outages'
-      preLoaderRoute: typeof AppOutagesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/insights': {
-      id: '/_app/insights'
-      path: '/insights'
-      fullPath: '/insights'
-      preLoaderRoute: typeof AppInsightsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/history': {
-      id: '/_app/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof AppHistoryRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/energy': {
-      id: '/_app/energy'
-      path: '/energy'
-      fullPath: '/energy'
-      preLoaderRoute: typeof AppEnergyRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
+    '/_app/account': {
+      id: '/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AppAccountRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/backup': {
@@ -299,12 +257,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBackupRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/account': {
-      id: '/_app/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AppAccountRouteImport
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/energy': {
+      id: '/_app/energy'
+      path: '/energy'
+      fullPath: '/energy'
+      preLoaderRoute: typeof AppEnergyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/history': {
+      id: '/_app/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof AppHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/insights': {
+      id: '/_app/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof AppInsightsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/outages': {
+      id: '/_app/outages'
+      path: '/outages'
+      fullPath: '/outages'
+      preLoaderRoute: typeof AppOutagesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/sign-in/$': {
+      id: '/sign-in/$'
+      path: '/sign-in/$'
+      fullPath: '/sign-in/$'
+      preLoaderRoute: typeof SignInSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-up/$': {
+      id: '/sign-up/$'
+      path: '/sign-up/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof SignUpSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/account/': {
       id: '/_app/account/'
@@ -313,11 +313,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountIndexRouteImport
       parentRoute: typeof AppAccountRoute
     }
-    '/_app/account/sessions': {
-      id: '/_app/account/sessions'
-      path: '/sessions'
-      fullPath: '/account/sessions'
-      preLoaderRoute: typeof AppAccountSessionsRouteImport
+    '/_app/account/preferences': {
+      id: '/_app/account/preferences'
+      path: '/preferences'
+      fullPath: '/account/preferences'
+      preLoaderRoute: typeof AppAccountPreferencesRouteImport
       parentRoute: typeof AppAccountRoute
     }
     '/_app/account/profile': {
@@ -327,11 +327,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountProfileRouteImport
       parentRoute: typeof AppAccountRoute
     }
-    '/_app/account/preferences': {
-      id: '/_app/account/preferences'
-      path: '/preferences'
-      fullPath: '/account/preferences'
-      preLoaderRoute: typeof AppAccountPreferencesRouteImport
+    '/_app/account/sessions': {
+      id: '/_app/account/sessions'
+      path: '/sessions'
+      fullPath: '/account/sessions'
+      preLoaderRoute: typeof AppAccountSessionsRouteImport
       parentRoute: typeof AppAccountRoute
     }
   }

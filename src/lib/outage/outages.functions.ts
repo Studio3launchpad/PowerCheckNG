@@ -4,7 +4,7 @@ import { prisma } from "./prisma.server";
 import { ensureUser, requireUserId } from "../clerk.server";
 import type { PowerStatus } from "./outages.types";
 
-function serialize(o: {
+function serializeOutage(o: {
   id: string;
   area: string;
   discoCode: string;
@@ -33,7 +33,7 @@ export const listOutages = createServerFn({ method: "GET" }).handler(async () =>
   });
 
   return {
-    outages: rows.map(serialize),
+    outages: rows.map(serializeOutage),
   };
 });
 
@@ -42,7 +42,7 @@ export const listOutageHistory = createServerFn({ method: "GET" }).handler(async
     orderBy: { startedAt: "desc" },
     take: 50,
   });
-  return { outages: rows.map(serialize), fetchedAt: new Date().toISOString() };
+  return { outages: rows.map(serializeOutage), fetchedAt: new Date().toISOString() };
 });
 
 export const reportOutage = createServerFn({ method: "POST" })
@@ -54,11 +54,7 @@ export const reportOutage = createServerFn({ method: "POST" })
         latitude: z.number(),
         longitude: z.number(),
 
-        status: z.enum([
-          "POWER_OFF",
-          "POWER_ON",
-          "NOT_SURE",
-        ]),
+        status: z.enum(["POWER_OFF", "POWER_ON", "NOT_SURE"]),
 
         description: z.string().optional(),
       })
@@ -71,29 +67,28 @@ export const reportOutage = createServerFn({ method: "POST" })
 
     // Prevent duplicate reports from the same user
     // in the same area within 5 minutes.
-    const fiveMinutesAgo = new Date(
-      Date.now() - 5 * 60 * 1000,
-    );
+    const DUPLICATE_REPORT_WINDOW_MS = 5 * 60 * 1000;
 
-    const recentReport =
-      await prisma.outageReport.findFirst({
-        where: {
-          userId,
-          area: data.area,
-          startedAt: {
-            gte: fiveMinutesAgo,
-          },
+    const fiveMinutesAgo = new Date(Date.now() - DUPLICATE_REPORT_WINDOW_MS);
+
+    const recentReport = await prisma.outageReport.findFirst({
+      where: {
+        userId,
+        area: data.area,
+        startedAt: {
+          gte: fiveMinutesAgo,
         },
-        orderBy: {
-          startedAt: "desc",
-        },
-      });
+      },
+      orderBy: {
+        startedAt: "desc",
+      },
+    });
 
     if (recentReport) {
       return {
         success: false as const,
-        message:
-          "You already submitted a report for this area within the last 5 minutes.",
+        message: "You already submitted a report for this area within the last 5 minutes.",
+        outage: undefined,
       };
     }
 
@@ -111,6 +106,7 @@ export const reportOutage = createServerFn({ method: "POST" })
 
     return {
       success: true as const,
-      outage: serialize(created),
+      message: "Power status reported successfully.",
+      outage: serializeOutage(created),
     };
   });

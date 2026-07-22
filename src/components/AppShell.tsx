@@ -12,7 +12,7 @@ import {
   RadioTower,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";

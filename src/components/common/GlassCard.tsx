@@ -1,5 +1,5 @@
 import type { ReactNode, HTMLAttributes } from "react";
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 
 interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -16,7 +16,7 @@ export function GlassCard({
     <div
       className={cn(
         variant === "strong" ? "glass-strong" : "glass",
-        "rounded-2xl p-6",
+        "rounded-2xl",
         className,
       )}
       {...props}

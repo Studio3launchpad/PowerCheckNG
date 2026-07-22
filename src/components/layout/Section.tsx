@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/outage/utils";
+import { cn } from "@/lib/outage/geoUtils";
 
 type SectionProps = React.HTMLAttributes<HTMLElement>;
 
