@@ -87,7 +87,7 @@ export function DashboardPreview() {
                   return (
                     <div
                       key={item.title}
-                      className="rounded-xl border border-border bg-background/30 p-4 sm:p-5"
+                      className="rounded-2xl border border-border bg-background/30 p-4 sm:p-5"
                     >
                       <Icon className="mb-3 h-5 w-5 text-primary sm:h-6 sm:w-6" />
 
@@ -139,7 +139,7 @@ export function DashboardPreview() {
                   {tools.map((tool) => (
                     <div
                       key={tool}
-                      className="rounded-xl border border-border bg-background/30 px-4 py-3 text-sm font-medium sm:text-base"
+                      className="rounded-2xl border border-border bg-background/30 px-4 py-3 text-sm font-medium sm:text-base"
                     >
                       {tool}
                     </div>

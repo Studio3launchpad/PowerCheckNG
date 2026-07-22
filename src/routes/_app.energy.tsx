@@ -1,13 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { PageHeader } from "@/components/common/PageHeader";
 import { analyzeEnergyPlan } from "@/lib/energy/energyPlanner";
 import { DEFAULT_APPLIANCES } from "@/lib/energy/energy.constants";
 import type { Appliance, EnergyAnalysis } from "@/lib/energy/energy.types";
 import { ApplianceSelector } from "@/components/energy/ApplianceSelector";
 import { EnergyBudgetInput } from "@/components/energy/EnergyBudgetInput";
 import { EnergyAnalysisResults } from "@/components/energy/EnergyAnalysisResults";
-import {loadSavedAppliances, loadSavedBudget, saveAppliances, saveBudget, saveEnergyAnalysis} from "@/lib/energy/energyStorage";
+import {
+  loadSavedAppliances,
+  loadSavedBudget,
+  saveAppliances,
+  saveBudget,
+  saveEnergyAnalysis,
+} from "@/lib/energy/energyStorage";
+import { Brain } from "lucide-react";
+
 
 const ANALYSIS_SESSION_KEY = "powercheckng-energy-analysis-timestamp";
 
@@ -99,13 +107,13 @@ function SmartEnergyPlanner() {
   }, [budget, hasLoadedSavedPlan]);
 
   useEffect(() => {
-  if (!analysis) return;
+    if (!analysis) return;
 
-  resultsSectionRef.current?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-}, [analysis]);
+    resultsSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [analysis]);
 
   const toggle = (name: string) => {
     setAppliances((current) =>
@@ -202,20 +210,21 @@ function SmartEnergyPlanner() {
   return (
     <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
       <PageHeader
-  title="Smart Energy Planner"
-  description="Build an energy plan based on your appliances and monthly electricity budget."
-  actions={
-    analysis ? (
-      <Link
-        to="/insights"
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto"
-      >
-        View Smart Insights
-        <span>→</span>
-      </Link>
-    ) : undefined
-  }
-/>
+        icon={Brain}
+        title="Smart Energy Planner"
+        description="Build an energy plan based on your appliances and monthly electricity budget."
+        action={
+          analysis ? (
+            <Link
+              to="/insights"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto"
+            >
+              View Smart Insights
+              <span>→</span>
+            </Link>
+          ) : undefined
+        }
+      />
 
       <ApplianceSelector
         appliances={appliances}
@@ -242,23 +251,21 @@ function SmartEnergyPlanner() {
 
           <div className="flex justify-center px-4 sm:px-0">
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-  <Link
-    to="/dashboard"
-    className="inline-flex w-full items-center justify-center rounded-xl border border-border px-4 py-3 text-sm font-semibold transition hover:bg-white/5 sm:w-auto sm:px-6"
-  >
-    ← View Dashboard
-  </Link>
+              <Link
+                to="/dashboard"
+                className="inline-flex w-full items-center justify-center rounded-xl border border-border px-4 py-3 text-sm font-semibold transition hover:bg-white/5 sm:w-auto sm:px-6"
+              >
+                ← View Dashboard
+              </Link>
 
-  <Link
-    to="/insights"
-    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto sm:px-6"
-  >
-    View Full Smart Insights
-    <span className="transition-transform group-hover:translate-x-1">
-      →
-    </span>
-  </Link>
-</div>
+              <Link
+                to="/insights"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10 sm:w-auto sm:px-6"
+              >
+                View Full Smart Insights
+                <span className="transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
           </div>
         </div>
       )}

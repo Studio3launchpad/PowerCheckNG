@@ -41,7 +41,7 @@ export function HistoryFilters({
           onChange={(e) => onSearchChange(e.target.value)}
           className="
       flex-1
-      rounded-xl
+      rounded-2xl
       border
       border-border
       bg-background/50
@@ -50,12 +50,12 @@ export function HistoryFilters({
       outline-none
       mb-3
       focus:border-primary
-    "  
+    "
         />
 
         <button
           onClick={onClearFilters}
-          className="w-full rounded-xl border border-border px-4 py-3 hover:bg-white/5 sm:w-auto mb-3"
+          className="w-full rounded-2xl border border-border px-4 py-3 hover:bg-white/5 sm:w-auto mb-3"
         >
           Clear
         </button>
@@ -68,7 +68,7 @@ export function HistoryFilters({
             onChange={(e) => onStatusChange(e.target.value)}
             className="w-full
             appearance-none
-            rounded-xl
+            rounded-2xl
             border
             border-border
             bg-background/50
@@ -103,7 +103,7 @@ export function HistoryFilters({
             onChange={(e) => onDiscoChange(e.target.value)}
             className="w-full
             appearance-none
-            rounded-xl
+            rounded-2xl
             border
             border-border
             bg-background/50
@@ -138,12 +138,10 @@ export function HistoryFilters({
             type="date"
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-full rounded-xl border border-border bg-background/50 px-3 py-3 [color-scheme:dark]"
+            className="w-full rounded-2xl border border-border bg-background/50 px-3 py-3 [color-scheme:dark]"
           />
 
-          <p className="text-xs text-muted-foreground">
-            Filter reports by date.
-          </p>
+          <p className="text-xs text-muted-foreground">Filter reports by date.</p>
         </div>
       </div>
     </div>

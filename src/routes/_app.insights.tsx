@@ -6,8 +6,7 @@ import { SmartInsightList } from "@/components/insights/SmartInsightList";
 import { SavingsOpportunities } from "@/components/insights/SavingsOpportunities";
 import { EnergyBreakdownChart } from "@/components/insights/EnergyBreakdownChart";
 import { generateEnergyInsights } from "@/lib/insights/insightEngine";
-import { PageHeader } from "@/components/layout/PageHeader";
-
+import { PageHeader } from "@/components/common/PageHeader";
 
 import type { Appliance } from "@/lib/energy/energy.types";
 
@@ -119,19 +118,19 @@ function SmartInsightsPage() {
   return (
     <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
       <div className="space-y-4">
-  <Link
-    to="/energy"
-    className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
-  >
-    <span aria-hidden="true">←</span>
-    Back to Smart Energy Planner
-  </Link>
+        <Link
+          to="/energy"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
+        >
+          <span aria-hidden="true">←</span>
+          Back to Smart Energy Planner
+        </Link>
 
-  <PageHeader
-    title="Smart Insights"
-    description="Personalized analysis based on your saved Smart Energy Planner profile."
-  />
-</div>
+        <PageHeader
+          title="Smart Insights"
+          description="Personalized analysis based on your saved Smart Energy Planner profile."
+        />
+      </div>
 
       <InsightSummaryCards profile={profile} />
 

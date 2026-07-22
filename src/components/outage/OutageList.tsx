@@ -1,4 +1,5 @@
-
+import { Clock3 } from "lucide-react";
+import { SectionHeader } from "@/components/common/SectionHeader";
 import { OutageCard } from "./OutageCard";
 import type { Outage } from "@/lib/outage/outages.types";
 
@@ -17,29 +18,15 @@ export function OutageList({
   limit,
   showViewAll = true,
 }: Props) {
-  const reports =
-  typeof limit === "number"
-    ? outages.slice(0, limit)
-    : outages;
+  const reports = typeof limit === "number" ? outages.slice(0, limit) : outages;
 
   return (
     <>
-      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
+      <SectionHeader icon={Clock3} title={title} description={subtitle} />
 
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            {subtitle}
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {reports.map((o) => (
-          <OutageCard
-            key={o.id}
-            outage={o}
-          />
+          <OutageCard key={o.id} outage={o} />
         ))}
       </div>
     </>

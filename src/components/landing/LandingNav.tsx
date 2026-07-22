@@ -15,7 +15,7 @@ export function LandingNav() {
       <header className="flex h-20 items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary glow-primary">
+          <div className="flex size-9 items-center justify-center rounded-2xl bg-primary glow-primary">
             <Zap className="size-5 text-primary-foreground" />
           </div>
 
@@ -25,7 +25,7 @@ export function LandingNav() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 text-sm text-muted-foreground lg:flex">
+        <nav className="hidden items-center gap-8 text-lg font-medium text-muted-foreground lg:flex">
           <a href="#features" className="transition hover:text-foreground">
             Features
           </a>
@@ -44,7 +44,7 @@ export function LandingNav() {
           <Link
             to="/sign-in/$"
             params={{ _splat: "" }}
-            className="text-sm text-muted-foreground transition hover:text-foreground"
+            className="text-base font-medium text-muted-foreground transition hover:text-foreground"
           >
             Sign in
           </Link>
@@ -52,7 +52,7 @@ export function LandingNav() {
           <Link
             to="/sign-up/$"
             params={{ _splat: "" }}
-            className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 glow-primary"
+            className="rounded-2xl bg-primary px-4 py-2 text-base font-medium text-primary-foreground transition hover:bg-primary/90 glow-primary"
           >
             Get Started
           </Link>

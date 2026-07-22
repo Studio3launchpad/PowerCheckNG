@@ -9,9 +9,7 @@ type Props = {
 
 export function CustomApplianceForm({ onAdd, onCancel }: Props) {
   const [name, setName] = useState("");
-  const [powerRange, setPowerRange] = useState<string>(
-  POWER_RANGES[2].id,
-);
+  const [powerRange, setPowerRange] = useState<string>(POWER_RANGES[2].id);
   const [watts, setWatts] = useState(POWER_RANGES[2].defaultWatts.toString());
   const [quantity, setQuantity] = useState("1");
   const [hours, setHours] = useState("1");
@@ -48,14 +46,14 @@ export function CustomApplianceForm({ onAdd, onCancel }: Props) {
   };
 
   return (
-    <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
+    <div className="mt-4 mb-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
       <div>
         <h3 className="font-semibold">Add Custom Appliance</h3>
 
         <p className="mt-1 text-xs text-muted-foreground">
-  Give your appliance a name, choose an estimated power range,
-  and adjust the values if you know the exact specifications.
-</p>
+          Give your appliance a name, choose an estimated power range, and adjust the values if you
+          know the exact specifications.
+        </p>
       </div>
 
       <div className="mt-4 space-y-3">
@@ -72,41 +70,41 @@ export function CustomApplianceForm({ onAdd, onCancel }: Props) {
         </label>
 
         <div className="grid gap-3 sm:grid-cols-2">
-            <label className="space-y-1">
-              <span className="text-xs text-muted-foreground">Estimated Power</span>
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Estimated Power</span>
 
-              <select
-                value={powerRange}
-                onChange={(event) => {
-                  const selected = POWER_RANGES.find((range) => range.id === event.target.value);
+            <select
+              value={powerRange}
+              onChange={(event) => {
+                const selected = POWER_RANGES.find((range) => range.id === event.target.value);
 
-                  setPowerRange(event.target.value);
+                setPowerRange(event.target.value);
 
-                  if (selected) {
-                    setWatts(selected.defaultWatts.toString());
-                  }
-                }}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary"
-              >
-                {POWER_RANGES.map((range) => (
-                  <option key={range.id} value={range.id}>
-                    {range.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                if (selected) {
+                  setWatts(selected.defaultWatts.toString());
+                }
+              }}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary"
+            >
+              {POWER_RANGES.map((range) => (
+                <option key={range.id} value={range.id}>
+                  {range.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-            <label className="space-y-1">
-              <span className="text-xs text-muted-foreground">Power (Watts)</span>
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Power (Watts)</span>
 
-              <input
-                type="number"
-                min="1"
-                value={watts}
-                onChange={(event) => setWatts(event.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary"
-              />
-            </label>
+            <input
+              type="number"
+              min="1"
+              value={watts}
+              onChange={(event) => setWatts(event.target.value)}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary"
+            />
+          </label>
           <label className="space-y-1">
             <span className="text-xs text-muted-foreground">Quantity</span>
 

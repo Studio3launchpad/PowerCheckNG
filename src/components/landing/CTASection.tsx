@@ -48,7 +48,7 @@ export function CTASection() {
                 discover the best backup solution—all in one place.
               </p>
 
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
                   to="/sign-up/$"
                   params={{ _splat: "" }}

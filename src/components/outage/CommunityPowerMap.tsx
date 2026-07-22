@@ -79,7 +79,7 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
 
   if (!mounted) {
     return (
-      <div className="flex h-[320px] w-full items-center justify-center rounded-xl bg-muted animate-pulse sm:h-[420px] lg:h-[520px]">
+      <div className="flex h-[320px] w-full items-center justify-center rounded-2xl bg-muted animate-pulse sm:h-[420px] lg:h-[520px]">
         <p className="text-sm text-muted-foreground">Loading community map...</p>
       </div>
     );
@@ -88,12 +88,11 @@ export function CommunityPowerMap({ outages }: { outages: Outage[] }) {
 
 
   return (
-    <div className="relative z-0 overflow-hidden rounded-xl">
+    <div className="relative z-0 overflow-hidden rounded-2xl">
     <MapContainer
       center={[9.082, 8.6753]}
       zoom={6}
-      className="h-[320px] w-full sm:h-[420px] lg:h-[520px] z-0"
-    >
+      className="h-[280px] sm:h-[380px] lg:h-[520px] w-full z-0">
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

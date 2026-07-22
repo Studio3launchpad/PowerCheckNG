@@ -1,5 +1,5 @@
 import { BatteryCharging, Zap, Fuel } from "lucide-react";
-
+import { SectionHeader } from "@/components/common/SectionHeader";
 import { GlassCard } from "@/components/GlassCard";
 
 import type {
@@ -31,26 +31,18 @@ export function BestBackupSolutionCard({
   return (
     <GlassCard>
       <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          {isGenerator ? (
-            <Fuel className="h-8 w-8 text-primary" />
-          ) : (
-            <BatteryCharging className="h-8 w-8 text-primary" />
-          )}
-
-          <div>
-            <p className="text-xs uppercase tracking-widest text-primary">
-              Recommended Backup Solution
-            </p>
-
-            <h2 className="text-2xl font-bold">
-              {isGenerator ? generator.name : isHybrid ? "Hybrid Backup System" : inverter.inverter}
-            </h2>
-          </div>
+        <SectionHeader
+          icon={isGenerator ? Fuel : BatteryCharging}
+          title="Recommended Backup Solution"
+        />
+        <div>
+          <h3 className="break-words text-xl font-bold leading-tight sm:text-2xl">
+            {isGenerator ? generator.name : isHybrid ? "Hybrid Backup System" : inverter.inverter}
+          </h3>
         </div>
 
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-          <p className="leading-7">
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+          <p className="text-[13px] leading-6 text-muted-foreground sm:text-sm lg:text-base">
             {isGenerator &&
               "Based on your energy profile, a generator offers the best balance between purchase cost, starting power and long-duration backup."}
 
@@ -63,55 +55,49 @@ export function BestBackupSolutionCard({
         </div>
 
         <div className="rounded-xl border border-border bg-background/40 p-5">
-  <p className="mb-5 text-sm font-medium">
-    System Specifications
-  </p>
+          <p className="mb-5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            System Specifications
+          </p>
 
-  <div className="grid gap-6 md:grid-cols-3">
-    <div>
-      <p className="text-xs text-muted-foreground">
-        Battery
-      </p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-2xl border border-border bg-background p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Battery
+              </p>
 
-      <p className="mt-1 text-lg font-semibold">
-        {isGenerator
-          ? "Not Required"
-          : isHybrid
-          ? `${inverter.battery} + Generator`
-          : inverter.battery}
-      </p>
-    </div>
+              <p className="mt-1 text-lg font-bold leading-none sm:text-xl">
+                {isGenerator
+                  ? "Not Required"
+                  : isHybrid
+                    ? `${inverter.battery} + Generator`
+                    : inverter.battery}
+              </p>
+            </div>
 
-    <div>
-      <p className="text-xs text-muted-foreground">
-        Runtime
-      </p>
+            <div className="rounded-2xl border border-border bg-background p-4">
+              <p className="text-xs uppercase text-muted-foreground">Runtime</p>
 
-      <p className="mt-1 text-lg font-semibold">
-        {isGenerator
-          ? "Unlimited (with fuel)"
-          : `${inverter.estimatedRuntime} hrs`}
-      </p>
-    </div>
+              <p className="mt-1 text-lg font-bold leading-none sm:text-xl">
+                {isGenerator ? "Unlimited (with fuel)" : `${inverter.estimatedRuntime} hrs`}
+              </p>
+            </div>
 
-    <div>
-      <p className="text-xs text-muted-foreground">
-        Suitability
-      </p>
+            <div className="rounded-2xl border border-border bg-background p-4">
+              <p className="text-xs uppercase text-muted-foreground">Suitability</p>
 
-      <p className="mt-1 text-lg font-semibold text-green-500">
-        {isGenerator
-          ? "100%"
-          : `${inverter.suitability}%`}
-      </p>
-    </div>
-  </div>
-</div>
+              <p className="mt-1 text-lg font-bold leading-none sm:text-xl text-green-500">
+                {isGenerator ? "100%" : `${inverter.suitability}%`}
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <div className="rounded-xl border border-border bg-background/40 p-4">
-          <p className="text-sm font-medium">Backup sizing</p>
+        <div className="rounded-2xl border border-border bg-background/40 p-4 sm:p-5">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Backup sizing
+          </p>
 
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          <p className="mt-3 text-[13px] leading-6 text-muted-foreground sm:text-sm lg:text-base">
             {essentialApplianceCount > 0 ? (
               <>
                 This recommendation is based on{" "}

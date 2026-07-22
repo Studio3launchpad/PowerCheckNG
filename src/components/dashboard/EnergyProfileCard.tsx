@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 import { GlassCard } from "@/components/GlassCard";
 import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";
-import { DashboardSection } from "@/components/dashboard/common/DashboardSection";
+import { SectionHeader } from "@/components/common/SectionHeader";
 
 interface EnergyProfileCardProps {
   analysis: {
@@ -19,71 +19,52 @@ interface ProfileMetricProps {
   value: React.ReactNode;
 }
 
-function ProfileMetric({
-  label,
-  value,
-}: ProfileMetricProps) {
+function ProfileMetric({ label, value }: ProfileMetricProps) {
   return (
-    <div className="rounded-xl border border-border p-4">
-      <p className="text-xs text-muted-foreground">
-        {label}
-      </p>
+    <div className="rounded-2xl border border-border p-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
 
-      <div className="mt-2 text-2xl font-bold">
-        {value}
-      </div>
+      <div className="mt-2 text-xl font-bold leading-none sm:text-2xl">{value}</div>
     </div>
   );
 }
 
-export function EnergyProfileCard({
-  analysis,
-}: EnergyProfileCardProps) {
+export function EnergyProfileCard({ analysis }: EnergyProfileCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <GlassCard className="p-5 sm:p-6">
-        <DashboardSection
+      <GlassCard className="p-4 sm:p-5">
+        <SectionHeader
           title="Energy Profile"
           description="Your current energy setup."
           action={
             <Link
               to="/energy"
-              className="text-sm font-semibold text-primary hover:underline"
+              className="text-[13px] font-semibold text-primary transition-colors hover:underline sm:text-sm"
             >
-              Update →
+              Update
             </Link>
           }
-        >
-          <div className="mt-5 grid grid-cols-2 gap-5">
-            <ProfileMetric
-              label="Selected"
-              value={analysis.applianceCount}
-            />
+        />
+        <div className="mt-6 grid grid-cols-2 gap-4">
+          <ProfileMetric label="Selected" value={analysis.applianceCount} />
 
-            <ProfileMetric
-              label="Essential"
-              value={analysis.essentialApplianceCount}
-            />
+          <ProfileMetric label="Essential" value={analysis.essentialApplianceCount} />
 
-            <ProfileMetric
-              label="Peak Load"
-              value={`${analysis.peakLoad.toLocaleString()}W`}
-            />
+          <ProfileMetric label="Peak Load" value={`${analysis.peakLoad.toLocaleString()}W`} />
 
-            <ProfileMetric
-  label="Highest Consumer"
-  value={
-    <span className="text-lg font-semibold leading-tight">
-      {analysis.highestConsumer}
-    </span>
-  }
-/>
-          </div>
-        </DashboardSection>
+          <ProfileMetric
+            label="Highest Consumer"
+            value={
+              <span className="text-sm font-semibold leading-6 sm:text-base">
+                {analysis.highestConsumer}
+              </span>
+            }
+          />
+        </div>
       </GlassCard>
     </motion.div>
   );

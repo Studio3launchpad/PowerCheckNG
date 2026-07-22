@@ -12,8 +12,9 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardTools } from "@/components/dashboard/DashboardTools";
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard";
-import {loadEnergyAnalysis, loadSavedBudget} from "@/lib/energy/energyStorage";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { loadEnergyAnalysis, loadSavedBudget } from "@/lib/energy/energyStorage";
+import { PageHeader } from "@/components/common/PageHeader";
+import { LayoutDashboard } from "lucide-react";
 
 const outagesQO = queryOptions({
   queryKey: ["outages"],
@@ -48,9 +49,10 @@ function Dashboard() {
     return (
       <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
         <PageHeader
-  title="Dashboard"
-  description="Start by creating your Smart Energy Plan to unlock your personalised dashboard."
-/>
+          icon={LayoutDashboard}
+          title="Dashboard"
+          description="Start by creating your Smart Energy Plan to unlock your personalised dashboard."
+        />
 
         <GlassCard className="p-5 text-center sm:p-8">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl sm:h-14 sm:w-14 sm:text-2xl">

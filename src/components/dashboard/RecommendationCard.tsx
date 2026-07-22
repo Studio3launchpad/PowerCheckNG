@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
 import { GlassCard } from "@/components/GlassCard";
-import { DashboardSection } from "@/components/dashboard/common/DashboardSection";
+import { SectionHeader } from "@/components/common/SectionHeader";
 
 import type { EnergyAnalysis } from "@/lib/energy/energy.types";
 
@@ -19,17 +19,17 @@ export function RecommendationCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.25 }}
     >
-      <GlassCard className="p-6">
-        <DashboardSection
-          title="Energy Recommendation"
-          description="Personalised guidance based on your current energy profile."
-        >
-          <div className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-5">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+      <GlassCard className="p-4 sm:p-5">
+        <SectionHeader
+  title="Energy Recommendation"
+  description="Personalised guidance based on your current energy profile."
+/>
+          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               TODAY'S RECOMMENDATION
             </p>
 
-            <p className="mt-3 text-base leading-7">
+            <p className="mt-3 text-[13px] leading-6 sm:text-sm lg:text-base">
               {analysis.recommendations[0]}
             </p>
           </div>
@@ -37,12 +37,12 @@ export function RecommendationCard({
           <div className="mt-6">
             <Link
               to="/insights"
-              className="inline-flex items-center text-sm font-semibold text-primary hover:underline"
+              className="inline-flex items-center text-[13px] font-semibold text-primary transition-colors hover:underline sm:text-sm"
             >
               View Smart Insights →
             </Link>
           </div>
-        </DashboardSection>
+        
       </GlassCard>
     </motion.div>
   );

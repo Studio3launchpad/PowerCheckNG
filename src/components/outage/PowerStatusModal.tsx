@@ -42,10 +42,10 @@ export function PowerStatusModal({ open, area, state, onClose, onSelect }: Props
             What is the current electricity status where you are?
           </p>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <button
               onClick={() => onSelect("ON")}
-              className="w-full rounded-xl bg-green-600 hover:bg-green-700 px-4 py-3 text-left transition"
+              className="w-full rounded-2xl min-h-[52px] bg-green-600 hover:bg-green-700 px-4 py-3 text-left transition"
             >
               <div className="flex items-center gap-3">
                 <Power />
@@ -55,7 +55,7 @@ export function PowerStatusModal({ open, area, state, onClose, onSelect }: Props
 
             <button
               onClick={() => onSelect("OFF")}
-              className="w-full rounded-xl bg-red-600 hover:bg-red-700 py-3 px-4 text-left transition"
+              className="w-full rounded-2xl min-h-[52px] bg-red-600 hover:bg-red-700 py-3 px-4 text-left transition"
             >
               <div className="flex items-center gap-2">
                 <Power />
@@ -65,7 +65,7 @@ export function PowerStatusModal({ open, area, state, onClose, onSelect }: Props
 
             <button
               onClick={() => onSelect("NOT_SURE")}
-              className="w-full rounded-xl border border-border hover:border-primary py-3 px-4 text-left transition"
+              className="w-full rounded-2xl min-h-[52px] border border-border hover:border-primary py-3 px-4 text-left transition"
             >
               <div className="flex items-center gap-2">
                 <HelpCircle />
@@ -74,7 +74,7 @@ export function PowerStatusModal({ open, area, state, onClose, onSelect }: Props
             </button>
           </div>
 
-          <div className="mt-6 rounded-xl border border-primary/20 bg-primary/10 p-4">
+          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/10 p-4">
             <div className="flex gap-2">
               <MapPin className="mt-0.5 shrink-0 text-primary" size={18} />
 

@@ -12,7 +12,7 @@ import {
 } from "@/lib/backup/backupAdvisor";
 
 import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";
-import { DashboardMetric } from "@/components/dashboard/common/DashboardMetric";
+import { MetricCard } from "@/components/common/MetricCard";
 
 interface DashboardStatsProps {
   analysis: EnergyAnalysis;
@@ -32,34 +32,34 @@ export function DashboardStats({
       transition={{ delay: 0.05 }}
     >
       <ResponsiveGrid columns={4}>
-        <DashboardMetric
-          title="Energy Health Score"
-          value={`${analysis.score}/100`}
-          description={
-            analysis.score >= 80
-              ? "Excellent"
-              : analysis.score >= 60
-                ? "Good"
-                : "Needs Improvement"
-          }
-          icon={Zap}
-        />
+        <MetricCard
+  title="Energy Health Score"
+  value={`${analysis.score}/100`}
+  subtitle={
+    analysis.score >= 80
+      ? "Excellent"
+      : analysis.score >= 60
+        ? "Good"
+        : "Needs Improvement"
+  }
+  icon={Zap}
+/>
 
-        <DashboardMetric
-          title="Monthly Usage"
-          value={`${analysis.monthlyUsage.toFixed(1)} kWh`}
-          description="Estimated consumption"
-          icon={Activity}
-        />
+        <MetricCard
+  title="Monthly Usage"
+  value={`${analysis.monthlyUsage.toFixed(1)} kWh`}
+  subtitle="Estimated consumption"
+  icon={Activity}
+/>
 
-        <DashboardMetric
+        <MetricCard
   title="Monthly Cost"
   value={
     analysis.monthlyCost > 0
       ? `₦${analysis.monthlyCost.toLocaleString()}`
       : "—"
   }
-  description={
+  subtitle={
     analysis.monthlyCost > 0
       ? analysis.monthlyCost <= budget
         ? `₦${(budget - analysis.monthlyCost).toLocaleString()} below budget`
@@ -69,14 +69,14 @@ export function DashboardStats({
   icon={CreditCard}
 />
 
-        <DashboardMetric
+        <MetricCard
   title="Backup Ready"
   value={
     advisor
       ? `${advisor.readinessScore}%`
       : "—"
   }
-  description={
+  subtitle={
     advisor
       ? advisor.bestTechnology === "INVERTER"
         ? "Inverter Recommended"

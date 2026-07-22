@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 import { GlassCard } from "@/components/GlassCard";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { PageHeader } from "@/components/common/PageHeader";
 
 interface DashboardHeaderProps {
   monthlyCost: number;
@@ -33,9 +33,9 @@ export function DashboardHeader({
       className="space-y-6"
     >
       <PageHeader
-        title="Dashboard"
-        description="Everything you need to plan, analyse and optimise your electricity usage in one place."
-      />
+    title="Dashboard"
+    description="Monitor your energy usage, backup readiness, outage status, and personalised recommendations in one place."
+/>
 
       <p className="text-sm font-medium text-muted-foreground">
         Good {greeting} 👋

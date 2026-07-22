@@ -53,7 +53,7 @@ export function CoreFeatures() {
           </p>
         </div>
 
-        <ResponsiveGrid columns={2} className="mt-16 gap-6 lg:gap-8">
+        <ResponsiveGrid columns={2} className="mt-20 gap-6 lg:gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
 

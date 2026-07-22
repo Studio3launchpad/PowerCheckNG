@@ -16,10 +16,10 @@ export function OutageCard({ outage }: Props) {
   );
 
   return (
-    <GlassCard>
+    <GlassCard className="p-4 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="flex items-center gap-2 truncate font-semibold">
+          <p className="flex items-center gap-2 break-words font-semibold">
             <MapPin className="size-4 shrink-0 text-primary" />
             {outage.area}
           </p>
@@ -30,7 +30,7 @@ export function OutageCard({ outage }: Props) {
         </div>
 
         <span
-          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide ${STATUS_STYLES[outage.status]}`}
+          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide ${STATUS_STYLES[outage.status]}`}
         >
           {outage.status.replace("_", " ")}
         </span>

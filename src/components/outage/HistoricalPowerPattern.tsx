@@ -1,6 +1,8 @@
 import { GlassCard } from "@/components/GlassCard";
 import { analyzePowerAvailability } from "@/lib/outage/powerAvailability";
 import type { Outage } from "@/lib/outage/outages.types";
+import { BarChart3 } from "lucide-react";
+import { SectionHeader } from "@/components/common/SectionHeader";
 
 type Props = {
   outages: Outage[];
@@ -27,20 +29,15 @@ export function HistoricalPowerPattern({ outages }: Props) {
   return (
     <GlassCard>
       <div className="space-y-6">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-primary">
-            Community Power Analytics
-          </p>
+        <SectionHeader
+          icon={BarChart3}
+          badge="Community Power Analytics"
+          title="Historical Power Pattern"
+          description="Based on confirmed community reports from the last 30 days."
+        />
 
-          <h2 className="mt-1 text-xl font-bold sm:text-2xl">Historical Power Pattern</h2>
-
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            Based on confirmed community reports from the last 30 days.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-xl border border-border bg-background/30 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-border bg-background/30 p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">
               Overall Availability
             </p>
@@ -48,7 +45,7 @@ export function HistoricalPowerPattern({ outages }: Props) {
             <p className="mt-2 text-3xl font-bold">{overallAvailability}%</p>
           </div>
 
-          <div className="rounded-xl border border-border bg-background/30 p-4">
+          <div className="rounded-2xl border border-border bg-background/30 p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">
               Reports Analysed
             </p>
@@ -61,7 +58,7 @@ export function HistoricalPowerPattern({ outages }: Props) {
           {periods.map((period) => (
             <div
               key={period.key}
-              className="space-y-3 rounded-xl border border-border bg-background/30 p-4"
+              className="space-y-3 rounded-2xl border border-border bg-background/30 p-4"
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
@@ -107,7 +104,7 @@ export function HistoricalPowerPattern({ outages }: Props) {
           ))}
         </div>
 
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">
             Community Pattern Summary
           </p>

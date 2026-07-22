@@ -12,7 +12,6 @@ import { useCurrentLocation } from "@/hooks/useCurrentLocation";
 import { useOutageReporting } from "@/hooks/useOutageReporting";
 import { PowerAvailabilityOutlook } from "@/components/outage/PowerAvailabilityOutlook";
 
-
 const outagesQO = queryOptions({
   queryKey: ["outages"],
   queryFn: () => listOutages(),
@@ -49,7 +48,7 @@ function OutagesPage() {
   const { reportCount, confidence, currentStatus } = calculateCommunityPower(location, outages);
 
   return (
-    <div className="space-y-6 pb-24 lg:pb-6">
+    <div className="space-y-6 px-4 pb-24 sm:px-0 lg:pb-6">
       <OutageHeader
         onUpdateLocation={getCurrentLocation}
         onRefresh={refetch}
@@ -58,7 +57,7 @@ function OutagesPage() {
       />
 
       {isPending && (
-        <div className="rounded-xl border border-border bg-card/40 px-4 py-3">
+        <div className="rounded-2xl border border-border bg-card/40 px-4 py-3">
           <p className="text-sm text-muted-foreground">Loading community power reports...</p>
         </div>
       )}
@@ -108,14 +107,13 @@ function OutagesPage() {
           <OutageList outages={outages} limit={10} />
 
           <div className="flex justify-center pt-2">
-  <Link
-    to="/history"
-    className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-  >
-    View Full Report History
-    →
-  </Link>
-</div>
+            <Link
+              to="/history"
+              className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+            >
+              View Full Report History →
+            </Link>
+          </div>
         </>
       )}
 
@@ -130,6 +128,10 @@ function OutagesPage() {
             discoCode: location.discoCode,
             latitude: location.latitude,
             longitude: location.longitude,
+
+            // Add these two lines
+            rawLatitude: location.latitude,
+            rawLongitude: location.longitude,
 
             status: status === "OFF" ? "POWER_OFF" : status === "ON" ? "POWER_ON" : "NOT_SURE",
 

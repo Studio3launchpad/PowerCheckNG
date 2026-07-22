@@ -47,7 +47,7 @@ export function WhyPowerCheck() {
           </p>
         </div>
 
-        <ResponsiveGrid columns={3} className="mt-16 gap-6 lg:gap-8">
+        <ResponsiveGrid columns={3} className="mt-20 gap-6 lg:gap-8">
           {challenges.map((item, index) => (
             <motion.div
               key={item.title}

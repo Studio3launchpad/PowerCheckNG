@@ -77,7 +77,7 @@ export function HowItWorks() {
                   duration: 0.45,
                   delay: index * 0.15,
                 }}
-                className={`mb-10 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-center lg:gap-8 ${
+                className={`mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-center lg:gap-8 ${
                   index % 2 === 1 ? "lg:flex-row-reverse" : ""
                 }`}
               >

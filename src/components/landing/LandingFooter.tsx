@@ -9,7 +9,7 @@ export function LandingFooter() {
   return (
     <footer className="border-t border-border/60 bg-background/40">
       <PageContainer>
-        <div className="py-16">
+        <div className="py-20">
           <div className="grid gap-12 md:grid-cols-3">
             {/* Brand */}
 

@@ -1,8 +1,4 @@
-import {
-  Brain,
-  TrendingUp,
-  ShieldCheck,
-} from "lucide-react";
+import { Brain, TrendingUp, ShieldCheck } from "lucide-react";
 import { buildBackupDisplayModel } from "@/lib/backup/displayModel";
 import { GlassCard } from "@/components/GlassCard";
 import type {
@@ -10,7 +6,8 @@ import type {
   BackupType,
   GeneratorRecommendation,
 } from "@/lib/backup/backupAdvisor";
-
+import { SectionHeader } from "@/components/common/SectionHeader";
+import { MetricCard } from "@/components/common/MetricCard";
 
 type Props = {
   bestTechnology: BackupType;
@@ -28,86 +25,52 @@ export function BackupRecommendation({
   generator,
   readinessScore,
 }: Props) {
-  const display = buildBackupDisplayModel(
-  bestTechnology,
-  inverter,
-  generator,
-);
-  
+  const display = buildBackupDisplayModel(bestTechnology, inverter, generator);
+
   return (
     <GlassCard>
       <div className="space-y-6">
+        <SectionHeader
+          icon={Brain}
+          title="PowerCheckNG Recommendation"
+          description="An explanation of why this backup system was recommended."
+        />
 
-        <div className="flex items-center gap-3">
-          <Brain className="h-7 w-7 text-primary" />
-
-          <div>
-            <h2 className="text-xl font-bold">
-              Backup Recommendation
-            </h2>
-
-            <p className="text-sm text-muted-foreground">
-              An explanation of why this backup system was recommended.
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-          <p className="text-sm leading-7">
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+          <p className="text-[13px] leading-6 text-muted-foreground sm:text-sm lg:text-base">
             {display.reason}
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 text-muted-foreground">
+          <MetricCard
+            icon={ShieldCheck}
+            iconSize="sm"
+            compact
+            title="Recommendation Confidence"
+            value={display.confidence}
+            subtitle={`Suitability Score: ${display.suitability}%`}
+          />
 
-          <div className="rounded-xl border border-border p-4">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-primary" />
-
-              <p className="font-semibold">
-                Recommendation Confidence
-              </p>
-            </div>
-
-            <p className="mt-3 text-2xl font-bold">
-              {display.confidence}
-            </p>
-
-            <p className="mt-2 text-sm text-muted-foreground">
-              Suitability Score: {display.suitability}%
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-border p-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-
-              <p className="font-semibold">
-                Backup Readiness
-              </p>
-            </div>
-
-            <p className="mt-3 text-2xl font-bold">
-              {readinessScore}/100
-            </p>
-
-            <p className="mt-2 text-sm text-muted-foreground">
-              Based on your selected essential appliances.
-            </p>
-          </div>
-
+          <MetricCard
+            icon={TrendingUp}
+            iconSize="sm"
+            compact
+            title="Backup Readiness"
+            value={`${readinessScore}/100`}
+            subtitle="Based on your selected essential appliances."
+          />
         </div>
 
-        <div className="rounded-xl border border-border p-5">
-          <h3 className="font-semibold">
+        <div className="rounded-2xl border border-border p-4 sm:p-5">
+          <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Future Upgrade Advice
           </h3>
 
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">
+          <p className="mt-3 text-[13px] leading-6 text-muted-foreground sm:text-sm lg:text-base">
             {display.upgradeAdvice}
           </p>
         </div>
-
       </div>
     </GlassCard>
   );

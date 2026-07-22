@@ -154,7 +154,7 @@ function HistoryPage() {
           <button
             type="button"
             onClick={() => setVisibleCount((current) => current + REPORTS_PER_PAGE)}
-            className="w-full rounded-xl border border-primary/30 px-6 py-3 font-medium text-primary transition hover:bg-primary/10 sm:w-auto"
+            className="w-full rounded-2xl border border-primary/30 px-6 py-3 font-medium text-primary transition hover:bg-primary/10 sm:w-auto"
           >
             Load More Reports
           </button>

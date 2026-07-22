@@ -38,7 +38,7 @@ export function EnergyBudgetInput({
           Monthly Budget
         </label>
 
-        <div className="relative mt-2">
+        <div className="relative mt-3">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
             ₦
           </span>

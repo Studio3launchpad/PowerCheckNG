@@ -48,7 +48,7 @@ export function ApplianceSelector({
   return (
     <GlassCard>
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-        <div>
+        <div className="space-y-5 lg:space-y-10">
           <h2 className="text-lg font-bold sm:text-xl">Select Your Appliances</h2>
 
           <p className="mt-1 text-sm text-muted-foreground">
@@ -211,7 +211,7 @@ export function ApplianceSelector({
 
       <div className="space-y-3">
         {appliances.map((appliance) => (
-          <div key={appliance.id} className="rounded-xl border border-border bg-background/30 p-4">
+          <div key={appliance.id} className="relative rounded-2xl border border-border bg-background/30 px-5 py-5">
             <div className="flex items-start justify-between gap-3">
               <button
                 type="button"
@@ -246,7 +246,17 @@ export function ApplianceSelector({
                 title={`Remove ${appliance.name}`}
                 className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-red-500/10 hover:text-red-500"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="
+absolute
+right-1
+top-1
+sm:right-4 top-4
+h-4
+w-4
+sm:h-7 w-7 
+text-muted-foreground
+hover:text-destructive
+" />
               </button>
             </div>
 

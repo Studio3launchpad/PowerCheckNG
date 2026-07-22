@@ -1,9 +1,8 @@
 import { GlassCard } from "@/components/GlassCard";
+import { SectionHeader } from "@/components/common/SectionHeader";
+import type { BudgetRisk, EnergyInsightProfile } from "@/lib/insights/insight.types";
+import { TriangleAlert } from "lucide-react";
 
-import type {
-  BudgetRisk,
-  EnergyInsightProfile,
-} from "@/lib/insights/insight.types";
 
 type Props = {
   profile: EnergyInsightProfile;
@@ -16,10 +15,7 @@ type RiskConfig = {
   barClass: string;
 };
 
-const riskConfig: Record<
-  BudgetRisk,
-  RiskConfig
-> = {
+const riskConfig: Record<BudgetRisk, RiskConfig> = {
   NO_BUDGET: {
     label: "No Budget Set",
     description:
@@ -61,79 +57,47 @@ const riskConfig: Record<
   },
 };
 
-export function BudgetRiskCard({
-  profile,
-}: Props) {
-  const {
-    analysis,
-    budget,
-    budgetRisk,
-    budgetDifference,
-    budgetUsagePercentage,
-  } = profile;
+export function BudgetRiskCard({ profile }: Props) {
+  const { analysis, budget, budgetRisk, budgetDifference, budgetUsagePercentage } = profile;
 
   const config = riskConfig[budgetRisk];
 
-  const progressPercentage =
-    budget <= 0
-      ? 0
-      : Math.min(
-          budgetUsagePercentage,
-          100,
-        );
+  const progressPercentage = budget <= 0 ? 0 : Math.min(budgetUsagePercentage, 100);
 
   return (
-    <GlassCard>
-      <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h2 className="text-xl font-semibold">
-  Monthly Budget Risk
-</h2>
+    <GlassCard className="p-4 sm:p-5">
+      <SectionHeader
+        icon={TriangleAlert}
+        title="Monthly Budget Risk"
+        description="Understand how your projected electricity cost compares with your monthly budget."
+      />
+      <div
+        className={`mt-6 rounded-2xl border p-5 ${
+          budgetRisk === "LOW"
+            ? "border-green-500/20 bg-green-500/5"
+            : budgetRisk === "MODERATE"
+              ? "border-yellow-500/20 bg-yellow-500/5"
+              : budgetRisk === "HIGH"
+                ? "border-orange-500/20 bg-orange-500/5"
+                : budgetRisk === "CRITICAL"
+                  ? "border-red-500/20 bg-red-500/5"
+                  : "border-border"
+        }`}
+      >
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Current Risk Level
+        </p>
 
-          <h2
-            className={`mt-2 text-2xl font-bold ${config.textClass}`}
-          >
-            {config.label}
-          </h2>
+        <p className={`mt-2 text-xl font-bold ${config.textClass}`}>{config.label}</p>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-            {config.description}
-          </p>
-        </div>
-
-        {budget > 0 && (
-          <div className="md:text-right">
-            <p className="text-xs text-muted-foreground">
-              Estimated Cost / Budget
-            </p>
-
-            <p className="mt-2 text-lg font-semibold">
-              ₦
-              {Math.round(
-                analysis.monthlyCost,
-              ).toLocaleString()}
-              {" / "}
-              ₦
-              {Math.round(
-                budget,
-              ).toLocaleString()}
-            </p>
-
-            <p
-              className={`mt-1 text-sm font-medium ${config.textClass}`}
-            >
-              {Math.round(
-                budgetUsagePercentage,
-              )}
-              % of budget
-            </p>
-          </div>
-        )}
+        <p className="mt-3 text-[13px] leading-6 text-muted-foreground sm:text-sm lg:text-base">
+          {config.description}
+        </p>
       </div>
 
       {budget > 0 && (
         <>
-          <div className="mt-6 h-3 overflow-hidden rounded-full bg-border">
+          <div className="mt-8 h-3 overflow-hidden rounded-full bg-border">
             <div
               className={`h-full rounded-full transition-all duration-500 ${config.barClass}`}
               style={{
@@ -142,29 +106,25 @@ export function BudgetRiskCard({
             />
           </div>
 
-          <div className="mt-3">
-            {budgetDifference > 0 ? (
-              <p className="text-sm text-muted-foreground">
-                Projected to exceed your budget by{" "}
-                <span className={`font-semibold ${config.textClass}`}>
-                  ₦
-                  {Math.round(
-                    budgetDifference,
-                  ).toLocaleString()}
-                </span>
-                .
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Estimated Cost
               </p>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Estimated budget remaining:{" "}
-                <span className="font-semibold text-green-500">
-                  ₦
-                  {Math.round(
-                    Math.abs(budgetDifference),
-                  ).toLocaleString()}
-                </span>
-                .
+
+              <p className="mt-1 text-lg font-semibold">
+                ₦{Math.round(analysis.monthlyCost).toLocaleString()}
               </p>
+            </div>
+
+            {budget > 0 && (
+              <div className="sm:text-right">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Monthly Budget
+                </p>
+
+                <p className="mt-1 text-lg font-semibold">₦{Math.round(budget).toLocaleString()}</p>
+              </div>
             )}
           </div>
         </>

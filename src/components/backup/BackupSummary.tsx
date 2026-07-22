@@ -1,12 +1,10 @@
-import { GlassCard } from "@/components/GlassCard";
+import { MetricCard } from "@/components/common/MetricCard";
 import type {
   BackupRecommendation,
   BackupType,
   GeneratorRecommendation,
 } from "@/lib/backup/backupAdvisor";
 import { buildBackupDisplayModel } from "@/lib/backup/displayModel";
-
-
 
 type Props = {
   bestTechnology: BackupType;
@@ -16,59 +14,22 @@ type Props = {
   generator: GeneratorRecommendation;
 };
 
-export function BackupSummary({
-  bestTechnology,
-  inverter,
-  generator,
-}: Props) {
-
-const display = buildBackupDisplayModel(
-  bestTechnology,
-  inverter,
-  generator,
-);
+export function BackupSummary({ bestTechnology, inverter, generator }: Props) {
+  const display = buildBackupDisplayModel(bestTechnology, inverter, generator);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <GlassCard>
-        <p className="text-sm text-muted-foreground">
-          Recommended System
-        </p>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <MetricCard title="Recommended System" value={display.system} valueClassName="mt-3" />
 
-        <h2 className="mt-2 text-2xl font-bold">
-          {display.system}
-        </h2>
-      </GlassCard>
+      <MetricCard title="Estimated Backup" value={display.runtime} valueClassName="mt-3"/>
 
-      <GlassCard>
-        <p className="text-sm text-muted-foreground">
-          Estimated Backup
-        </p>
+      <MetricCard title="Estimated Cost" value={`₦${display.cost.toLocaleString()}`} valueClassName="mt-3"/>
 
-        <h2 className="mt-2 text-2xl font-bold">
-          {display.runtime}
-        </h2>
-      </GlassCard>
-
-      <GlassCard>
-        <p className="text-sm text-muted-foreground">
-          Estimated Cost
-        </p>
-
-        <h2 className="mt-2 text-2xl font-bold">
-          ₦{display.cost.toLocaleString()}
-        </h2>
-      </GlassCard>
-
-      <GlassCard>
-        <p className="text-sm text-muted-foreground">
-          Estimated Capacity
-        </p>
-
-        <h2 className="mt-2 text-2xl font-bold text-primary">
-          {display.capacity}W
-        </h2>
-      </GlassCard>
+      <MetricCard
+        title="Estimated Capacity"
+        value={`${display.capacity}W`}
+        valueClassName="text-primary mt-3"
+      />
     </div>
   );
 }

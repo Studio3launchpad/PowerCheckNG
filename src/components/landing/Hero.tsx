@@ -42,7 +42,7 @@ export function Hero() {
   return (
    <Section className="pt-8 sm:pt-12">
   <PageContainer>
-    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+    <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
       {/* Left */}
 
       <motion.div
@@ -50,12 +50,12 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] sm:text-xs text-primary">
+        <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 ...">
           <span className="size-1.5 animate-pulse rounded-full bg-primary" />
           ⚡ Smarter Energy Planning for Nigeria
         </span>
 
-        <h1 className="mt-5 font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+        <h1 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-5xl lg:text-6xl">
           Good Energy Decisions,
           <br />
 
@@ -75,7 +75,7 @@ export function Hero() {
           <Link
             to="/sign-up/$"
             params={{ _splat: "" }}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto glow-primary"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto glow-primary"
           >
             Get Started
             <ArrowRight className="size-4" />
@@ -83,7 +83,7 @@ export function Hero() {
 
           <a
             href="#features"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/40 px-5 py-3 text-sm font-medium transition hover:bg-card/70 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-border bg-card/40 px-5 py-3 text-sm font-medium transition hover:bg-card/70 sm:w-auto"
           >
             Explore Features
           </a>
@@ -100,7 +100,7 @@ export function Hero() {
           delay: 0.1,
         }}
       >
-        <GlassCard className="overflow-hidden p-0">
+        <GlassCard className="overflow-hidden p-4 sm:p-0">
 
           <div className="p-6">
 
@@ -137,7 +137,7 @@ export function Hero() {
                   transition={{
                     delay: 0.25 + index * 0.15,
                   }}
-                  className="rounded-2xl border border-border bg-background/30 p-4"
+                  className="rounded-2xl border border-border bg-background/30 p-5 transition-all hover:border-primary/30"
                 >
 
                   <p className="text-xs text-muted-foreground">
@@ -174,7 +174,7 @@ export function Hero() {
               transition={{
                 delay: 0.95,
               }}
-              className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5"
+              className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6"
             >
 
               <p className="text-xs uppercase tracking-wide text-primary">

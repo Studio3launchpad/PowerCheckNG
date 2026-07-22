@@ -1,5 +1,7 @@
-import { ArrowUpRight } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
+import { BackupOptionCard } from "./BackupOptionCard";
+import { BackupOptionSection } from "./BackupOptionSection";
+import { useState } from "react";
 import {
   BACKUP_SYSTEMS,
   GENERATOR_SYSTEMS,
@@ -7,6 +9,7 @@ import {
   type BackupType,
   type GeneratorRecommendation,
 } from "@/lib/backup/backupAdvisor";
+import { SectionHeader } from "@/components/common/SectionHeader";
 
 type Props = {
   bestTechnology: BackupType;
@@ -14,188 +17,96 @@ type Props = {
   generator: GeneratorRecommendation;
 };
 
-export function AlternativeBackupOptions({
-  bestTechnology,
-  inverter,
-  generator,
-}: Props) {
+type Section = "inverter" | "generator" | "hybrid";
+
+export function AlternativeBackupOptions({ bestTechnology, inverter, generator }: Props) {
+  const [openSection, setOpenSection] = useState<Section | null>(
+    bestTechnology === "GENERATOR"
+      ? "generator"
+      : bestTechnology === "HYBRID"
+        ? "hybrid"
+        : "inverter",
+  );
+
   return (
     <GlassCard>
       <div className="space-y-8">
-        <div>
-          <h2 className="text-xl font-bold">
-            Alternative Backup Solutions
-          </h2>
-
-          <p className="mt-2 text-sm text-muted-foreground">
-            Explore alternative backup solutions for different power needs and
-            budgets.
-          </p>
-        </div>
+        <SectionHeader
+          title="Alternative Backup Solutions"
+          description="Explore alternative backup solutions for different power needs and budgets."
+        />
 
         {/* ===================== INVERTERS ===================== */}
 
-        <section className="space-y-3">
-          <h3 className="text-lg font-semibold">Inverters</h3>
-
+        <BackupOptionSection
+          title={`Inverter Backup Options (${BACKUP_SYSTEMS.length})`}
+          open={openSection === "inverter"}
+          onToggle={() => setOpenSection(openSection === "inverter" ? null : "inverter")}
+        >
           {BACKUP_SYSTEMS.map((system) => {
             const recommended =
-              bestTechnology !== "GENERATOR" &&
-              system.inverter === inverter.inverter;
+              bestTechnology !== "GENERATOR" && system.inverter === inverter.inverter;
+
+            const recommendation =
+              system.maxLoad <= 500
+                ? "Ideal for lighting, fans and basic entertainment."
+                : system.maxLoad <= 1000
+                  ? "Suitable for small homes and essential appliances."
+                  : system.maxLoad <= 1800
+                    ? "Recommended for medium households with moderate power demand."
+                    : "Designed for larger homes with higher backup requirements.";
 
             return (
-              <div
+              <BackupOptionCard
                 key={system.inverter}
-                className={`rounded-xl border p-4 transition ${
-                  recommended
-                    ? "border-primary bg-primary/5"
-                    : "border-border"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-semibold">
-                        {system.inverter}
-                      </p>
-
-                      {recommended && (
-                        <span className="rounded-full bg-primary px-2 py-1 text-[10px] font-medium text-primary-foreground">
-                          Recommended
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Battery: {system.battery}
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="font-semibold">
-                      ₦{system.estimatedCost.toLocaleString()}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground">
-                      Max Load {system.maxLoad}W
-                    </p>
-                  </div>
-                </div>
-
-                {!recommended && (
-                  <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-                    <ArrowUpRight className="h-3 w-3" />
-
-                    {system.maxLoad <= 500
-                      ? "Ideal for lighting, fans and basic entertainment."
-                      : system.maxLoad <= 1000
-                        ? "Suitable for small homes and essential appliances."
-                        : system.maxLoad <= 1800
-                          ? "Recommended for medium households with moderate power demand."
-                          : "Designed for larger homes with higher backup requirements."}
-                  </div>
-                )}
-              </div>
+                title={system.inverter}
+                subtitle={`Battery: ${system.battery}`}
+                cost={system.estimatedCost}
+                maxLoad={system.maxLoad}
+                recommended={recommended}
+                recommendation={recommendation}
+              />
             );
           })}
-        </section>
+        </BackupOptionSection>
 
         {/* ===================== GENERATORS ===================== */}
 
-        <section className="space-y-3">
-          <h3 className="text-lg font-semibold">Generators</h3>
-
+        <BackupOptionSection
+          title={`Generator Backup Options (${GENERATOR_SYSTEMS.length})`}
+          open={openSection === "generator"}
+          onToggle={() => setOpenSection(openSection === "generator" ? null : "generator")}
+        >
           {GENERATOR_SYSTEMS.map((system) => {
-            const recommended =
-              bestTechnology === "GENERATOR" &&
-              system.name === generator.name;
+            const recommended = bestTechnology === "GENERATOR" && system.name === generator.name;
 
             return (
-              <div
+              <BackupOptionCard
                 key={system.name}
-                className={`rounded-xl border p-4 transition ${
-                  recommended
-                    ? "border-primary bg-primary/5"
-                    : "border-border"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-semibold">
-                        {system.name}
-                      </p>
-
-                      {recommended && (
-                        <span className="rounded-full bg-primary px-2 py-1 text-[10px] font-medium text-primary-foreground">
-                          Recommended
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Fuel: {system.fuelCost}
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="font-semibold">
-                      ₦{system.estimatedCost.toLocaleString()}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground">
-                      Max Load {system.maxLoad}W
-                    </p>
-                  </div>
-                </div>
-
-                {!recommended && (
-                  <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-                    <ArrowUpRight className="h-3 w-3" />
-                    Suitable for longer outages and heavier electrical loads.
-                  </div>
-                )}
-              </div>
+                title={system.name}
+                subtitle={`Fuel: ${system.fuelCost}`}
+                cost={system.estimatedCost}
+                maxLoad={system.maxLoad}
+                recommended={recommended}
+                recommendation="Suitable for longer outages and heavier electrical loads."
+              />
             );
           })}
-        </section>
+        </BackupOptionSection>
 
         {/* ===================== HYBRID ===================== */}
 
-        <section className="space-y-3">
-          <h3 className="text-lg font-semibold">
-            Hybrid Backup System
-          </h3>
-
-          <div
-            className={`rounded-xl border p-4 ${
-              bestTechnology === "HYBRID"
-                ? "border-primary bg-primary/5"
-                : "border-border"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold">
-                    Inverter + Generator
-                  </p>
-
-                  {bestTechnology === "HYBRID" && (
-                    <span className="rounded-full bg-primary px-2 py-1 text-[10px] font-medium text-primary-foreground">
-                      Recommended
-                    </span>
-                  )}
-                </div>
-
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Combines an inverter for efficient daily backup with a
-                  generator for extended outages and higher electrical demand.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <BackupOptionSection
+          title="Hybrid Backup System (1)"
+          open={openSection === "hybrid"}
+          onToggle={() => setOpenSection(openSection === "hybrid" ? null : "hybrid")}
+        >
+          <BackupOptionCard
+            title="Inverter + Generator"
+            subtitle="Combines an inverter for efficient daily backup with a generator for extended outages and higher electrical demand."
+            recommended={bestTechnology === "HYBRID"}
+          />
+        </BackupOptionSection>
       </div>
     </GlassCard>
   );

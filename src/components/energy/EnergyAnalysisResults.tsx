@@ -21,31 +21,47 @@ export function EnergyAnalysisResults({ analysis, budget }: Props) {
         <div className="rounded-xl border border-border p-4 sm:p-5">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Daily Usage</p>
 
-          <p className="mt-2 text-xl font-bold sm:text-2xl">{analysis.dailyUsage.toFixed(1)} kWh</p>
+          <p className="mt-2 text-xl font-bold leading-none sm:text-2xl">
+            {analysis.dailyUsage.toFixed(1)} kWh
+          </p>
         </div>
 
         <div className="rounded-xl border border-border p-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Monthly Usage</p>
 
-          <p className="mt-2 text-xl font-bold sm:text-2xl">{analysis.monthlyUsage.toFixed(1)} kWh</p>
+          <p className="mt-2 text-xl font-bold leading-none sm:text-2xl">
+            {analysis.monthlyUsage.toFixed(1)} kWh
+          </p>
         </div>
 
         <div className="rounded-xl border border-border p-4">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">Estimated Monthly Bill</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Estimated Monthly Bill
+          </p>
 
-          <p className="mt-2 text-xl font-bold sm:text-2xl">₦{analysis.monthlyCost.toLocaleString()}</p>
+          <p className="mt-2 text-xl font-bold leading-none sm:text-2xl">
+            ₦{analysis.monthlyCost.toLocaleString()}
+          </p>
         </div>
 
         <div className="rounded-xl border border-border p-4">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">Energy Health Score</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Energy Health Score
+          </p>
 
-          <p className="mt-2 text-xl font-bold sm:text-2xl text-primary">{analysis.score}/100</p>
+          <p className="mt-2 text-xl font-bold leading-none sm:text-2xl text-primary">
+            {analysis.score}/100
+          </p>
         </div>
 
         <div className="rounded-xl border border-border p-4">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">Highest Consuming Appliance</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            Highest Consuming Appliance
+          </p>
 
-          <p className="mt-2 text-lg font-semibold sm:text-xl">{analysis.highestConsumer}</p>
+          <p className="mt-2 text-lg font-semibold leading-none sm:text-xl">
+            {analysis.highestConsumer}
+          </p>
         </div>
       </div>
 
@@ -67,7 +83,7 @@ export function EnergyAnalysisResults({ analysis, budget }: Props) {
           />
         </div>
 
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">
           {isOverBudget
             ? `⚠ You're over budget by ₦${budgetDifference.toLocaleString()}`
             : "✅ You're within your monthly electricity budget."}
@@ -79,12 +95,10 @@ export function EnergyAnalysisResults({ analysis, budget }: Props) {
 
         <div className="space-y-4">
           {analysis.breakdown.map((item) => (
-            <div key={item.name} className="flex items-start justify-between gap-4">
-              <span className="pr-3 text-sm sm:text-base">
-  {item.name}
-</span>
+            <div key={item.name} className="flex flex-col gap-2 rounded-2xl border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+              <span className="pr-3 text-sm font-semibold leading-6 sm:text-base">{item.name}</span>
 
-              <span className="shrink-0 font-semibold">₦{item.cost.toLocaleString()}</span>
+              <span className="shrink-0 text-sm font-bold text-primary sm:text-base">₦{item.cost.toLocaleString()}</span>
             </div>
           ))}
         </div>
