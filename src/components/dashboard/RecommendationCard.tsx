@@ -37,7 +37,7 @@ export function RecommendationCard({
           <div className="mt-6">
             <Link
               to="/insights"
-              className="inline-flex items-center text-[13px] font-semibold text-primary transition-colors hover:underline sm:text-sm"
+              className="inline-flex items-center text-[13px] font-semibold text-primary rounded-2xl border border-primary/40 bg-primary/5 px-5 py-3 transition-colors hover:underline sm:text-sm"
             >
               View Smart Insights →
             </Link>

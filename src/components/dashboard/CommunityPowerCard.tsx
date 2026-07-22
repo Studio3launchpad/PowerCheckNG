@@ -48,6 +48,7 @@ export function CommunityPowerCard({
         <SectionHeader
           title="Community Power"
           description="Live community power status from nearby reports."
+          className="mb-6"
           action={
             <Link
               to="/outages"

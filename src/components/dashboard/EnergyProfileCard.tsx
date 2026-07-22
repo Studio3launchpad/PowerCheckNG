@@ -43,7 +43,7 @@ export function EnergyProfileCard({ analysis }: EnergyProfileCardProps) {
           action={
             <Link
               to="/energy"
-              className="text-[13px] font-semibold text-primary transition-colors hover:underline sm:text-sm"
+              className="text-[13px] font-semibold text-primary rounded-2xl border border-primary/40 bg-primary/5 px-5 py-3 transition-colors hover:underline sm:text-sm"
             >
               Update
             </Link>

@@ -1,12 +1,23 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UserButton } from "@clerk/tanstack-react-start";
-import { Battery, Brain, LayoutDashboard, Menu, Zap, UserRound } from "lucide-react";
+import {
+  Battery,
+  Brain,
+  LayoutDashboard,
+  Menu,
+  Zap,
+  UserRound,
+  PanelLeftClose,
+  PanelLeftOpen,
+  RadioTower,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/outage/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { SidebarNavItem } from "@/components/common/SidebarNavItem";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const NAV = [
   {
@@ -81,96 +92,97 @@ export function AppShell({ children }: { children: ReactNode }) {
             collapsed ? "w-20 p-3" : "w-60 p-4",
           )}
         >
-          {/* Logo */}
+          <TooltipProvider delayDuration={150}>
+            {/* Logo */}
 
-          <Link
-            to="/dashboard"
-            className={cn(
-              "flex items-center rounded-xl transition-all",
-              collapsed ? "justify-center py-3" : "gap-3 px-2 py-3",
-            )}
-          >
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary glow-primary">
-              <Zap className="size-4 text-primary-foreground" />
-            </div>
-
-            {!collapsed && (
-              <span className="font-display text-lg font-semibold">
-                PowerCheckNG
-              </span>
-            )}
-          </Link>
-
-          {/* Navigation */}
-
-          <nav className="mt-6 flex-1 space-y-2">
-            {SIDEBAR_NAV.map((item) => {
-              const Icon = item.icon;
-
-              const active = isNavItemActive(pathname, item.to);
-
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={cn(
-                    "flex rounded-xl transition-all duration-200",
-
-                    collapsed
-                      ? "justify-center px-2 py-3"
-                      : "items-center gap-3 px-4 py-3",
-
-                    active
-                      ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
-                  )}
-                >
-                  <Icon className="size-5 shrink-0" />
-
-                  {!collapsed && (
-                    <span className="truncate">
-                      {item.label}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Footer */}
-
-          <div className="space-y-3 border-t border-border pt-4">
             <Link
-              to="/account"
+              to="/dashboard"
               className={cn(
-                "flex items-center rounded-xl bg-white/5 transition hover:bg-white/10",
-
-                collapsed
-                  ? "justify-center p-3"
-                  : "justify-between p-3",
+                "flex items-center rounded-xl transition-all",
+                collapsed ? "justify-center py-3" : "gap-3 px-2 py-3",
               )}
             >
-              <UserButton />
+              <div className="flex size-9 items-center justify-center rounded-xl bg-primary glow-primary">
+                <Zap className="size-4 text-primary-foreground" />
+              </div>
 
               {!collapsed && (
-                <span className="text-xs text-muted-foreground">
-                  Account
-                </span>
+                <span className="font-display text-lg font-semibold">PowerCheckNG</span>
               )}
             </Link>
 
-            <Button
-              variant="ghost"
-              onClick={() => setCollapsed(!collapsed)}
-              className="w-full justify-center rounded-xl"
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="size-5" />
-              ) : (
-                <PanelLeftClose className="size-5" />
-              )}
-            </Button>
-          </div>
+            {/* Navigation */}
+
+            <nav className="mt-6 flex-1 space-y-2">
+              {SIDEBAR_NAV.map((item) => (
+                <SidebarNavItem
+                  key={item.to}
+                  to={item.to}
+                  label={item.label}
+                  icon={item.icon}
+                  active={isNavItemActive(pathname, item.to)}
+                  collapsed={collapsed}
+                />
+              ))}
+            </nav>
+
+            {/* Footer */}
+
+            <div className="space-y-4 border-t border-border pt-4">
+              {/* Primary Action */}
+
+              <TooltipProvider delayDuration={150}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      className={cn(
+                        "h-11 w-full rounded-2xl shadow-sm transition-all",
+                        collapsed ? "px-0" : "justify-start gap-3 px-4",
+                      )}
+                    >
+                      <Link to="/outages">
+                        <RadioTower className="size-5 shrink-0" />
+
+                        {!collapsed && <span>Report Power Status</span>}
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+
+                  {collapsed && <TooltipContent side="right">Report Power Status</TooltipContent>}
+                </Tooltip>
+              </TooltipProvider>
+
+              {/* Account */}
+
+              <Link
+                to="/account"
+                className={cn(
+                  "flex items-center rounded-2xl bg-white/5 transition hover:bg-white/10",
+
+                  collapsed ? "justify-center p-3" : "justify-between p-3",
+                )}
+              >
+                <UserButton />
+
+                {!collapsed && <span className="text-xs text-muted-foreground">Account</span>}
+              </Link>
+
+              {/* Collapse */}
+
+              <Button
+                variant="ghost"
+                onClick={() => setCollapsed(!collapsed)}
+                className="h-11 w-full rounded-2xl"
+              >
+                {collapsed ? (
+                  <PanelLeftOpen className="size-5" />
+                ) : (
+                  <PanelLeftClose className="size-5" />
+                )}
+              </Button>
+            </div>
+          </TooltipProvider>
         </aside>
 
         {/* ================= MAIN ================= */}
