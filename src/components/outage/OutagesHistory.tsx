@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { History, MapPin, Clock, ThumbsUp, RefreshCw, Zap } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { listOutageHistory } from "@/lib/outage/outages.functions";
 import { timeAgo } from "@/lib/outage/outages.utils";
 import { STATUS_STYLES } from "@/lib/outage/outages.constants";

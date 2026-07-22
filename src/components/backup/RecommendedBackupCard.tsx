@@ -1,5 +1,5 @@
 import { Battery } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type { BackupRecommendation, BackupType } from "@/lib/backup/backupAdvisor";
 
 type Props = {

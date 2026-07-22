@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, queryOptions } from "@tanstack/react-query";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { LiveOutageMap } from "@/components/outage/LiveOutageMap";
 import { PowerStatusModal } from "@/components/outage/PowerStatusModal";
 import { OutageHeader } from "@/components/outage/OutageHeader";

@@ -5,7 +5,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Section } from "@/components/layout/Section";
 

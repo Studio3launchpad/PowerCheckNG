@@ -1,5 +1,5 @@
 import { Check, Plus, Trash2 } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type { Appliance } from "@/lib/energy/energy.types";
 import { useState } from "react";
 import { CustomApplianceForm } from "@/components/energy/CustomApplianceForm";

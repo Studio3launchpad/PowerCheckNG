@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { analyzePowerAvailability } from "@/lib/outage/powerAvailability";
 import type { Outage } from "@/lib/outage/outages.types";
 import { BarChart3 } from "lucide-react";

@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type { EnergyAnalysis } from "@/lib/energy/energy.types";
 
 type Props = {

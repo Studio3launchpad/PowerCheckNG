@@ -16,7 +16,7 @@ export function GlassCard({
     <div
       className={cn(
         variant === "strong" ? "glass-strong" : "glass",
-        "rounded-2xl",
+        "rounded-2xl p-6",
         className,
       )}
       {...props}

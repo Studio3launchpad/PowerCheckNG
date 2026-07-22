@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
 import type { EnergyAnalysis } from "@/lib/energy/energy.types";

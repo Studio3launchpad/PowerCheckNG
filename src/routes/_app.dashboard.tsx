@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { Link } from "@tanstack/react-router";
 import { useQuery, queryOptions } from "@tanstack/react-query";
 import { buildBackupAdvisor } from "@/lib/backup/backupAdvisor";

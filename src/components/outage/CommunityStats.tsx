@@ -1,4 +1,4 @@
-import { GlassCard } from "../GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type { Outage } from "@/lib/outage/outages.types";
 import { MetricCard } from "@/components/common/MetricCard";
 import { SectionHeader } from "@/components/common/SectionHeader";

@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { analyzePowerAvailability } from "@/lib/outage/powerAvailability";
 import type { Outage } from "@/lib/outage/outages.types";
 import { POWER_PATTERN_WINDOW_MS } from "@/lib/outage/outages.constants";

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listOutages } from "@/lib/outage/outages.functions";
 import type { Outage } from "@/lib/outage/outages.types";

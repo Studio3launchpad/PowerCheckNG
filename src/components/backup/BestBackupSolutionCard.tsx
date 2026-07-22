@@ -1,6 +1,6 @@
 import { BatteryCharging, Zap, Fuel } from "lucide-react";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 
 import type {
   BackupRecommendation,

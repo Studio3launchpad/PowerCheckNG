@@ -2,7 +2,7 @@ import { UserButton, useClerk, useUser } from "@clerk/tanstack-react-start";
 import { Shield, Mail, Monitor, LogOut } from "lucide-react";
 import { ChevronRight, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { AccountAvatar } from "@/components/account/AccountAvatar";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 

@@ -1,5 +1,5 @@
 import { Activity, Clock, Lightbulb } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { analyzePowerAvailability } from "@/lib/outage/powerAvailability";
 import { POWER_PATTERN_WINDOW_MS } from "@/lib/outage/outages.constants";
 import type { Outage } from "@/lib/outage/outages.types";

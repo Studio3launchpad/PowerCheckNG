@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { Clock, MapPin, ThumbsUp } from "lucide-react";
 import { ConfidenceBar } from "@/components/outage/ConfidenceBar";
 import { timeAgo } from "@/lib/outage/outages.utils";

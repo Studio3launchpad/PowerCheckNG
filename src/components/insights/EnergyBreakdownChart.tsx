@@ -1,6 +1,6 @@
 import { Cell, Pie, PieChart as EnergyPieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { PieChart as PieChartIcon } from "lucide-react";
 import type { ApplianceBreakdown } from "@/lib/energy/energy.types";
 

@@ -1,5 +1,5 @@
 import { BatteryCharging } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
 type Props = {

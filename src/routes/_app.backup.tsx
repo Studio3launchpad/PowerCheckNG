@@ -9,6 +9,8 @@ import { AlternativeBackupOptions } from "@/components/backup/AlternativeBackupO
 import { BestBackupSolutionCard } from "@/components/backup/BestBackupSolutionCard";
 import { loadEnergyAnalysis, loadSavedAppliances } from "@/lib/energy/energyStorage";
 import { buildBackupAdvisor } from "@/lib/backup/backupAdvisor";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_app/backup")({
   component: BackupPage,
@@ -98,6 +100,16 @@ function BackupPage() {
         inverter={advisor.recommendation}
         generator={advisor.generatorRecommendation}
       />
+      
+<div className="mt-8 flex justify-center">
+  <Link to="/energy">
+    <Button size="lg" className="w-full max-w-sm">
+      <ArrowLeft className="mr-2 h-4 w-4" />
+      Back to Smart Energy Planner
+    </Button>
+  </Link>
+</div>
+
     </div>
   );
 }

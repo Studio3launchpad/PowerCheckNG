@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import type { SavingsOpportunity } from "@/lib/insights/insight.types";
 import { PiggyBank } from "lucide-react";

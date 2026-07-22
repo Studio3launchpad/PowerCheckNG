@@ -1,6 +1,6 @@
 import { Brain, TrendingUp, ShieldCheck } from "lucide-react";
 import { buildBackupDisplayModel } from "@/lib/backup/displayModel";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type {
   BackupRecommendation as BackupRecommendationType,
   BackupType,

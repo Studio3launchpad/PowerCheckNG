@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { PageHeader } from "@/components/common/PageHeader";
 
 interface DashboardHeaderProps {

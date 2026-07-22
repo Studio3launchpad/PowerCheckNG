@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Section } from "@/components/layout/Section";
 import { ResponsiveGrid } from "@/components/layout/ResponsiveGrid";

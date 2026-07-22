@@ -1,4 +1,4 @@
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import { BackupOptionCard } from "./BackupOptionCard";
 import { BackupOptionSection } from "./BackupOptionSection";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import { CheckCircle2, XCircle } from "lucide-react";
-import { GlassCard } from "@/components/GlassCard";
+import { GlassCard } from "@/components/common/GlassCard";
 import type { Appliance } from "@/lib/energy/energy.types";
 import type {
   BackupRecommendation,
