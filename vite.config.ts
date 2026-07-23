@@ -1,4 +1,6 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+@lovable
+  
+  import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
